@@ -19,6 +19,9 @@ class SettingsHelpView extends View {
             'Environment: ' +
             (Launcher ? Launcher.name + ' v' + Launcher.version : 'web') +
             '\n' +
+            'GUID: ' +
+            RuntimeInfo.guid +
+            '\n' +
             'User-Agent: ' +
             navigator.userAgent;
 

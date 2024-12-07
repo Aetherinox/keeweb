@@ -12,9 +12,6 @@
 #    - ENV:
 #        PROJECT_NAME
 #        DOMAIN
-#        DIR_BUILD_OUTPUT
-#        DIR_WORKING
-#        WRANGLER_VERSION
 #        BRANCH
 # ---------------------------------------------------------------------------------------
 
@@ -39,7 +36,7 @@ on:
       PROJECT_NAME:
         description:  "Project Name"
         required:     true
-        default:      'app-keeweb'
+        default:      'app-keeweb-info'
         type:         string
 
       DIRECTORY_BUILD_OUTPUT:
@@ -76,7 +73,7 @@ on:
 # ---------------------------------------------------------------------------------------
 
 env:
-  PROJECT_NAME: ${{ github.event.inputs.PROJECT_NAME || 'app-keeweb' }}
+  PROJECT_NAME: ${{ github.event.inputs.PROJECT_NAME || 'app-keeweb-info' }}
   DOMAIN: 'app.keeweb.info'
   DIR_BUILD_OUTPUT: ${{ github.event.inputs.DIRECTORY_BUILD_OUTPUT || 'gh-pages' }}
   DIR_WORKING: ${{ github.event.inputs.DIRECTORY_WORKING || './' }}
@@ -348,7 +345,7 @@ jobs:
           #   Job > Complete > Summary of publish
           # ---------------------------------------------------------------------------------------
 
-          - name: "🆗 CF Pages Deployment: ${{ env.DOMAIN }}"
+          - name: "🆗 CF Pages Deployment: ${{ env.NOW }}"
             id: task_complete_summary
             run: |
               echo ""

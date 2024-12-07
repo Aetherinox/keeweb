@@ -12,7 +12,7 @@ class CsvParser {
         this.result = [];
         this.next = this.handleBeforeValue;
         this.index = 0;
-        while (this.next && this.index <= this.csv.length) {
+        while (this.next && this.index < this.csv.length) {
             this.next = this.next(this);
         }
         if (this.lines.length <= 1) {
@@ -44,7 +44,7 @@ class CsvParser {
             nextIndex = this.csv.length;
         }
 
-        const value = this.csv.substr(this.index, nextIndex - this.index);
+        const value = this.csv.slice(this.index, nextIndex);
         this.line.push(value);
 
         this.index = nextIndex;
@@ -65,24 +65,22 @@ class CsvParser {
         if (nextBackslashIndex > 0 && nextBackslashIndex < nextQuoteIndex) {
             const charAfterBackslash = this.csv[nextBackslashIndex + 1];
             if (charAfterBackslash === '"' || charAfterBackslash === '\\') {
-                this.value +=
-                    this.csv.substr(this.index, nextBackslashIndex - this.index) +
-                    charAfterBackslash;
+                this.value += this.csv.slice(this.index, nextBackslashIndex) + charAfterBackslash;
                 this.index = nextBackslashIndex + 2;
             } else {
-                this.value += this.csv.substr(this.index, nextBackslashIndex - this.index + 1);
+                this.value += this.csv.slice(this.index, nextBackslashIndex + 1);
                 this.index = nextBackslashIndex + 1;
             }
             return this.handleQuotedValue;
         }
 
         if (this.csv[nextQuoteIndex + 1] === '"') {
-            this.value += this.csv.substr(this.index, nextQuoteIndex - this.index + 1);
+            this.value += this.csv.slice(this.index, nextQuoteIndex + 1);
             this.index = nextQuoteIndex + 2;
             return this.handleQuotedValue;
         }
 
-        this.value += this.csv.substr(this.index, nextQuoteIndex - this.index);
+        this.value += this.csv.slice(this.index, nextQuoteIndex);
         this.index = nextQuoteIndex + 1;
         this.line.push(this.value);
         this.value = '';
