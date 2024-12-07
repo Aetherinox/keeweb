@@ -219,7 +219,7 @@ class ListSearchView extends View {
     }
 
     inputFocus(e) {
-        $(e.target).select();
+        $(e.target).trigger('select');
     }
 
     documentKeyPress(e) {
