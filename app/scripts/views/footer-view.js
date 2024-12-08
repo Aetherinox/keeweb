@@ -28,7 +28,6 @@ class FooterView extends View {
         this.onKey(Keys.DOM_VK_O, this.openFile, KeyHandler.SHORTCUT_ACTION);
         this.onKey(Keys.DOM_VK_S, this.saveAll, KeyHandler.SHORTCUT_ACTION);
         this.onKey(Keys.DOM_VK_COMMA, this.toggleSettings, KeyHandler.SHORTCUT_ACTION);
-        this.onKey(Keys.DOM_VK_I, this.openDevTools, KeyHandler.SHORTCUT_ACTION);
 
         this.listenTo(this, 'hide', this.viewHidden);
         this.listenTo(this.model.files, 'change', this.render);

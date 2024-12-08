@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { View } from 'framework/views/view';
 import { Events } from 'framework/events';
 import { IdleTracker } from 'comp/browser/idle-tracker';
@@ -142,6 +143,7 @@ class AppView extends View {
             titlebarStyle: this.titlebarStyle,
             customTitlebar: Features.renderCustomTitleBar
         });
+
         this.panelEl = this.$el.find('.app__panel:first');
         this.views.listWrap.render();
         this.views.menu.render();
@@ -323,19 +325,48 @@ class AppView extends View {
         }
     }
 
+    /*
+        @TODO       finish file settings
+                    this implmentation is pending completion from original v1.9.0 updates
+    */
+
     showFileSettings(e) {
         const menuItem = this.model.menu.filesSection.items.find(
-            (item) => item.file.id === e.fileId
+            (item) => item.file.id === e.fileId // 1fac5844-1693-5261-41f0-92928fcaee0a
         );
-        if (this.views.settings) {
-            if (this.views.settings.file === menuItem.file) {
-                this.showEntries();
-            } else {
-                this.model.menu.select({ item: menuItem });
-            }
-        } else {
-            this.showSettings(menuItem);
+
+        const vault_filter = `${menuItem.file.id}:${menuItem.file.uuid}`;
+
+        if (this.model.filter.group === vault_filter) {
+            menuItem.active = false;
+            return;
         }
+
+        this.iconEl = this.$el.find('.footer__db');
+        const items = this.model.menu.filesSection.items;
+
+        this.showEntries();
+        this.model.menu.select({ item: menuItem });
+
+        this.model.filterKey = 'group';
+        const filterKey = this.model.filterKey;
+        const filterValue = vault_filter;
+        const filter = {};
+        filter[filterKey] = filterValue;
+
+        // Events.emit('menu-select', { item: menuItem });
+        Events.emit('set-filter', filter);
+
+        if (items) {
+            items.forEach((item) => {
+                item.active = true;
+            });
+        }
+
+        Events.emit('change:active', true);
+
+        this.item = this.$el.find(`#footer__db--${menuItem.file.id}`);
+        this.item.toggleClass('footer__center-vault-item-active');
     }
 
     toggleOpenFile() {
@@ -477,7 +508,7 @@ class AppView extends View {
 
     openDevTools() {
         const logger = new Logger('launcher');
-        logger.info('Opening developer console...');
+        logger.info('Initializing developer console');
         if (Launcher) {
             Launcher.openDevTools();
         }
