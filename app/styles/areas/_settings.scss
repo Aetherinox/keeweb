@@ -140,6 +140,30 @@
         padding-bottom: 30px;
     }
 
+    div.section-desc {
+        padding-bottom: 20px;
+    }
+
+    hr.sep01 {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        border: 0px;
+    }
+
+    hr.sep02 {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        border: 0px;
+    }
+
+    div.section-indent-l {
+        padding-left: 30px;
+    }
+
     div.help-platforms {
         .fa:before {
             font-size: 30px;

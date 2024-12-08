@@ -170,14 +170,14 @@ class OpenView extends View {
                     .replace(/\*/g, '%2A');
             }
 
-            // not really necessary, but it doesnt hurt
-            const htmlCss = dompurify.sanitize(
+            // sanitize for xss
+            const cssBackground = dompurify.sanitize(
                 'linear-gradient(rgba(32, 32, 32, 0.90), rgba(32, 32, 32, 0.90)), url(' +
                     wallpaperPath +
                     ') 0% 0% / cover'
             );
 
-            this.$el.css('background', htmlCss);
+            this.$el.css('background', cssBackground);
         } else {
             this.$el.css('background', '');
         }

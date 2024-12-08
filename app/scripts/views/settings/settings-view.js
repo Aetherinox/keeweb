@@ -1,4 +1,3 @@
-import dompurify from 'dompurify';
 import { View } from 'framework/views/view';
 import { Events } from 'framework/events';
 import { Keys } from 'const/keys';
@@ -6,6 +5,7 @@ import { Features } from 'util/features';
 import { Scrollable } from 'framework/views/scrollable';
 import { StringFormat } from 'util/formatting/string-format';
 import template from 'templates/settings/settings.hbs';
+import dompurify from 'dompurify';
 import wallpaper1 from 'wallpaper1';
 import wallpaper2 from 'wallpaper2';
 import wallpaper3 from 'wallpaper3';
@@ -58,14 +58,14 @@ class SettingsView extends View {
                     .replace(/\*/g, '%2A');
             }
 
-            // not really necessary, but it doesnt hurt
-            const htmlCss = dompurify.sanitize(
+            // sanitize for xss
+            const cssBackground = dompurify.sanitize(
                 'linear-gradient(rgba(32, 32, 32, 0.90), rgba(32, 32, 32, 0.90)), url(' +
                     wallpaperPath +
                     ') 0% 0% / cover'
             );
 
-            this.$el.css('background', htmlCss);
+            this.$el.css('background', cssBackground);
         } else {
             this.$el.css('background', '');
         }

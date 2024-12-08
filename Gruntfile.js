@@ -3,22 +3,22 @@
 
     fs                  : filesystem
     moment              : datetime library
-    chalk               : requires chalk v4 for non-ESM modules. v5 does not have require.
-    pkgUuid             : uuid v5
+    chalk               : chalk v4 for cjs modules. v5 for esm.
+    pkgUuid             : uuid v5, uuid and guid
 */
 
 const fs = require('fs-extra');
 const path = require('path');
 const moment = require('moment');
 const debug = require('debug');
-// const chalk = require('chalk'); // requires chalk v4 for non ESM modules. v5 does not have require.
-const chalk = import('chalk').then((m) => m.default); // chalk v5 now uses ESM instead of CommonJS
+// const chalk = require('chalk'); // chalk v4 cjs
+const chalk = import('chalk').then((m) => m.default); // chalk v5 esm
 const { v5: pkgUuid } = require('uuid');
 const { execSync } = require('child_process');
 
 /*
-    serialHooks         : required for electron builder for hooks afterExtract, afterCopy, afterPrune
-    pkg                 : package.json contents
+    serialHooks             required for electron builder; hooks are [ afterExtract, afterCopy, afterPrune ]
+    pkg                     package.json contents
 */
 
 const webpackConfig = require('./build/webpack.config');
@@ -27,7 +27,13 @@ const serialHooks = require('electron-packager/src/hooks').serialHooks;
 const pkg = require('./package.json');
 
 /*
-    Misc
+    chalk.level
+
+    @ref        https://npmjs.com/package/chalk
+                - 0 	All colors disabled
+                - 1 	Basic color support (16 colors)
+                - 2 	256 color support
+                - 3 	Truecolor support (16 million colors)
 */
 
 chalk.level = 3;
@@ -53,20 +59,20 @@ module.exports = function (grunt) {
 
         times based on UTC
 
-        now             : Fri May 10 2024 19:35:54 GMT+0000
-        nowYyyymmdd     : 2024-05-10
-        nowYear         : 2024
+        now                 Fri Dec 10 2024 19:35:54 GMT+0000
+        nowShort            2024-12-10
+        nowYear             2024
     */
 
     const now = moment().utc();
-    const nowYyyymmdd = moment(now).format('YYYY-MM-DD');
+    const nowShort = moment(now).format('YYYY-MM-DD');
     const nowYear = moment(now).year();
 
     /*
         Build IDs
 
-        guid        : should never change, based on repository url
-        uuid        : changes with each new version based on version number
+        guid                should never change, based on repository url
+        uuid                changes with each new version based on version number
     */
 
     const guid = pkgUuid(`${pkg.repository.url}`, pkgUuid.URL);
@@ -426,41 +432,40 @@ module.exports = function (grunt) {
 
         /*
             HTML Link Rel
-
             used primarily for preloading
 
-            rel         : alternate, canonical, author, bookmark, dns-prefetch, expect,
-                          external, help, icon, manifest, modulepreload, license, next,
-                          nofollow, noopener, noreferrer, opener, pingback, preconnect,
-                          prefetch, preload, prev, privacy-policy, search, stylesheet,
-                          tag, terms-of-service
+            rel             alternate, canonical, author, bookmark, dns-prefetch, expect,
+                            external, help, icon, manifest, modulepreload, license, next,
+                            nofollow, noopener, noreferrer, opener, pingback, preconnect,
+                            prefetch, preload, prev, privacy-policy, search, stylesheet,
+                            tag, terms-of-service
 
-            as          : fetch, font, image, script, style, track
+            as              fetch, font, image, script, style, track
 
-            type        : image/webp, image/jpeg, image/png, image/x-icon, font/ttf, font/woff2, text/css
-                          application/rss+xml, application/json
+            type            image/webp, image/jpeg, image/png, image/x-icon, font/ttf, font/woff2, text/css
+                            application/rss+xml, application/json
 
-            cors        : defines how to handle crossorigin requests. Setting the crossorigin attribute
-                          (equivalent to crossorigin="anonymous") will switch the request to a CORS
-                          request using the same-origin policy. It is required on the rel="preload" as
-                          font requests require same-origin policy.
+            cors            defines how to handle crossorigin requests. Setting the crossorigin attribute
+                            (equivalent to crossorigin="anonymous") will switch the request to a CORS
+                            request using the same-origin policy. It is required on the rel="preload" as
+                            font requests require same-origin policy.
 
-                          An invalid keyword and an empty string will be handled as the anonymous keyword.
+                            An invalid keyword and an empty string will be handled as the anonymous keyword.
 
-                          specifying 'true' will be the same as 'anonymous' / "".
+                            specifying 'true' will be the same as 'anonymous' / "".
 
-                          > anonymous
-                            Request uses CORS headers and credentials flag is set to 'same-origin'.
-                            There is no exchange of user credentials via cookies, client-side TLS
-                            certificates or HTTP authentication, unless destination is the same origin.
+                            >   anonymous
+                                Request uses CORS headers and credentials flag is set to 'same-origin'.
+                                There is no exchange of user credentials via cookies, client-side TLS
+                                certificates or HTTP authentication, unless destination is the same origin.
 
-                          > use-credentials
-                            Request uses CORS headers, credentials flag is set to 'include' and user
-                            credentials are always included.
+                            >   use-credentials
+                                Request uses CORS headers, credentials flag is set to 'include' and user
+                                credentials are always included.
 
-                          > ""
-                            Setting the attribute name to an empty value, like crossorigin or
-                            crossorigin="", is the same as anonymous.
+                            >   ""
+                                Setting the attribute name to an empty value, like crossorigin or
+                                crossorigin="", is the same as anonymous.
 
         */
 
@@ -551,7 +556,7 @@ module.exports = function (grunt) {
                         },
                         {
                             pattern: /"date":\s*".*?"/,
-                            replacement: `"date": "${nowYyyymmdd}"`
+                            replacement: `"date": "${nowShort}"`
                         },
                         {
                             pattern: /"guid":\s*".*?"/,

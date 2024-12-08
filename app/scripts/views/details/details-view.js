@@ -26,11 +26,11 @@ import { createDetailsFields, createNewCustomField } from 'views/details/details
 import { FieldViewCustom } from 'views/fields/field-view-custom';
 import { IconSelectView } from 'views/icon-select-view';
 import { isEqual } from 'util/fn';
+import { Launcher } from 'comp/launcher';
 import dompurify from 'dompurify';
 import template from 'templates/details/details.hbs';
 import emptyTemplate from 'templates/details/details-empty.hbs';
 import groupTemplate from 'templates/details/details-group.hbs';
-import { Launcher } from 'comp/launcher';
 import wallpaper1 from 'wallpaper1';
 import wallpaper2 from 'wallpaper2';
 import wallpaper3 from 'wallpaper3';
@@ -178,14 +178,14 @@ class DetailsView extends View {
                     .replace(/\*/g, '%2A');
             }
 
-            // not really necessary, but it doesnt hurt
-            const htmlCss = dompurify.sanitize(
+            // sanitize for xss
+            const cssBackground = dompurify.sanitize(
                 'linear-gradient(rgba(32, 32, 32, 0.90), rgba(32, 32, 32, 0.90)), url(' +
                     wallpaperPath +
                     ') 0% 0% / cover'
             );
 
-            this.$el.css('background', htmlCss);
+            this.$el.css('background', cssBackground);
         } else {
             this.$el.css('background', '');
         }

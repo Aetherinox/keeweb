@@ -39,7 +39,7 @@ $titlebar-padding-large: 40px;
 
 // Borders
 @function base-border() {
-    @return 1px solid var(--base-border-color);
+    @return 1px dotted var(--base-border-color);
 }
 @function light-border() {
     @return 1px solid var(--light-border-color);
