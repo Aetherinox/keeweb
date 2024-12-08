@@ -136,6 +136,14 @@ class OpenView extends View {
             showLogo
         });
 
+        const wallpaperArr = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg'];
+        const wallpaperSel = wallpaperArr[Math.floor(Math.random() * wallpaperArr.length)];
+
+        this.$el.css('background', '#FFFFFF');
+        this.$el.css('background-blend-mode', 'darken');
+        this.$el.css('background', 'url(../wallpapers/' + wallpaperSel + ')');
+        this.$el.css('backgroundSize', 'cover');
+
         this.inputEl = this.$el.find('.open__pass-input');
         this.passwordInput.setElement(
             this.inputEl,

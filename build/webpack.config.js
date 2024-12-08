@@ -33,9 +33,8 @@ module.exports = function (options) {
         },
         output: {
             path: path.resolve('.', 'tmp'),
-            filename: 'js/[name].js',
-            publicPath: '../../../',
-            assetModuleFilename: '[name][ext]'
+            publicPath: '',
+            filename: 'js/[name].js'
         },
         target: 'web',
         performance: {
@@ -80,13 +79,16 @@ module.exports = function (options) {
                 'argon2-wasm': 'argon2-browser/dist/argon2.wasm',
                 templates: path.join(rootDir, 'app/templates'),
                 'public-key.pem': path.join(rootDir, 'app/resources/public-key.pem'),
-                '1.jpg': path.join(rootDir, 'wallpapers/1.jpg'),
                 'public-key-new.pem': path.join(rootDir, 'app/resources/public-key-new.pem'),
                 'demo.kdbx': path.join(rootDir, 'app/resources/Demo.kdbx'),
                 'fontawesome.woff2': path.resolve(
                     __dirname,
                     '../node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2'
-                )
+                ),
+                'wallpaper-1.jpg': path.join(rootDir, 'app/wallpapers/1.jpg'),
+                'wallpaper-2.jpg': path.join(rootDir, 'app/wallpapers/2.jpg'),
+                'wallpaper-3.jpg': path.join(rootDir, 'app/wallpapers/3.jpg'),
+                'wallpaper-4.jpg': path.join(rootDir, 'app/wallpapers/4.jpg')
             },
             fallback: {
                 console: false,
@@ -197,7 +199,11 @@ module.exports = function (options) {
                             // translates CSS into CommonJS
                             loader: 'css-loader',
                             options: {
-                                esModule: false
+                                esModule: false,
+                                importLoaders: 2,
+                                sourceMap: !devMode,
+                                url: true,
+                                import: true
                             }
                         },
                         {
@@ -223,13 +229,8 @@ module.exports = function (options) {
                     ]
                 },
                 {
-                    test: /\.(png|svg|jpg|jpeg)$/i,
-                    type: 'asset/resource',
-                    generator: {
-                        // publicPath: path.join(rootDir, 'wallpapers/'),
-                        publicPath: '../wallpapers/',
-                        filename: '../[name][ext]'
-                    }
+                    test: /\.(svg|png|jpe?g|gif)$/,
+                    loader: 'file-loader'
                 },
                 { test: /fontawesome.*\.woff2$/, loader: 'fontawesome-loader' },
                 { test: /\.pem$/, loader: 'raw-loader' },

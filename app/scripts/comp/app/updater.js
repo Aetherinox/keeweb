@@ -43,8 +43,8 @@ const Updater = {
         this.scheduleNextCheck();
         console.log('Launcher ' + Launcher);
         console.log('Navigator Service Worker  ' + navigator.serviceWorker);
-        console.log('Beta ' + RuntimeInfo.beta);
-        console.log('Dev ' + RuntimeInfo.devMode);
+        console.log('Beta  Mode: ' + RuntimeInfo.beta);
+        console.log('Dev Mode: ' + RuntimeInfo.devMode);
         if (!Launcher && navigator.serviceWorker && !RuntimeInfo.beta && !RuntimeInfo.devMode) {
             navigator.serviceWorker
                 .register('service-worker.js')
@@ -58,7 +58,7 @@ const Updater = {
                     });
                 })
                 .catch((e) => {
-                    console.log('hi');
+                    console.log('Checking service worker');
                     logger.error('Failed to register a service worker', e);
                 });
         }

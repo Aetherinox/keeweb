@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-// const chalk = require('chalk'); // requires chalk v4 for non ESM modules. v5 does not have require.
+const chalk = import('chalk').then((m) => m.default); // chalk v5 now uses ESM instead of CommonJS
 
 module.exports = function (grunt) {
     /*
@@ -215,18 +214,17 @@ module.exports = function (grunt) {
                 }
 
                 for (const file of opt.app) {
-                    const html = grunt.file.read(file.src, {
-                        encoding: 'utf8'
-                    });
+                    const html = grunt.file.read(file.src, { encoding: 'utf8' });
                     const regex = new RegExp(pattern, 'gim');
                     const htmlUpdated = html.replace(regex, assetsInclude);
 
-                    grunt.log
-                        .writeln
-                        // chalk.green(`→ Htmlinkrel → Add Asset`),
-                        // chalk.gray(`→ ${name}`),
-                        // chalk.gray(`→ ${file.src}`)
-                        ();
+                    chalk.then(async (c) =>
+                        grunt.log.writeln(
+                            c.green(`→ Htmlinkrel → Add Asset`),
+                            c.gray(`→ ${name}`),
+                            c.gray(`→ ${file.src}`)
+                        )
+                    );
 
                     grunt.file.write(file.src, htmlUpdated);
 
@@ -241,20 +239,22 @@ module.exports = function (grunt) {
             */
 
             if (!pattern) {
-                grunt.log
-                    .writeln
-                    // chalk.red(`Htmlinkrel → no regex pattern specified → `),
-                    //  chalk.yellow(`Aborting`)
-                    ();
+                chalk.then(async (c) =>
+                    grunt.log.writeln(
+                        c.red(`Htmlinkrel → no regex pattern specified → `),
+                        c.yellow(`Aborting`)
+                    )
+                );
                 break;
             }
 
             if (!hrefPath) {
-                grunt.log
-                    .writeln
-                    //   chalk.red(`Htmlinkrel → no public path specified → `),
-                    //  chalk.yellow(`Aborting`)
-                    ();
+                chalk.then(async (c) =>
+                    grunt.log.writeln(
+                        c.red(`Htmlinkrel → no public path specified → `),
+                        c.yellow(`Aborting`)
+                    )
+                );
                 break;
             }
 
@@ -275,21 +275,20 @@ module.exports = function (grunt) {
                 htmlInclude += `<link${relString}${hrefString}${asString}${mediaString}${typeString}${sizesString}${colorString}${classString}${corsString}>`;
 
                 for (const file of opt.app) {
-                    const html = grunt.file.read(file.src, {
-                        encoding: 'utf8'
-                    });
+                    const html = grunt.file.read(file.src, { encoding: 'utf8' });
                     const regex = new RegExp(pattern, 'gim');
                     const htmlUpdated = html.replace(regex, htmlInclude);
 
                     const href = hrefString.match(/(?<=\")(.*?)(?=\")/gim) || hrefString;
 
-                    grunt.log
-                        .writeln
-                        //  chalk.green(`→ Htmlinkrel → Add Static`),
-                        //  chalk.gray(`→ ${name}`),
-                        //   chalk.gray(`→ ${href}`),
-                        //  chalk.gray(`→ ${file.src}`)
-                        ();
+                    chalk.then(async (c) =>
+                        grunt.log.writeln(
+                            c.green(`→ Htmlinkrel → Add Static`),
+                            c.gray(`→ ${name}`),
+                            c.gray(`→ ${href}`),
+                            c.gray(`→ ${file.src}`)
+                        )
+                    );
 
                     grunt.file.write(file.src, htmlUpdated);
                 }
@@ -320,10 +319,7 @@ module.exports = function (grunt) {
                             if (n > 0) {
                                 // append filename to end of hrefString for newly added file
                                 // eslint-disable-next-line prettier/prettier
-                                const hrefStringEach =
-                                    hrefString.substring(0, n) +
-                                    `/${file}` +
-                                    hrefString.substring(n);
+                                const hrefStringEach = hrefString.substring(0, n) + `/${file}` + hrefString.substring(n);
                                 htmlInclude += `<link${relString}${hrefStringEach}${asString}${mediaString}${typeString}${sizesString}${colorString}${classString}${corsString}>`;
 
                                 if (files.length !== iCurrent) {
@@ -338,21 +334,20 @@ module.exports = function (grunt) {
                 });
 
                 for (const file of opt.app) {
-                    const html = grunt.file.read(file.src, {
-                        encoding: 'utf8'
-                    });
+                    const html = grunt.file.read(file.src, { encoding: 'utf8' });
                     const regex = new RegExp(pattern, 'gim');
                     const htmlUpdated = html.replace(regex, htmlInclude);
 
                     const folder = searchPath.match(/(?<=\")(.*?)(?=\")/gim) || searchPath;
 
-                    grunt.log
-                        .writeln
-                        //  chalk.green(`→ Htmlinkrel → Add Dynamic`),
-                        // chalk.gray(`→ ${name}`),
-                        // chalk.gray(`→ ${folder}`),
-                        // chalk.gray(`→ ${file.src}`)
-                        ();
+                    chalk.then(async (c) =>
+                        grunt.log.writeln(
+                            c.green(`→ Htmlinkrel → Add Dynamic`),
+                            c.gray(`→ ${name}`),
+                            c.gray(`→ ${folder}`),
+                            c.gray(`→ ${file.src}`)
+                        )
+                    );
 
                     grunt.file.write(file.src, htmlUpdated);
                 }

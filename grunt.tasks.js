@@ -18,20 +18,25 @@ module.exports = function (grunt) {
         'eslint',
         'copy:html',
         'copy:icons',
+        'copy:wallpapers',
         'copy:manifest',
+        'htmlinkrel:images',
         'webpack:app',
         'inline',
+        'htmlinkrel:assets',
         'htmlmin',
         'csp-hashes',
         'copy:content-dist',
         'string-replace:service-worker',
         'string-replace:update-manifest',
         'copy:dist-icons',
+        'copy:dist-wallpapers',
         'copy:dist-manifest'
     ]);
 
     grunt.registerTask('build-desktop-app-content', [
         'copy:desktop-html',
+        'copy:desktop-html-wallpaper',
         'copy:desktop-app-content',
         'string-replace:desktop-public-key'
     ]);

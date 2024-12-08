@@ -2,10 +2,13 @@ const fs = require('fs-extra');
 const path = require('path');
 const { execSync } = require('child_process');
 const debug = require('debug');
+// const chalk = require('chalk'); // requires chalk v4 for non ESM modules. v5 does not have require.
+const chalk = import('chalk').then((m) => m.default); // chalk v5 now uses ESM instead of CommonJS
 const { v5: pkgUuid } = require('uuid');
 
 const webpackConfig = require('./build/webpack.config');
 const webpackConfigTest = require('./test/test.webpack.config');
+const serialHooks = require('electron-packager/src/hooks').serialHooks;
 const pkg = require('./package.json');
 
 debug.enable('electron-notarize');
@@ -130,6 +133,20 @@ module.exports = function (grunt) {
                 expand: true,
                 nonull: true
             },
+            wallpapers: {
+                cwd: 'app/wallpapers/',
+                src: ['*.jpg'],
+                dest: 'tmp/wallpapers/',
+                expand: true,
+                nonull: true
+            },
+            'dist-wallpapers': {
+                cwd: 'app/wallpapers/',
+                src: ['*.jpg'],
+                dest: 'dist/wallpapers/',
+                expand: true,
+                nonull: true
+            },
             manifest: {
                 cwd: 'app/manifest/',
                 src: ['*.json', '*.xml'],
@@ -147,6 +164,13 @@ module.exports = function (grunt) {
             'desktop-html': {
                 src: 'dist/index.html',
                 dest: 'tmp/desktop/app/index.html',
+                nonull: true
+            },
+            'desktop-html-wallpaper': {
+                cwd: 'dist/wallpapers/',
+                src: ['*.jpg'],
+                dest: 'tmp/desktop/app/wallpapers/',
+                expand: true,
                 nonull: true
             },
             'desktop-app-content': {
@@ -288,6 +312,97 @@ module.exports = function (grunt) {
             }
         },
 
+        /*
+            HTML Link Rel
+
+            used primarily for preloading
+
+            rel         : alternate, canonical, author, bookmark, dns-prefetch, expect,
+                          external, help, icon, manifest, modulepreload, license, next,
+                          nofollow, noopener, noreferrer, opener, pingback, preconnect,
+                          prefetch, preload, prev, privacy-policy, search, stylesheet,
+                          tag, terms-of-service
+
+            as          : fetch, font, image, script, style, track
+
+            type        : image/webp, image/jpeg, image/png, image/x-icon, font/ttf, font/woff2, text/css
+                          application/rss+xml, application/json
+
+            cors        : defines how to handle crossorigin requests. Setting the crossorigin attribute
+                          (equivalent to crossorigin="anonymous") will switch the request to a CORS
+                          request using the same-origin policy. It is required on the rel="preload" as
+                          font requests require same-origin policy.
+
+                          An invalid keyword and an empty string will be handled as the anonymous keyword.
+
+                          specifying 'true' will be the same as 'anonymous' / "".
+
+                          > anonymous
+                            Request uses CORS headers and credentials flag is set to 'same-origin'.
+                            There is no exchange of user credentials via cookies, client-side TLS
+                            certificates or HTTP authentication, unless destination is the same origin.
+
+                          > use-credentials
+                            Request uses CORS headers, credentials flag is set to 'include' and user
+                            credentials are always included.
+
+                          > ""
+                            Setting the attribute name to an empty value, like crossorigin or
+                            crossorigin="", is the same as anonymous.
+
+        */
+
+        'htmlinkrel': {
+            'images': {
+                options: {
+                    replacements: [
+                        {
+                            name: 'Preload: Wallpapers',
+                            rel: 'preload',
+                            pattern: /<!--{{PRELOAD_IMAGES}}-->/,
+                            hrefPath: 'wallpapers',
+                            searchPath: 'app/wallpapers',
+                            as: 'image',
+                            type: 'image/jpeg',
+                            cors: 'anonymous'
+                        }
+                    ],
+                    app: [
+                        {
+                            src: 'tmp/index.html'
+                        }
+                    ]
+                }
+            },
+            'assets': {
+                options: {
+                    replacements: [
+                        {
+                            name: 'Preload: CSS',
+                            rel: 'preload',
+                            pattern: /<!--{{PRELOAD_CSS}}-->/,
+                            hrefPath: 'css/app.css',
+                            as: 'style',
+                            cors: false
+                        },
+                        {
+                            name: 'Preload: Javascript',
+                            rel: 'preload',
+                            pattern: /<!--{{PRELOAD_JS}}-->/,
+                            hrefPath: 'js/app.js',
+                            as: 'script',
+                            cors: false
+                        }
+                    ],
+                    app: [
+                        {
+                            src: 'tmp/index.html'
+                        }
+                    ]
+                }
+            }
+        },
+
         'csp-hashes': {
             options: {
                 algo: 'sha512',
@@ -335,7 +450,9 @@ module.exports = function (grunt) {
                 files: { 'dist/update.json': 'app/update.json' }
             },
             'service-worker': {
-                options: { replacements: [{ pattern: '0.0.0', replacement: pkg.version }] },
+                options: {
+                    replacements: [{ pattern: '0.0.0', replacement: pkg.version }]
+                },
                 files: { 'dist/service-worker.js': 'app/service-worker.js' }
             },
             'desktop-public-key': {
@@ -433,7 +550,53 @@ module.exports = function (grunt) {
                 asar: true,
                 appCopyright: `Copyright © ${year} Antelle`,
                 appVersion: pkg.version,
-                buildVersion: sha
+                buildVersion: sha,
+                extraResource: path.join(__dirname, 'app/wallpapers'),
+                afterExtract: [
+                    serialHooks([
+                        function (buildPath, electronVersion, platform, arch) {
+                            const pathWallpapersTo = path.join(buildPath, 'wallpapers/');
+                            chalk.then(async (c) =>
+                                grunt.log.writeln(
+                                    c.green(`Electron → Extract Complete →`),
+                                    c.yellow(buildPath)
+                                )
+                            );
+                            fs.copySync('./app/wallpapers', pathWallpapersTo);
+
+                            chalk.then(async (c) =>
+                                grunt.log.writeln(
+                                    c.green(`Electron → Moving Wallpapers →`),
+                                    c.yellow(pathWallpapersTo)
+                                )
+                            );
+                        }
+                    ])
+                ],
+                afterCopy: [
+                    serialHooks([
+                        function (buildPath, electronVersion, platform, arch) {
+                            chalk.then(async (c) =>
+                                grunt.log.writeln(
+                                    c.green(`Electron → Copy Complete →`),
+                                    c.yellow(buildPath)
+                                )
+                            );
+                        }
+                    ])
+                ],
+                afterPrune: [
+                    serialHooks([
+                        function (buildPath, electronVersion, platform, arch) {
+                            chalk.then(async (c) =>
+                                grunt.log.writeln(
+                                    c.green(`Electron → Prune Complete →`),
+                                    c.yellow(buildPath)
+                                )
+                            );
+                        }
+                    ])
+                ]
             },
             linux: {
                 options: {
@@ -552,22 +715,57 @@ module.exports = function (grunt) {
                 level: 6
             },
             'win32-x64': {
-                options: { archive: `dist/desktop/KeeWeb-${pkg.version}.win.x64.zip` },
-                files: [{ cwd: 'tmp/desktop/KeeWeb-win32-x64', src: '**', expand: true }]
+                options: {
+                    archive: `dist/desktop/KeeWeb-${pkg.version}.win.x64.zip`
+                },
+                files: [
+                    {
+                        cwd: 'tmp/desktop/KeeWeb-win32-x64',
+                        src: '**',
+                        expand: true
+                    }
+                ]
             },
             'win32-ia32': {
-                options: { archive: `dist/desktop/KeeWeb-${pkg.version}.win.ia32.zip` },
-                files: [{ cwd: 'tmp/desktop/KeeWeb-win32-ia32', src: '**', expand: true }]
+                options: {
+                    archive: `dist/desktop/KeeWeb-${pkg.version}.win.ia32.zip`
+                },
+                files: [
+                    {
+                        cwd: 'tmp/desktop/KeeWeb-win32-ia32',
+                        src: '**',
+                        expand: true
+                    }
+                ]
             },
             'win32-arm64': {
-                options: { archive: `dist/desktop/KeeWeb-${pkg.version}.win.arm64.zip` },
-                files: [{ cwd: 'tmp/desktop/KeeWeb-win32-arm64', src: '**', expand: true }]
+                options: {
+                    archive: `dist/desktop/KeeWeb-${pkg.version}.win.arm64.zip`
+                },
+                files: [
+                    {
+                        cwd: 'tmp/desktop/KeeWeb-win32-arm64',
+                        src: '**',
+                        expand: true
+                    }
+                ]
             },
             'linux-x64': {
-                options: { archive: `dist/desktop/KeeWeb-${pkg.version}.linux.x64.zip` },
+                options: {
+                    archive: `dist/desktop/KeeWeb-${pkg.version}.linux.x64.zip`
+                },
                 files: [
-                    { cwd: 'tmp/desktop/keeweb-linux-x64', src: '**', expand: true },
-                    { cwd: 'graphics', src: '128x128.png', nonull: true, expand: true }
+                    {
+                        cwd: 'tmp/desktop/keeweb-linux-x64',
+                        src: '**',
+                        expand: true
+                    },
+                    {
+                        cwd: 'graphics',
+                        src: '128x128.png',
+                        nonull: true,
+                        expand: true
+                    }
                 ]
             }
         },
@@ -670,7 +868,13 @@ module.exports = function (grunt) {
                     }
                 },
                 files: [
-                    { cwd: 'package/deb/usr', src: '**', dest: '/usr', expand: true, nonull: true },
+                    {
+                        cwd: 'package/deb/usr',
+                        src: '**',
+                        dest: '/usr',
+                        expand: true,
+                        nonull: true
+                    },
                     {
                         cwd: 'tmp/desktop/keeweb-linux-x64/',
                         src: '**',
