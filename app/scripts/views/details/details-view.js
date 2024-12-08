@@ -463,7 +463,16 @@ class DetailsView extends View {
         this.views.sub = subView;
     }
 
+    /*
+        Toggle Attachments
+    */
+
     toggleAttachment(e) {
+
+        // since keeweb can render markdown, remove .app__details background image. only solid color should appear behind markdown
+        const cssBackground = dompurify.sanitize('none');
+        this.$el.css('background', cssBackground);
+
         const attBtn = $(e.target).closest('.details__attachment');
         const id = attBtn.data('id');
         const attachment = this.model.attachments[id];
