@@ -1,7 +1,8 @@
 $themes: map-merge(
     $themes,
     (
-        sd: map-merge(
+        sd:
+            map-merge(
                 $theme-defaults,
                 map-merge(
                     $light-colors,
@@ -56,7 +57,7 @@ body.th-sd {
     --md-hx-link-align: super;
 
     --md-link-n-color: #6e70cf;
-    --md-link-h-color: #ffffff;
+    --md-link-h-color: #FFFFFF;
     --md-link-decorator-color: #6260c4;
 
     --md-paragraph-spacing-start: 1;
@@ -66,10 +67,10 @@ body.th-sd {
     --md-ul-spacing-end: 1;
     --md-ul-text-weight: lighter;
 
-    --md-accent-em-color: #e0db92;
-    --md-strong-em-color-1: #43d3ff;
-    --md-strong-em-color-2: #baaaff;
-    --md-accent-strong-color: #ff7190;
+    --md-accent-em-color: #E0DB92;
+    --md-strong-em-color-1: #43D3FF;
+    --md-strong-em-color-2: #BAAAFF;
+    --md-accent-strong-color: #FF7190;
     --md-accent-abbr-color: #c2c2c2;
     --md-accent-abbr-line-color: #6260c4;
     --md-accent-strike-text-color: rgba(255, 255, 255, 0.3);
@@ -77,14 +78,14 @@ body.th-sd {
 
     --md-code-block-text-color: #dbdbdb;
     --md-code-block-text-weight: bold;
-    --md-code-block-accent-style: 6px solid #dc322f;
-    --md-code-inline-text-color: #599f56;
+    --md-code-block-accent-style: 6px solid #dc322f;;
+    --md-code-inline-text-color: #599F56;
     --md-code-inline-text-weight: bolder;
     --md-code-bg-color: #0d3c48;
 
     --md-table-head-bg-color: #074f61;
     --md-table-body-bg-color: #001b22;
-    --md-table-head-text-color: #ffffff;
+    --md-table-head-text-color: #FFFFFF;
     --md-table-inline-codeblock-bg-color: hsla(var(--md-hue), 100%, 100%, 0.15);
     --md-table-body-left-color: hsla(var(--md-hue), 0%, 0%, 0.45);
     --md-table-text-left-color: #979797;
@@ -95,13 +96,13 @@ body.th-sd {
     --md-blockquote-text-color: #cfcfcf;
     --md-blockquote-text-style: italic;
     --md-blockquote-body-bg-color: #9191911c;
-    --md-blockquote-accent-color: #dd1862;
-    --md-blockquote-inline-codeblock-bg-color: hsla(var(--md-hue), 0%, 10%, 0.7);
+    --md-blockquote-accent-color: #DD1862;
+    --md-blockquote-inline-codeblock-bg-color: hsla(var(--md-hue), 0%, 10%, 0.70);
 
-    --md-hr-color-1: #84143b;
-    --md-hr-color-4: #4f7782;
-    --md-hr-color-2: #57a2b5;
-    --md-hr-color-3: #cf2460;
+    --md-hr-color-1: #84143B;
+    --md-hr-color-4: #4F7782;
+    --md-hr-color-2: #57A2B5;
+    --md-hr-color-3: #CF2460;
 
     --md-alert-note-color: #539bf5;
     --md-alert-tip-color: #57ab5a;
@@ -109,13 +110,13 @@ body.th-sd {
     --md-alert-warning-color: #c69026;
     --md-alert-caution-color: #e5534b;
     --md-alert-bg-color: #043946;
-    --md-alert-border-style: 4px solid #444c56;
+    --md-alert-border-style: 4px solid #444c56;;
 
     --md-checkbox-bg-unchecked-color: #001f27;
     --md-checkbox-border-unchecked-color: #4e4e4e;
     --md-checkbox-bg-checked-color: #dc322f;
     --md-checkbox-bg-hover-color: #449b4b;
-    --md-checkbox-border-hover-color: #ffffff;
+    --md-checkbox-border-hover-color: #FFFFFF;
 
     --md-footnote-opacity-full: 1;
     --md-footnote-opacity-min: 0.4;
@@ -145,17 +146,17 @@ body.th-sd {
     pre code.hljs {
         display: block;
         overflow-x: auto;
-        padding: 1em;
+        padding: 1em
     }
 
     code.hljs {
-        padding: 3px 5px;
+        padding: 3px 5px
     }
 
     /*  Comment */
     .hljs-meta,
     .hljs-comment {
-        color: #565f89;
+        color: #565f89
     }
 
     /* Red */
@@ -170,7 +171,7 @@ body.th-sd {
     .hljs-selector-attr,
     .hljs-variable.language_,
     .hljs-deletion {
-        color: #f7768e;
+        color: #f7768e
     }
 
     /*Orange */
@@ -182,20 +183,20 @@ body.th-sd {
     .hljs-type,
     .hljs-params,
     .hljs-link {
-        color: #ff9e64;
+        color: #ff9e64
     }
 
     /*  Yellow */
     /* INFO:  	Function parameters, Regex character sets, Terminal Yellow */
     .hljs-built_in,
     .hljs-attribute {
-        color: #e0af68;
+        color: #e0af68
     }
 
     /* cyan */
     /* INFO: Language support functions, CSS HTML elements */
     .hljs-selector-tag {
-        color: #2ac3de;
+        color: #2ac3de
     }
 
     /* light blue */
@@ -207,13 +208,13 @@ body.th-sd {
     .hljs-title.class_.inherited__,
     .hljs-subst,
     .hljs-property {
-        color: #7dcfff;
+        color: #7dcfff
     }
 
     /*Green*/
     /* INFO: Object literal keys, Markdown links, Terminal Green */
     .hljs-selector-tag {
-        color: #73daca;
+        color: #73daca
     }
 
     /*Green(er) */
@@ -223,7 +224,7 @@ body.th-sd {
     .hljs-symbol,
     .hljs-bullet,
     .hljs-addition {
-        color: #9ece6a;
+        color: #9ece6a
     }
 
     /* Blue */
@@ -231,7 +232,7 @@ body.th-sd {
     .hljs-code,
     .hljs-formula,
     .hljs-section {
-        color: #7aa2f7;
+        color: #7aa2f7
     }
 
     /* Magenta */
@@ -242,25 +243,26 @@ body.th-sd {
     .hljs-keyword,
     .hljs-char.escape_,
     .hljs-attr {
-        color: #bb9af7;
+        color: #bb9af7
     }
 
     /* white*/
     /* INFO: Variables, Class names, Terminal White */
     .hljs-punctuation {
-        color: #c0caf5;
+        color: #c0caf5
     }
 
     .hljs {
         background: #1a1b26;
-        color: #9aa5ce;
+        color: #9aa5ce
     }
 
     .hljs-emphasis {
-        font-style: italic;
+        font-style: italic
     }
 
     .hljs-strong {
-        font-weight: bold;
+        font-weight: bold
     }
+
 }

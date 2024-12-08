@@ -3,7 +3,7 @@
 */
 
 @use 'sass:math';
-@use 'sass:meta';
+@use "sass:meta";
 @use 'sass:color';
 @use 'sass:list';
 
@@ -53,7 +53,7 @@ $-hex-chars: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd
 
 @function int-to-hex($num) {
     @if $num < 0 {
-        @return '-#{int-to-hex(-$num)}';
+        @return "-#{int-to-hex(-$num)}";
     } @else if $num < 16 {
         @return list.nth($-hex-chars, $num + 1);
     } @else {

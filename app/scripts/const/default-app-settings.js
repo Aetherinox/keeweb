@@ -1,5 +1,8 @@
 const DefaultAppSettings = {
     theme: null, // UI theme
+    backgroundState: 'random', // interface backgrounds
+    backgroundUrl: null, // interface background url
+    backgroundId: 1, // interface background identifier
     autoSwitchTheme: false, // automatically switch between light and dark theme
     locale: null, // user interface language
     expandGroups: true, // show entries from all subgroups
@@ -47,6 +50,7 @@ const DefaultAppSettings = {
     auditPasswordAge: 0, // show warnings about old passwords, number of years, 0 = disabled
     deviceOwnerAuth: null, // Touch ID: null / 'memory' / 'file'
     deviceOwnerAuthTimeoutMinutes: 0, // how often master password is required with Touch ID
+    enableFullPathStorage: false, // enable full path storage
     disableOfflineStorage: false, // don't cache loaded files in offline storage
     shortLivedStorageToken: false, // short-lived sessions in cloud storage providers
     extensionFocusIfLocked: true, // focus KeeWeb if a browser extension tries to connect while KeeWeb is locked

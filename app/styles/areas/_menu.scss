@@ -106,40 +106,13 @@
             .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > & {
                 padding-left: $base-padding-h * 7;
             }
-            .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > & {
+            .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > & {
                 padding-left: $base-padding-h * 8;
             }
-            .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > & {
+            .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > & {
                 padding-left: $base-padding-h * 9;
             }
-            .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > .menu__item
-                > & {
+            .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > .menu__item > & {
                 padding-left: $base-padding-h * 10;
             }
         }
@@ -206,9 +179,7 @@
             right: 1.2em;
             top: 0.55em;
             cursor: pointer;
-            transition:
-                opacity $base-duration $base-timing,
-                color $base-duration $base-timing;
+            transition: opacity $base-duration $base-timing, color $base-duration $base-timing;
             color: var(--clickable-on-secondary-color);
             &:hover {
                 color: var(--medium-color);

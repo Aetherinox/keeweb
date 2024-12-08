@@ -26,6 +26,8 @@ class SettingsGeneralView extends View {
 
     events = {
         'click .settings__general-theme': 'changeTheme',
+        'change .settings__general-backgroundState': 'changeBackgroundState',
+        'click .settings__general-background-url-save-btn': 'changeBackgroundUrl',
         'click .settings__general-auto-switch-theme': 'changeAuthSwitchTheme',
         'change .settings__general-locale': 'changeLocale',
         'change .settings__general-font-size': 'changeFontSize',
@@ -64,6 +66,7 @@ class SettingsGeneralView extends View {
         'click .settings__general-restart-btn': 'installUpdateAndRestart',
         'click .settings__general-download-update-btn': 'downloadUpdate',
         'click .settings__general-update-found-btn': 'installFoundUpdate',
+        'change .settings__general-enable-full-path-storage': 'changeEnableFullPathStorage',
         'change .settings__general-disable-offline-storage': 'changeDisableOfflineStorage',
         'change .settings__general-short-lived-storage-token': 'changeShortLivedStorageToken',
         'change .settings__general-prv-check': 'changeStorageEnabled',
@@ -89,6 +92,10 @@ class SettingsGeneralView extends View {
 
         super.render({
             themes: this.getAllThemes(),
+            desktop: Features.isDesktop,
+            backgroundState: AppSettingsModel.backgroundState,
+            backgroundId: AppSettingsModel.backgroundId,
+            backgroundUrl: AppSettingsModel.backgroundUrl,
             autoSwitchTheme: AppSettingsModel.autoSwitchTheme,
             activeTheme: SettingsManager.activeTheme,
             locales: SettingsManager.allLocales,
@@ -149,6 +156,7 @@ class SettingsGeneralView extends View {
             hasDeviceOwnerAuth: Features.isDesktop && Features.isMac,
             deviceOwnerAuth: AppSettingsModel.deviceOwnerAuth,
             deviceOwnerAuthTimeout: AppSettingsModel.deviceOwnerAuthTimeoutMinutes,
+            enableFullPathStorage: AppSettingsModel.enableFullPathStorage,
             disableOfflineStorage: AppSettingsModel.disableOfflineStorage,
             shortLivedStorageToken: AppSettingsModel.shortLivedStorageToken
         });
@@ -174,6 +182,7 @@ class SettingsGeneralView extends View {
         switch (UpdateModel.status) {
             case 'checking':
                 return Locale.setGenUpdateChecking + '...';
+
             case 'error': {
                 let errMsg = Locale.setGenErrorChecking;
                 if (UpdateModel.lastError) {
@@ -191,6 +200,7 @@ class SettingsGeneralView extends View {
                 }
                 return errMsg;
             }
+
             case 'ok': {
                 let msg =
                     Locale.setGenCheckedAt +
@@ -206,6 +216,7 @@ class SettingsGeneralView extends View {
                         ' ' +
                         DateFormat.dStr(UpdateModel.lastVersionReleaseDate);
                 }
+
                 switch (UpdateModel.updateStatus) {
                     case 'downloading':
                         return msg + '. ' + Locale.setGenDownloadingUpdate;
@@ -216,6 +227,7 @@ class SettingsGeneralView extends View {
                 }
                 return msg;
             }
+
             default:
                 return Locale.setGenNeverChecked;
         }
@@ -272,6 +284,62 @@ class SettingsGeneralView extends View {
                 SettingsManager.setTheme(theme);
             }
         }
+    }
+
+    /*
+        Called every time the background dropdown state is changed.
+    */
+
+    changeBackgroundState(e) {
+        const val = e.target.value;
+        if (val === '...') {
+            e.target.value = AppSettingsModel.backgroundState || 'random';
+        } else {
+            AppSettingsModel.backgroundState = val;
+        }
+
+        /*
+            This ensures all aspects are refreshed when the wallpaper is changed.
+        */
+
+        Events.emit('toggle-settings', false);
+        Events.emit('toggle-settings', 'general', 'appearance');
+        Events.emit('theme-applied');
+        Events.emit('refresh');
+
+        this.render();
+    }
+
+    /*
+        Wallpaper URL > Custom
+    */
+
+    changeBackgroundUrl(e) {
+        // eslint-disable-next-line no-unused-vars
+        const savetn = this.$el.find('.settings__general-background-url-save-btn');
+        const urlTextBox = this.$el.find('#settings__general-background-url');
+        const errorBox = this.$el.find('.settings__general-background-save-error');
+
+        errorBox.empty();
+
+        const url = urlTextBox.val().trim();
+        if (!url) {
+            AppSettingsModel.backgroundUrl = null;
+            return;
+        }
+
+        const wallpaperUrl = encodeURI(url)
+            .replace(/[!'()]/g, encodeURI)
+            .replace(/\*/g, '%2A');
+
+        AppSettingsModel.backgroundUrl = wallpaperUrl;
+
+        Events.emit('toggle-settings', false);
+        Events.emit('toggle-settings', 'general', 'appearance');
+        Events.emit('theme-applied');
+        Events.emit('refresh');
+
+        this.render();
     }
 
     changeAuthSwitchTheme(e) {
@@ -497,6 +565,11 @@ class SettingsGeneralView extends View {
         const expand = e.target.checked;
         AppSettingsModel.expandGroups = expand;
         Events.emit('refresh');
+    }
+
+    changeEnableFullPathStorage(e) {
+        const enableFullPathStorage = e.target.checked;
+        AppSettingsModel.enableFullPathStorage = enableFullPathStorage;
     }
 
     changeDisableOfflineStorage(e) {

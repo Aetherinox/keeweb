@@ -1,9 +1,15 @@
+import dompurify from 'dompurify';
 import { View } from 'framework/views/view';
 import { Events } from 'framework/events';
 import { Keys } from 'const/keys';
+import { Features } from 'util/features';
 import { Scrollable } from 'framework/views/scrollable';
 import { StringFormat } from 'util/formatting/string-format';
 import template from 'templates/settings/settings.hbs';
+import wallpaper1 from 'wallpaper1';
+import wallpaper2 from 'wallpaper2';
+import wallpaper3 from 'wallpaper3';
+import wallpaper4 from 'wallpaper4';
 
 class SettingsView extends View {
     parent = '.app__body';
@@ -28,6 +34,41 @@ class SettingsView extends View {
         });
 
         this.pageEl = this.$el.find('.scroller');
+
+        /*
+            Backgrounds
+
+            check relative path to wallpapers.
+            'wallpapers' folder needs to be in root directory of keeweb.exe or index.html.
+        */
+
+        if (this.model.settings.backgroundState !== 'disabled') {
+            const wallpaperDir = Features.isDesktop ? '../../' : '';
+            const wallpaperArr = [wallpaper1, wallpaper2, wallpaper3, wallpaper4];
+            const wallpaperSel = wallpaperArr[Math.floor(Math.random() * wallpaperArr.length)];
+
+            let wallpaperPath = `${wallpaperDir}${wallpaperSel}`;
+            if (
+                this.model.settings.backgroundUrl &&
+                this.model.settings.backgroundUrl !== '' &&
+                this.model.settings.backgroundState === 'custom'
+            ) {
+                wallpaperPath = encodeURI(this.model.settings.backgroundUrl)
+                    .replace(/[!'()]/g, encodeURI)
+                    .replace(/\*/g, '%2A');
+            }
+
+            // not really necessary, but it doesnt hurt
+            const htmlCss = dompurify.sanitize(
+                'linear-gradient(rgba(32, 32, 32, 0.60), rgba(32, 32, 32, 0.60)), url(' +
+                    wallpaperPath +
+                    ') 0% 0% / cover'
+            );
+
+            this.$el.css('background', htmlCss);
+        } else {
+            this.$el.css('background', '');
+        }
     }
 
     setPage(e) {

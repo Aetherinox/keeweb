@@ -37,18 +37,8 @@
     {{/if}}
 
     <br />
+
     <h2 id="appearance">{{res 'setGenAppearance'}}</h2>
-    {{#if locales}}
-    <div>
-        <label for="settings__general-locale">{{res 'setGenLocale'}}:</label>
-        <select class="settings__general-locale settings__select input-base" id="settings__general-locale">
-            {{#each locales as |name key|}}
-                <option value="{{key}}" {{#ifeq key ../activeLocale}}selected{{/ifeq}}>{{name}}</option>
-            {{/each}}
-            <option value="...">({{res 'setGenLocOther'}})</option>
-        </select>
-    </div>
-    {{/if}}
     <div>
         <label>{{res 'setGenTheme'}}:</label>
         <div class="settings__general-themes">
@@ -67,18 +57,57 @@
             </div>
         </div>
     </div>
-    <div>
-        <input type="checkbox" class="settings__input input-base settings__general-auto-switch-theme" id="settings__general-auto-switch-theme" {{#if autoSwitchTheme}}checked{{/if}} />
-        <label for="settings__general-auto-switch-theme">{{res 'setGenAutoSwitchTheme'}}</label>
-    </div>
+
+    <br />
+
     <div>
         <label for="settings__general-font-size">{{res 'setGenFontSize'}}:</label>
         <select class="settings__general-font-size settings__select input-base" id="settings__general-font-size">
             <option value="0" {{#ifeq fontSize 0}}selected{{/ifeq}}>{{res 'setGenFontSizeSmall'}}</option>
-            <option value="1" {{#ifeq fontSize 0}}selected{{/ifeq}}>{{res 'setGenFontSizeNormal'}}</option>
-            <option value="2" {{#ifeq fontSize 1}}selected{{/ifeq}}>{{res 'setGenFontSizeLarge'}}</option>
-            <option value="3" {{#ifeq fontSize 2}}selected{{/ifeq}}>{{res 'setGenFontSizeLargest'}}</option>
+            <option value="1" {{#ifeq fontSize 1}}selected{{/ifeq}}>{{res 'setGenFontSizeNormal'}}</option>
+            <option value="2" {{#ifeq fontSize 2}}selected{{/ifeq}}>{{res 'setGenFontSizeLarge'}}</option>
+            <option value="3" {{#ifeq fontSize 3}}selected{{/ifeq}}>{{res 'setGenFontSizeLargest'}}</option>
         </select>
+    </div>
+
+    {{#if locales}}
+    <div>
+        <label for="settings__general-locale">{{res 'setGenLocale'}}:</label>
+        <select class="settings__general-locale settings__select input-base" id="settings__general-locale">
+            {{#each locales as |name key|}}
+                <option value="{{key}}" {{#ifeq key ../activeLocale}}selected{{/ifeq}}>{{name}}</option>
+            {{/each}}
+            <option value="...">({{res 'setGenLocOther'}})</option>
+        </select>
+    </div>
+    {{/if}}
+
+    <div>
+        <label for="settings__general-backgroundState">{{res 'setGenBackgroundLabel'}}:</label>
+        <select class="settings__general-backgroundState settings__select input-base" id="settings__general-backgroundState">
+            <option value="disabled" {{#ifeq backgroundState 'disabled'}}selected{{/ifeq}}>{{res 'setGenBackgroundOpt1'}}</option>
+            <option value="random" {{#ifeq backgroundState 'random'}}selected{{/ifeq}}>{{res 'setGenBackgroundOpt2'}}</option>
+            <option value="custom" {{#ifeq backgroundState 'custom'}}selected{{/ifeq}}>{{res 'setGenBackgroundOpt3'}}</option>
+        </select>
+    </div>
+
+    {{#ifeq backgroundState 'custom'}}
+        <div>{{res 'setGenBackgroundStateDesc'}}</div>
+        <label for="settings__general-background-url">{{res 'setGenBackgroundStateLabel'}}</label>
+        <input type="text" class="settings__input input-base" id="settings__general-background-url" value="{{backgroundUrl}}" />
+        {{#if backgroundSaveError}}<div class="error-color settings__general-background-save-error"><pre>{{backgroundSaveError}}</pre></div>{{/if}}
+
+        <button class="settings__general-background-url-save-btn">
+            {{res 'setBackgroundCustomSaveBtn'}}
+        </button>
+
+        <br />
+        <br />
+    {{/ifeq}}
+
+    <div>
+        <input type="checkbox" class="settings__input input-base settings__general-auto-switch-theme" id="settings__general-auto-switch-theme" {{#if autoSwitchTheme}}checked{{/if}} />
+        <label for="settings__general-auto-switch-theme">{{res 'setGenAutoSwitchTheme'}}</label>
     </div>
     {{#if supportsTitleBarStyles}}
     <div>
@@ -328,6 +357,13 @@
 
     <br />
     <h2 id="storage">{{res 'setGenStorage'}}</h2>
+    {{#if desktop}}
+        <div>
+            <input type="checkbox" class="settings__input input-base settings__general-enable-full-path-storage" id="settings__general-enable-full-path-storage"
+                {{#if enableFullPathStorage}}checked{{/if}} />
+            <label for="settings__general-enable-full-path-storage">{{res 'setGenShowFullPaths'}}</label>
+        </div>
+    {{/if}}
     <div>
         <input type="checkbox" class="settings__input input-base settings__general-disable-offline-storage" id="settings__general-disable-offline-storage"
                {{#if disableOfflineStorage}}checked{{/if}} />

@@ -1,7 +1,8 @@
 $themes: map-merge(
     $themes,
     (
-        db: map-merge(
+        db:
+            map-merge(
                 $theme-defaults,
                 (
                     background-color: #342f2e,
@@ -15,6 +16,7 @@ $themes: map-merge(
 );
 
 body.th-db {
+
     /*!
         Markdown Viewer
     */
@@ -49,8 +51,8 @@ body.th-db {
     --md-hx-link-align: super;
 
     --md-link-n-color: #2d8951;
-    --md-link-h-color: #ffffff;
-    --md-link-decorator-color: #ffffff;
+    --md-link-h-color: #FFFFFF;
+    --md-link-decorator-color: #FFFFFF;
 
     --md-paragraph-spacing-start: 1;
     --md-paragraph-spacing-end: 2;
@@ -59,10 +61,10 @@ body.th-db {
     --md-ul-spacing-end: 1;
     --md-ul-text-weight: lighter;
 
-    --md-accent-em-color: #e0db92;
-    --md-strong-em-color-1: #43d3ff;
-    --md-strong-em-color-2: #baaaff;
-    --md-accent-strong-color: #ff7190;
+    --md-accent-em-color: #E0DB92;
+    --md-strong-em-color-1: #43D3FF;
+    --md-strong-em-color-2: #BAAAFF;
+    --md-accent-strong-color: #FF7190;
     --md-accent-abbr-color: #d6ad53;
     --md-accent-abbr-line-color: #6260c4;
     --md-accent-strike-text-color: rgba(255, 255, 255, 0.3);
@@ -70,18 +72,18 @@ body.th-db {
 
     --md-code-block-text-color: #c46a6a;
     --md-code-block-text-weight: bold;
-    --md-code-block-accent-style: 6px solid #34af6a;
+    --md-code-block-accent-style: 6px solid #34af6a;;
     --md-code-inline-text-color: #fd6d67;
     --md-code-inline-text-weight: bolder;
     --md-code-bg-color: #262221;
 
     --md-table-head-bg-color: #7d403e;
     --md-table-body-bg-color: #001b22;
-    --md-table-head-text-color: #ffffff;
+    --md-table-head-text-color: #FFFFFF;
     --md-table-inline-codeblock-bg-color: hsla(var(--md-hue), 100%, 100%, 0.15);
     --md-table-body-left-color: hsla(var(--md-hue), 0%, 0%, 0.45);
-    --md-table-text-left-color: #ffffff;
-    --md-table-text-right-color: #ffffff;
+    --md-table-text-left-color: #FFFFFF;
+    --md-table-text-right-color: #FFFFFF;
     --md-table-border-rows-color: hsla(var(--md-hue), 15%, 95%, 0.12);
     --md-table-border-outside-color: #222222;
 
@@ -102,13 +104,13 @@ body.th-db {
     --md-alert-warning-color: #c69026;
     --md-alert-caution-color: #e5534b;
     --md-alert-bg-color: #262221;
-    --md-alert-border-style: 4px solid #444c56;
+    --md-alert-border-style: 4px solid #444c56;;
 
     --md-checkbox-bg-unchecked-color: #3a3a3a;
     --md-checkbox-border-unchecked-color: #4e4e4e;
     --md-checkbox-bg-checked-color: #2d8951;
     --md-checkbox-bg-hover-color: #449b4b;
-    --md-checkbox-border-hover-color: #ffffff;
+    --md-checkbox-border-hover-color: #FFFFFF;
 
     --md-footnote-opacity-full: 1;
     --md-footnote-opacity-min: 0.4;
@@ -137,77 +139,78 @@ body.th-db {
         @theme  : kimbie-dark.css
     */
 
-    pre code.hljs {
-        display: block;
-        overflow-x: auto;
-        padding: 1em;
-    }
+        pre code.hljs {
+            display: block;
+            overflow-x: auto;
+            padding: 1em
+        }
 
-    code.hljs {
-        padding: 3px 5px;
-    }
+        code.hljs {
+            padding: 3px 5px
+        }
 
-    .hljs {
-        background: #221a0f;
-        color: #d3af86;
-    }
+        .hljs {
+            background: #221a0f;
+            color: #d3af86
+        }
 
-    /* Kimbie Comment */
-    .hljs-comment,
-    .hljs-quote {
-        color: #d6baad;
-    }
+        /* Kimbie Comment */
+        .hljs-comment,
+        .hljs-quote {
+            color: #d6baad
+        }
 
-    /* Kimbie Red */
-    .hljs-variable,
-    .hljs-template-variable,
-    .hljs-tag,
-    .hljs-name,
-    .hljs-selector-id,
-    .hljs-selector-class,
-    .hljs-regexp,
-    .hljs-meta {
-        color: #dc3958;
-    }
+        /* Kimbie Red */
+        .hljs-variable,
+        .hljs-template-variable,
+        .hljs-tag,
+        .hljs-name,
+        .hljs-selector-id,
+        .hljs-selector-class,
+        .hljs-regexp,
+        .hljs-meta {
+            color: #dc3958
+        }
 
-    /* Kimbie Orange */
-    .hljs-number,
-    .hljs-built_in,
-    .hljs-literal,
-    .hljs-type,
-    .hljs-params,
-    .hljs-deletion,
-    .hljs-link {
-        color: #f79a32;
-    }
+        /* Kimbie Orange */
+        .hljs-number,
+        .hljs-built_in,
+        .hljs-literal,
+        .hljs-type,
+        .hljs-params,
+        .hljs-deletion,
+        .hljs-link {
+            color: #f79a32
+        }
 
-    /* Kimbie Green */
-    .hljs-string,
-    .hljs-symbol,
-    .hljs-bullet,
-    .hljs-addition {
-        color: #889b4a;
-    }
+        /* Kimbie Green */
+        .hljs-string,
+        .hljs-symbol,
+        .hljs-bullet,
+        .hljs-addition {
+            color: #889b4a
+        }
 
-    /* Kimbie Purple */
-    .hljs-keyword,
-    .hljs-selector-tag,
-    .hljs-function {
-        color: #98676a;
-    }
+        /* Kimbie Purple */
+        .hljs-keyword,
+        .hljs-selector-tag,
+        .hljs-function {
+            color: #98676a
+        }
 
-    /* Kimbie Yellow */
-    .hljs-title,
-    .hljs-section,
-    .hljs-attribute {
-        color: #f06431;
-    }
+        /* Kimbie Yellow */
+        .hljs-title,
+        .hljs-section,
+        .hljs-attribute {
+            color: #f06431
+        }
 
-    .hljs-emphasis {
-        font-style: italic;
-    }
+        .hljs-emphasis {
+            font-style: italic
+        }
 
-    .hljs-strong {
-        font-weight: bold;
-    }
+        .hljs-strong {
+            font-weight: bold
+        }
+
 }

@@ -26,10 +26,15 @@ import { createDetailsFields, createNewCustomField } from 'views/details/details
 import { FieldViewCustom } from 'views/fields/field-view-custom';
 import { IconSelectView } from 'views/icon-select-view';
 import { isEqual } from 'util/fn';
+import dompurify from 'dompurify';
 import template from 'templates/details/details.hbs';
 import emptyTemplate from 'templates/details/details-empty.hbs';
 import groupTemplate from 'templates/details/details-group.hbs';
 import { Launcher } from 'comp/launcher';
+import wallpaper1 from 'wallpaper1';
+import wallpaper2 from 'wallpaper2';
+import wallpaper3 from 'wallpaper3';
+import wallpaper4 from 'wallpaper4';
 
 class DetailsView extends View {
     parent = '.app__details';
@@ -148,6 +153,41 @@ class DetailsView extends View {
         this.dragging = false;
         if (this.dragTimeout) {
             clearTimeout(this.dragTimeout);
+        }
+
+        /*
+            Backgrounds
+
+            check relative path to wallpapers.
+            'wallpapers' folder needs to be in root directory of keeweb.exe or index.html.
+        */
+
+        if (AppSettingsModel.backgroundState !== 'disabled') {
+            const wallpaperDir = Features.isDesktop ? '../../' : '';
+            const wallpaperArr = [wallpaper1, wallpaper2, wallpaper3, wallpaper4];
+            const wallpaperSel = wallpaperArr[Math.floor(Math.random() * wallpaperArr.length)];
+
+            let wallpaperPath = `${wallpaperDir}${wallpaperSel}`;
+            if (
+                AppSettingsModel.backgroundUrl &&
+                AppSettingsModel.backgroundUrl !== '' &&
+                AppSettingsModel.backgroundState === 'custom'
+            ) {
+                wallpaperPath = encodeURI(AppSettingsModel.backgroundUrl)
+                    .replace(/[!'()]/g, encodeURI)
+                    .replace(/\*/g, '%2A');
+            }
+
+            // not really necessary, but it doesnt hurt
+            const htmlCss = dompurify.sanitize(
+                'linear-gradient(rgba(32, 32, 32, 0.60), rgba(32, 32, 32, 0.60)), url(' +
+                    wallpaperPath +
+                    ') 0% 0% / cover'
+            );
+
+            this.$el.css('background', htmlCss);
+        } else {
+            this.$el.css('background', '');
         }
 
         this.pageResized();

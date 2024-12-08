@@ -178,7 +178,6 @@ const PasswordGenerator = {
             result += ch;
         }
 
-        // return result.substr(0, opts.length);
         return result.slice(0, opts.length);
     },
 

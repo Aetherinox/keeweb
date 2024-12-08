@@ -5,6 +5,11 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
+    -webkit-animation: fade-in 1s;
+       -moz-animation: fade-in 1s;
+        -ms-animation: fade-in 1s;
+         -o-animation: fade-in 1s;
+            animation: fade-in 1s;
     background-color: var(--background-color);
 
     &__showpass {
@@ -14,7 +19,7 @@
         @include mobile {
             left: 65px;
         }
-        color: #fff;
+        color: #FFF;
         line-height: 3em;
         height: 3.2em;
         margin-left: -65px;
@@ -53,11 +58,16 @@
 
     &__icon {
         @include icon-btn();
-        color: var(--open-icon-color);
+        color: var(--open-icon-icon-n-color);
         padding-top: 0;
         margin: 0.2em 0.5em;
         &:hover {
-            color: var(--medium-color);
+            color: var(--open-icon-icon-h-color);
+            background-color: var(--open-icon-box-h-color);
+            transition: background-color 0.2s ease-in-out;
+            >.open__icon-i {
+                color: var(--open-icon-icon-h-color);
+            }
         }
         &:focus {
             .open--show-focus & {
@@ -66,16 +76,24 @@
         }
         &-i {
             font-size: 4em;
+            color: var(--open-icon-icon-n-color);
+            &:hover {
+                color: var(--open-icon-icon-h-color);
+            }
         }
         &-text {
-            color: var(--muted-color);
+            color: var(--open-icon-text-n-color);
             .open__icon:hover > & {
-                color: var(--medium-color);
+                color: var(--open-icon-text-h-color);
             }
         }
     }
 
     &__pass {
+        &-warning {
+            font-size: 1.1em;
+            animation: fade-in-partial 1s infinite alternate;
+        }
         &-area {
             display: flex;
             align-items: stretch;
@@ -346,6 +364,7 @@
                 .open__last-item:hover & {
                     opacity: 0.3;
                     cursor: pointer;
+                    color: var(--open-last-del-h-color);
                 }
                 color: var(--muted-color);
                 &:hover {

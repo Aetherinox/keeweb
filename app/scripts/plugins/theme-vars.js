@@ -79,7 +79,7 @@ const ThemeVars = {
             }
         }
         if (/^L/.test(arg)) {
-            return locals[arg.substr(1)];
+            return locals[arg.slice(1)];
         }
         if (/%$/.test(arg)) {
             return arg.replace(/%$/, '') / 100;
