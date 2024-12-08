@@ -35,6 +35,15 @@
         }
     }
 
+    .badge-button {
+        padding-bottom: 15px;
+        border-bottom: none !important;
+
+        a:hover {
+            border-bottom: none !important;
+        }
+    }
+
     .badge-donate {
         background-color: #294c82;
         color: #FFF;
@@ -61,14 +70,15 @@
     }
 
     .about-lib-list {
+        padding-bottom: 15px;
         td:nth-child(1) {
             width: 100px;
         }
     }
 
     hr {
-        margin-bottom: 40px;
-        margin-top: 40px;
+        margin-top: 30px;
+        margin-bottom: 30px;
         border-bottom: 1px solid var(hr-color);
     }
 
@@ -82,38 +92,32 @@
     }
 
     h1 {
-        padding-top: 20px;
         margin-top: 5px;
         color: var(--h1-color);
     }
 
     h2 {
-        margin-top: 20px;
         color: var(--h2-color);
     }
 
     h3 {
-        margin-top: 10px;
         color: var(--h3-color);
     }
 
     h4 {
-        margin-top: 10px;
         color: var(--h4-color);
     }
 
     h5 {
-        margin-top: 10px;
         color: var(--h5-color);
     }
 
     h6 {
-        margin-top: 10px;
         color: var(--h6-color);
     }
 
     p {
-        padding-bottom: 30px;
+        padding-bottom: 5px;
 
         .fa {
             color: var(--text-color);
@@ -126,6 +130,10 @@
         .fa {
             color: var(--text-color);
         }
+    }
+
+    p.para-section {
+        padding-bottom: 30px;
     }
 
     ul.segment {

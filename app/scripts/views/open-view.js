@@ -172,7 +172,7 @@ class OpenView extends View {
 
             // not really necessary, but it doesnt hurt
             const htmlCss = dompurify.sanitize(
-                'linear-gradient(rgba(32, 32, 32, 0.60), rgba(32, 32, 32, 0.60)), url(' +
+                'linear-gradient(rgba(32, 32, 32, 0.90), rgba(32, 32, 32, 0.90)), url(' +
                     wallpaperPath +
                     ') 0% 0% / cover'
             );
