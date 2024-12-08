@@ -1,30 +1,93 @@
-const path = require('path');
+/*
+    Required Modules
+
+    fs                  : filesystem
+    moment              : datetime library
+    pkgUuid             : uuid v5
+*/
+
 const fs = require('fs');
+const path = require('path');
 const webpack = require('webpack');
-const pkg = require('../package.json');
+const moment = require('moment');
 const { v5: pkgUuid } = require('uuid');
+
+/*
+    Plugins
+*/
 
 const PluginBundleAnalyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const PluginMiniCssExtract = require('mini-css-extract-plugin');
 const PluginMinimizeCss = require('css-minimizer-webpack-plugin');
 const PluginTerser = require('terser-webpack-plugin');
 
-const rootDir = path.join(__dirname, '..');
+/*
+    Misc
+*/
 
+const pkg = require('../package.json');
+const rootDir = path.join(__dirname, '..');
 process.noDeprecation = true; // for css loaders
 
+/*
+    Module > Exports
+*/
+
 module.exports = function (options) {
+    /*
+        Build IDs
+
+        guid        : should never change, based on repository url
+        uuid        : changes with each new version based on version number
+    */
+
     const kwGuid = pkgUuid(`${pkg.repository.url}`, pkgUuid.URL);
     const kwUuid = pkgUuid(pkg.version, kwGuid);
 
+    const guid = options.guid || kwGuid;
+    const uuid = options.uuid || kwUuid;
+
+    /*
+        Env mode
+    */
+
     const mode = options.mode || 'production';
     const devMode = mode === 'development';
-    const date = options.date;
-    const guid = options.guid || kwGuid;
-    // eslint-disable-next-line no-unused-vars
-    const uuid = options.uuid || kwUuid;
-    const dt = date.toISOString().replace(/T.*/, '');
-    const year = date.getFullYear();
+
+    /*
+        Timestamps
+
+        times based on UTC
+
+        now             : Fri May 10 2024 19:35:54 GMT+0000
+        nowYyyymmdd     : 2024-05-10
+        nowYear         : 2024
+
+        'options.date' can also come from test.webpack.config.js
+    */
+
+    const now = options.date || moment().utc();
+    const nowYyyymmdd = moment(now).format('YYYY-MM-DD');
+    const nowYear = moment(now).year();
+
+    /*
+        banner
+    */
+
+    const jsBanner = `
+/*!
+*    @name:        ${pkg.name} v${pkg.version}
+*    @url:         ${pkg.repository.url}
+*    @copyright:   (c) ${nowYear}
+*    @license:     opensource.org/licenses/${pkg.license}
+*    @build:       ${now}
+*    @guid:        ${guid}
+*    @uuid:        ${uuid}
+*/
+console.log("%c${pkg.name} Developer Console", "color:#7f6df2; font-size:30px; font-weight:bold;");
+console.log("%cIf you have an issue with this app, copy the contents of this window and submit it to https://github.com/keeweb/keeweb/issues", "color:#ffffff; font-size:12px; font-weight:bold;");
+console.log("%cNever do anything in this window if you are asked by someone outside of ${pkg.name} developers", "color:#ef1d53; font-size:12px; font-weight:bold;");
+    `;
 
     return {
         mode,
@@ -85,10 +148,10 @@ module.exports = function (options) {
                     __dirname,
                     '../node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2'
                 ),
-                'wallpaper-1.jpg': path.join(rootDir, 'app/wallpapers/1.jpg'),
-                'wallpaper-2.jpg': path.join(rootDir, 'app/wallpapers/2.jpg'),
-                'wallpaper-3.jpg': path.join(rootDir, 'app/wallpapers/3.jpg'),
-                'wallpaper-4.jpg': path.join(rootDir, 'app/wallpapers/4.jpg')
+                'wallpaper1': path.join(rootDir, 'app/wallpapers/1.jpg'),
+                'wallpaper2': path.join(rootDir, 'app/wallpapers/2.jpg'),
+                'wallpaper3': path.join(rootDir, 'app/wallpapers/3.jpg'),
+                'wallpaper4': path.join(rootDir, 'app/wallpapers/4.jpg')
             },
             fallback: {
                 console: false,
@@ -150,7 +213,7 @@ module.exports = function (options) {
                                 search: /@@BETA/g,
                                 replace: options.beta ? '1' : ''
                             },
-                            { search: /@@DATE/g, replace: dt },
+                            { search: /@@DATE/g, replace: nowYyyymmdd },
                             { search: /@@GUID/g, replace: guid },
                             {
                                 search: /@@COMMIT/g,
@@ -230,7 +293,18 @@ module.exports = function (options) {
                 },
                 {
                     test: /\.(svg|png|jpe?g|gif)$/,
-                    loader: 'file-loader'
+                    loader: 'file-loader',
+                    options: {
+                        name: 'wallpapers/[name].[ext]'
+                    }
+                },
+                {
+                    test: /\.(svg|png|jpe?g|gif)$/,
+                    include: [path.resolve(__dirname, 'app/wallpapers/')],
+                    type: 'asset/resource',
+                    generator: {
+                        filename: '[name][ext]'
+                    }
                 },
                 { test: /fontawesome.*\.woff2$/, loader: 'fontawesome-loader' },
                 { test: /\.pem$/, loader: 'raw-loader' },
@@ -269,20 +343,16 @@ module.exports = function (options) {
             ]
         },
         plugins: [
-            new webpack.BannerPlugin(
-                'keeweb v' +
-                    pkg.version +
-                    ', (c) ' +
-                    year +
-                    ' ' +
-                    pkg.author.name +
-                    ', opensource.org/licenses/' +
-                    pkg.license
-            ),
+            new webpack.BannerPlugin({
+                entryOnly: true,
+                raw: true,
+                banner: jsBanner
+            }),
             new webpack.ProvidePlugin({
                 $: 'jquery',
                 babelHelpers: 'babel-helpers'
             }),
+            new webpack.ProvidePlugin({ process: 'process/browser' }),
             new webpack.IgnorePlugin({ resourceRegExp: /^(moment)$/ }),
             new PluginMiniCssExtract({
                 filename: 'css/[name].css'
