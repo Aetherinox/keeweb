@@ -76,7 +76,7 @@ class AppView extends View {
         this.listenTo(Events, 'menu-select', this.menuSelect);
         this.listenTo(Events, 'lock-workspace', this.lockWorkspace);
         this.listenTo(Events, 'open-devtools', this.openDevTools);
-        this.listenTo(Events, 'show-file', this.showFileSettings);
+        this.listenTo(Events, 'show-file', this.toggleShowFile);
         this.listenTo(Events, 'open-file', this.toggleOpenFile);
         this.listenTo(Events, 'save-all', this.saveAll);
         this.listenTo(Events, 'remote-key-changed', this.remoteKeyChanged);
@@ -326,43 +326,47 @@ class AppView extends View {
     }
 
     /*
-        @TODO       finish file settings
-                    this implmentation is pending completion from original v1.9.0 updates
+        @TAG        v1.9.0
+                    actions when switching between open vaults
     */
 
-    showFileSettings(e) {
+    toggleShowFile(e) {
         const menuItem = this.model.menu.filesSection.items.find(
             (item) => item.file.id === e.fileId // 1fac5844-1693-5261-41f0-92928fcaee0a
         );
 
-        const vault_filter = `${menuItem.file.id}:${menuItem.file.uuid}`;
+        const items = this.model.menu.filesSection.items; // match all menu vault items
+        const vault_id = `${menuItem.file.id}:${menuItem.file.uuid}`;
 
-        if (this.model.filter.group === vault_filter) {
-            menuItem.active = false;
+        // action > already clicked
+        if (this.model.filter.group === vault_id) {
             return;
         }
 
-        this.iconEl = this.$el.find('.footer__db');
-        const items = this.model.menu.filesSection.items;
+        // de-select all in vault menu
+        this.item = this.$el.find(`.footer__db-item`);
+        this.item.toggleClass('footer__center-vault-item-active', false);
 
+        // set all menu items as inactive
+        if (items) {
+            items.forEach((item) => {
+                item.active = false;
+            });
+        }
+
+        // reset interface and select the clicked vault
         this.showEntries();
         this.model.menu.select({ item: menuItem });
 
+        // get vault group
         this.model.filterKey = 'group';
         const filterKey = this.model.filterKey;
-        const filterValue = vault_filter;
+        const filterValue = vault_id;
         const filter = {};
         filter[filterKey] = filterValue;
 
         // Events.emit('menu-select', { item: menuItem });
         Events.emit('set-filter', filter);
-
-        if (items) {
-            items.forEach((item) => {
-                item.active = true;
-            });
-        }
-
         Events.emit('change:active', true);
 
         this.item = this.$el.find(`#footer__db--${menuItem.file.id}`);
