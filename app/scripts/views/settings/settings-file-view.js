@@ -255,7 +255,6 @@ class SettingsFileView extends View {
         const fileName = this.model.name + '.kdbx';
         if (Launcher && !this.model.storage) {
             Launcher.getSaveFileName(fileName, (path) => {
-                console.log('PATHHHHHHHH:' + path);
                 if (path) {
                     this.save({ storage: 'file', path });
                 }
