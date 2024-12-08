@@ -22,19 +22,19 @@
 <br />
 
 - [About](#about)
-  - [Quick Links](#quick-links)
+    - [Quick Links](#quick-links)
 - [Self-hosting](#self-hosting)
-  - [Docker Users:](#docker-users)
+    - [Docker Users:](#docker-users)
 - [Build From Source](#build-from-source)
-  - [Platform: Windows](#platform-windows)
-    - [Using Grunt](#using-grunt)
-    - [Using NPM](#using-npm)
-  - [Platform: Linux](#platform-linux)
-    - [Using Grunt](#using-grunt-1)
-    - [Using NPM](#using-npm-1)
-  - [Platform: MacOS](#platform-macos)
-    - [Using Grunt](#using-grunt-2)
-    - [Using NPM](#using-npm-2)
+    - [Platform: Windows](#platform-windows)
+        - [Using Grunt](#using-grunt)
+        - [Using NPM](#using-npm)
+    - [Platform: Linux](#platform-linux)
+        - [Using Grunt](#using-grunt-1)
+        - [Using NPM](#using-npm-1)
+    - [Platform: MacOS](#platform-macos)
+        - [Using Grunt](#using-grunt-2)
+        - [Using NPM](#using-npm-2)
 - [Donations](#donations)
 - [Contributors ✨](#contributors-)
 
@@ -46,7 +46,7 @@
 
 ## About
 
-**KeeWeb** is a password manager which supports managing `kdbx` files created by other applications such as KeePass, KeePassXC, etc. You choose the platform you wish to run; as KeeWeb supports being installed and ran as either a Desktop application, or in your web-browser. 
+**KeeWeb** is a password manager which supports managing `kdbx` files created by other applications such as KeePass, KeePassXC, etc. You choose the platform you wish to run; as KeeWeb supports being installed and ran as either a Desktop application, or in your web-browser.
 
 <br />
 
@@ -54,11 +54,12 @@ With support for Linux, Windows, and MacOS, we give you the tools to seamlessly 
 
 <br />
 
-Decide how you want to save your credential vault, KeeWeb supports saving your database as a local file, or you can store your password vault with some of the most popular cloud services such as Dropbox, Google Drive, and Microsoft OneDrive. 
+Decide how you want to save your credential vault, KeeWeb supports saving your database as a local file, or you can store your password vault with some of the most popular cloud services such as Dropbox, Google Drive, and Microsoft OneDrive.
 
 <br />
 
 ### Quick Links
+
 Review some of our most important links below to learn more about KeeWeb and who we are:
 
 <br />
@@ -68,7 +69,7 @@ Timeline: [Release Notes](release-notes.md), [TODO](https://github.com/keeweb/ke
 On one page: [Features](https://keeweb.info/#features), [FAQ](https://github.com/keeweb/keeweb/wiki/FAQ)  
 Website: [keeweb.info](https://keeweb.info)  
 Twitter: [kee_web](https://twitter.com/kee_web)  
-Donate: [OpenCollective](https://opencollective.com/keeweb#support), [GitHub](https://github.com/sponsors/antelle)  
+Donate: [OpenCollective](https://opencollective.com/keeweb#support), [GitHub](https://github.com/sponsors/antelle)
 
 <br />
 
@@ -82,13 +83,13 @@ Want to self-host your copy of KeeWeb? Everything you need to host this app on y
 
 <br />
 
-You can download the latest distribution files from [gh-pages](https://github.com/keeweb/keeweb/archive/gh-pages.zip) branch.  
+You can download the latest distribution files from [gh-pages](https://github.com/keeweb/keeweb/archive/gh-pages.zip) branch.
 
 <br />
 
 ### Docker Users:
 
-1. Place your `dh.pem`, `cert.pem`, `key.pem` to `/etc/nginx/external/` 
+1. Place your `dh.pem`, `cert.pem`, `key.pem` to `/etc/nginx/external/`
 2. Then execute the command below:
 
 <br />
@@ -110,6 +111,7 @@ To configure Dropbox support on your self-hosted setup [view our Wiki page](http
 ## Build From Source
 
 The easiest way to clone all KeeWeb repos is:
+
 ```bash
 curl https://raw.githubusercontent.com/keeweb/keeweb/develop/dev-env.sh | bash -
 ```
@@ -121,14 +123,17 @@ KeeWeb can be built utilizing the **grunt commandline**. Each platform has multi
 <br />
 
 ### Platform: Windows
+
 You may build KeeWeb for `Windows` by executing ONE of the following two commands provided:
 
 #### Using Grunt
+
 ```shell
 grunt dev-desktop-win32 --skip-sign
 ```
 
 #### Using NPM
+
 ```shell
 npm run dev-desktop-windows
 ```
@@ -136,14 +141,17 @@ npm run dev-desktop-windows
 <br />
 
 ### Platform: Linux
+
 You may build KeeWeb for `Linux` by executing ONE of the following two commands provided:
 
 #### Using Grunt
+
 ```shell
 grunt dev-desktop-linux --skip-sign
 ```
 
 #### Using NPM
+
 ```shell
 npm run dev-desktop-linux
 ```
@@ -151,21 +159,24 @@ npm run dev-desktop-linux
 <br />
 
 ### Platform: MacOS
+
 You may build KeeWeb for `MacOS` by executing ONE of the following two commands provided:
 
 #### Using Grunt
+
 ```shell
 grunt dev-desktop-darwin --skip-sign
 ```
 
 #### Using NPM
+
 ```shell
 npm run dev-desktop-macos
 ```
 
 <br />
 
-Once the build is complete, all (html files will be in `dist/` folder. To build KeeWeb, utilize the following commands below. 
+Once the build is complete, all (html files will be in `dist/` folder. To build KeeWeb, utilize the following commands below.
 
 <br />
 
@@ -201,11 +212,11 @@ You can help the project or say "thank you" with this button:
 
 <br />
 
-You can also sponsor the developer directly [on GitHub](https://github.com/sponsors/antelle).  
+You can also sponsor the developer directly [on GitHub](https://github.com/sponsors/antelle).
 
 <br />
 
-Please note: donation does not imply any type of service contract.  
+Please note: donation does not imply any type of service contract.
 
 <br />
 
@@ -214,6 +225,7 @@ Please note: donation does not imply any type of service contract.
 <br />
 
 ## Contributors ✨
+
 We are always looking for contributors. If you feel that you can provide something useful to KeeWeb, then we'd love to review your suggestion. Before submitting your contribution, please review the following resources:
 
 - [Pull Request Procedure](.github/PULL_REQUEST_TEMPLATE.md)
@@ -222,6 +234,7 @@ We are always looking for contributors. If you feel that you can provide somethi
 <br />
 
 Want to help but can't write code?
+
 - Review [active questions by our community](https://github.com/keeweb/keeweb/labels/help%20wanted) and answer the ones you know.
 - Help [translating KeeWeb](https://keeweb.oneskyapp.com)
 
@@ -230,7 +243,9 @@ Want to help but can't write code?
 The following people have helped get this project going:
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->

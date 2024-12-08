@@ -2,32 +2,31 @@
 
 Thank you for your interest in contributing to KeeWeb! :gift:
 
-Below are a list of ways that you can help contribute to this project, as well as policies and guides that explain how to get started. 
+Below are a list of ways that you can help contribute to this project, as well as policies and guides that explain how to get started.
 
 Please review everything on this page before you submit your contribution.
 
 <br />
 
 - [Contributing to KeeWeb](#contributing-to-keeweb)
-  - [Code of Conduct](#code-of-conduct)
-  - [Issues, Bugs, Ideas](#issues-bugs-ideas)
-  - [Vulnerabilities](#vulnerabilities)
-  - [Development](#development)
-    - [Before Submitting Pull Requests](#before-submitting-pull-requests)
-    - [Conventional Commit Specification](#conventional-commit-specification)
-      - [Types](#types)
-        - [Example 1:](#example-1)
-        - [Example 2:](#example-2)
-    - [Referencing Issues](#referencing-issues)
-    - [Commenting](#commenting)
-    - [Variable \& Method Casing](#variable--method-casing)
-    - [ESLint \& Prettier](#eslint--prettier)
-    - [Spaces Instead Of Tabs](#spaces-instead-of-tabs)
-  - [Documentation / Wiki](#documentation--wiki)
-  - [Donations](#donations)
-  - [Translations](#translations)
-  - [Public Relations](#public-relations)
-
+    - [Code of Conduct](#code-of-conduct)
+    - [Issues, Bugs, Ideas](#issues-bugs-ideas)
+    - [Vulnerabilities](#vulnerabilities)
+    - [Development](#development)
+        - [Before Submitting Pull Requests](#before-submitting-pull-requests)
+        - [Conventional Commit Specification](#conventional-commit-specification)
+            - [Types](#types)
+                - [Example 1:](#example-1)
+                - [Example 2:](#example-2)
+        - [Referencing Issues](#referencing-issues)
+        - [Commenting](#commenting)
+        - [Variable \& Method Casing](#variable--method-casing)
+        - [ESLint \& Prettier](#eslint--prettier)
+        - [Spaces Instead Of Tabs](#spaces-instead-of-tabs)
+    - [Documentation / Wiki](#documentation--wiki)
+    - [Donations](#donations)
+    - [Translations](#translations)
+    - [Public Relations](#public-relations)
 
 <br />
 
@@ -37,7 +36,7 @@ Please review everything on this page before you submit your contribution.
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [KeeWeb Code of Conduct](https://github.com/keeweb/keeweb/blob/master/.github/CODE_OF_CONDUCT.md#readme). 
+This project and everyone participating in it is governed by the [KeeWeb Code of Conduct](https://github.com/keeweb/keeweb/blob/master/.github/CODE_OF_CONDUCT.md#readme).
 By participating, you are expected to uphold this code. Please report unacceptable behavior to antelle.net@gmail.com.
 
 <br />
@@ -55,6 +54,7 @@ By participating, you are expected to uphold this code. Please report unacceptab
 <br />
 
 ## Issues, Bugs, Ideas
+
 Stuff happens, and sometimes as best as we try, there may be issues with KeeWeb that we are unaware of. That is the great thing about open-source; anyone can use the program and contribute to making it better.
 
 <br />
@@ -64,6 +64,7 @@ If you have found a bug, have an issue with KeeWeb, or maybe even a cool idea; y
 <br />
 
 Once you are sure that your issue is not already being dealt with; you may submit it by clicking [here](https://github.com/keeweb/keeweb/issues/new/choose). You'll be asked to specify exactly what your new submission targets, such as:
+
 - Bug report
 - Feature Suggestion
 
@@ -132,13 +133,14 @@ If you believe that you have found a vulnerability, we would appreciate [respons
 <br />
 
 ## Development
+
 If you are looking to contribute to KeeWeb by actually submitting your own code; please review this section completely. There is important information and policies provided below that you must follow for your pull request to get accepted.
 
 The source is here for everyone to collectively share and colaborate on. If you think you have a possible solution to a problem; don't be afraid to get your hands dirty.
 
 Unless you are fixing a known bug, we strongly recommend discussing it with the team by opening a [GitHub Discussion](https://github.com/keeweb/keeweb/discussions) you start in order to ensure your work does not conflict with future plans.
 
-All contributions are made via **Pull Requests**. To make a pull request, you will need a GitHub account; if you are unclear on this process, see GitHub's documentation on forking and pull requests. 
+All contributions are made via **Pull Requests**. To make a pull request, you will need a GitHub account; if you are unclear on this process, see GitHub's documentation on forking and pull requests.
 
 <br />
 
@@ -149,8 +151,8 @@ All contributions are made via **Pull Requests**. To make a pull request, you wi
 - Document the changes in the code and/or the project's documentation;
 - Your PR must pass the CI pipeline;
 - When submitting your Pull Request, use one of the following branches:
-  - For bug fixes: `main` branch
-  - For features & functionality: `development` branch
+    - For bug fixes: `main` branch
+    - For features & functionality: `development` branch
 - Include a proper git commit message following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/#specification).
 
 <br />
@@ -162,6 +164,7 @@ Once your submission has been tested and verified; it will be merged.
 <br />
 
 Before submitting your pull request, please review the following resources:
+
 - [Architecture](https://github.com/keeweb/keeweb/wiki/Architecture)
 - [Engineering](https://github.com/keeweb/keeweb/wiki/Engineering)
 - [Unsupported Features](https://github.com/keeweb/keeweb/wiki/Unsupported%20Features)
@@ -186,24 +189,25 @@ When commiting your changes, we require you to follow the Conventional Commit Sp
 ```
 
 #### Types
-| Type | Description |
-| --- | --- |
-| `feat` | Introduces a new feature |
-| `fix` | Bug fix for the end-user |
-| `deps` | Specifically targets adding new or updating existing dependencies |
-| `docs` | Change to the website or Markdown documents |
-| `build` | Alters the build process. E.g: creating a new build task, updating the release script, etc. |
-| `test` | Adds or refactors tests, no production code change. Usually changes the suite of automated tests for the app. |
-| `perf` | Improves performance of algorithms or general execution time of the app, but does not fundamentally change an existing feature. |
-| `style` | Updates or reformats the style of the source code, but does not otherwise change the way the app is implemented. Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc) |
-| `refactor` | Change to production code that leads to no behavior difference, E.g. splitting files, renaming internal variables, improving code style, etc. |
-| `change` | Changes to an existing feature. |
-| `chore` | Includes a technical or preventative maintenance task that is necessary for managing the app or the repo, such as updating grunt tasks, but is not tied to any specific feature. Usually done for maintanence purposes. |
-| `ci` | Changes related to Continuous Integration (usually `yml` and other configuration files). |
-| `misc` | Anything else that doesn't fit into another commit type. Usually doesn't change production code; yet is not ci, test or chore. |
-| `revert` | Revert a previous commit |
-| `remove` | Removes a feature from the app. Typically features are deprecated first for a period of time before being removed. Removing a feature from the app may be considered a breaking change that will require a major version number increment. |
-| `deprecate` | Deprecates existing functionality, but does not remove it from the app. |
+
+| Type        | Description                                                                                                                                                                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `feat`      | Introduces a new feature                                                                                                                                                                                                                   |
+| `fix`       | Bug fix for the end-user                                                                                                                                                                                                                   |
+| `deps`      | Specifically targets adding new or updating existing dependencies                                                                                                                                                                          |
+| `docs`      | Change to the website or Markdown documents                                                                                                                                                                                                |
+| `build`     | Alters the build process. E.g: creating a new build task, updating the release script, etc.                                                                                                                                                |
+| `test`      | Adds or refactors tests, no production code change. Usually changes the suite of automated tests for the app.                                                                                                                              |
+| `perf`      | Improves performance of algorithms or general execution time of the app, but does not fundamentally change an existing feature.                                                                                                            |
+| `style`     | Updates or reformats the style of the source code, but does not otherwise change the way the app is implemented. Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)                    |
+| `refactor`  | Change to production code that leads to no behavior difference, E.g. splitting files, renaming internal variables, improving code style, etc.                                                                                              |
+| `change`    | Changes to an existing feature.                                                                                                                                                                                                            |
+| `chore`     | Includes a technical or preventative maintenance task that is necessary for managing the app or the repo, such as updating grunt tasks, but is not tied to any specific feature. Usually done for maintanence purposes.                    |
+| `ci`        | Changes related to Continuous Integration (usually `yml` and other configuration files).                                                                                                                                                   |
+| `misc`      | Anything else that doesn't fit into another commit type. Usually doesn't change production code; yet is not ci, test or chore.                                                                                                             |
+| `revert`    | Revert a previous commit                                                                                                                                                                                                                   |
+| `remove`    | Removes a feature from the app. Typically features are deprecated first for a period of time before being removed. Removing a feature from the app may be considered a breaking change that will require a major version number increment. |
+| `deprecate` | Deprecates existing functionality, but does not remove it from the app.                                                                                                                                                                    |
 
 <br />
 
@@ -223,6 +227,7 @@ feat(core): allow overriding of webpack config
 <br />
 
 ##### Example 2:
+
 ```
 <type>(<scope>): <short summary>
   │       │             │
@@ -241,6 +246,7 @@ feat(core): allow overriding of webpack config
 <br />
 
 ### Referencing Issues
+
 If you are pushing a commit which addresses a submitted issue, reference your issue at the end of the commit message. You may also optionally add the major issue to the end of your commit body.
 
 References should be on their own line, following the word `Ref` or `Refs`
@@ -255,17 +261,21 @@ Description:    The description of your commit
 <br />
 
 ### Commenting
+
 Comment your code. If someone else comes along, they should be able to do a quick glance and have an idea of what is going on. Plus it helps novice readers to better understand the process.
 
 <br />
 
 ### Variable & Method Casing
+
 When writing your code, ensure you utilize `camelCase` when naming variables and methods.
 
 <br />
 
 ### ESLint & Prettier
+
 This app is developed with the following packages installed:
+
 - [eslint](https://www.npmjs.com/package/eslint)
 - [eslint-plugin-prettier](https://www.npmjs.com/package/eslint-plugin-prettier)
 - [eslint-plugin-babel](https://www.npmjs.com/package/eslint-plugin-babel)
@@ -286,6 +296,7 @@ When submitting your pull request, these linting and style rules will be verifie
 <br />
 
 ### Spaces Instead Of Tabs
+
 When writing your code, set your IDE to utilize **spaces**, with a configured size of `4 characters`. Our repo provides a `.editorconfig` file which defines how the file should be formatted. Load that file into programs like Visual Studio code.
 
 <br />
@@ -325,11 +336,12 @@ If you would like to improve it, please [open an issue](https://github.com/keewe
 
 ## Donations
 
-There are two ways of donating:  
+There are two ways of donating:
+
 - join as backer on [OpenCollective](https://opencollective.com/keeweb#support);
 - sponsor the developer directly on [GitHub](https://github.com/sponsors/antelle).
 
-Please note: donation does not imply any type of service contract.  
+Please note: donation does not imply any type of service contract.
 
 <br />
 
@@ -366,6 +378,6 @@ join us on [OneSky](https://keeweb.oneskyapp.com).
 
 ## Public Relations
 
-We would be happy to support you if you decide to post, blog, or review the project, 
-or provide any other kind of PR. Please [contact the developer](mailto:antelle.net@gmail.com) 
+We would be happy to support you if you decide to post, blog, or review the project,
+or provide any other kind of PR. Please [contact the developer](mailto:antelle.net@gmail.com)
 if you have anything to share. You can also poke us on [Twitter](https://twitter.com/kee_web).

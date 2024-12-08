@@ -97,7 +97,29 @@
       "eqeqeq": "error",
       "no-unneeded-ternary": "error",
       "curly": "error",
-      "prettier/prettier": "error",
+      "prettier/prettier": [
+        "error",
+        {
+          "experimentalTernaries": false,
+          "printWidth": 100,
+          "tabWidth": 4,
+          "useTabs": false,
+          "semi": true,
+          "singleQuote": true,
+          "quoteProps": "preserve",
+          "jsxSingleQuote": true,
+          "trailingComma": "none",
+          "bracketSpacing": true,
+          "bracketSameLine": false,
+          "arrowParens": "always",
+          "proseWrap": "preserve",
+          "htmlWhitespaceSensitivity": "ignore",
+          "endOfLine": "auto",
+          "parser": "flow",
+          "embeddedLanguageFormatting": "auto",
+          "singleAttributePerLine": true
+        }
+      ],
       "no-empty": "off",
       "no-restricted-syntax": [
         "error",
