@@ -901,7 +901,7 @@ class AppView extends View {
             }
             logger.info(`Parsed CSV: ${data.rows.length} records, ${logger.ts(ts)}`);
 
-            // TODO: refactor this
+            // @TODO            refactor
             this.hideSettings();
             this.hidePanelView();
             this.hideOpenFile();

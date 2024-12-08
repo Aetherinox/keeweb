@@ -1,38 +1,95 @@
+/*
+    Required Modules
+
+    fs                  : filesystem
+    moment              : datetime library
+    chalk               : requires chalk v4 for non-ESM modules. v5 does not have require.
+    pkgUuid             : uuid v5
+*/
+
 const fs = require('fs-extra');
 const path = require('path');
-const { execSync } = require('child_process');
+const moment = require('moment');
 const debug = require('debug');
 // const chalk = require('chalk'); // requires chalk v4 for non ESM modules. v5 does not have require.
 const chalk = import('chalk').then((m) => m.default); // chalk v5 now uses ESM instead of CommonJS
 const { v5: pkgUuid } = require('uuid');
+const { execSync } = require('child_process');
+
+/*
+    serialHooks         : required for electron builder for hooks afterExtract, afterCopy, afterPrune
+    pkg                 : package.json contents
+*/
 
 const webpackConfig = require('./build/webpack.config');
 const webpackConfigTest = require('./test/test.webpack.config');
 const serialHooks = require('electron-packager/src/hooks').serialHooks;
 const pkg = require('./package.json');
 
+/*
+    Misc
+*/
+
+chalk.level = 3;
 debug.enable('electron-notarize');
 
+/*
+    Module > Exports
+*/
+
 module.exports = function (grunt) {
+    /*
+        Grunt Tasks
+    */
+
     require('time-grunt')(grunt);
     require('load-grunt-tasks')(grunt);
-
     grunt.loadTasks('build/tasks');
-
     require('./grunt.tasks')(grunt);
     require('./grunt.entrypoints')(grunt);
 
-    const date = new Date();
+    /*
+        Timestamps
+
+        times based on UTC
+
+        now             : Fri May 10 2024 19:35:54 GMT+0000
+        nowYyyymmdd     : 2024-05-10
+        nowYear         : 2024
+    */
+
+    const now = moment().utc();
+    const nowYyyymmdd = moment(now).format('YYYY-MM-DD');
+    const nowYear = moment(now).year();
+
+    /*
+        Build IDs
+
+        guid        : should never change, based on repository url
+        uuid        : changes with each new version based on version number
+    */
+
     const guid = pkgUuid(`${pkg.repository.url}`, pkgUuid.URL);
     const uuid = pkgUuid(pkg.version, guid);
 
-    grunt.config.set('date', date);
+    /*
+        Grunt > Set Configs
+    */
+
+    grunt.config.set('date', now);
     grunt.config.set('guid', guid);
     grunt.config.set('uuid', uuid);
 
-    const dt = date.toISOString().replace(/T.*/, '');
-    const year = date.getFullYear();
+    /*
+        Misc declarations
+    */
+
     const electronVersion = pkg.dependencies.electron.replace(/^\D/, '');
+
+    /*
+        Code Signing
+    */
+
     const skipSign = grunt.option('skip-sign');
     const getCodeSignConfig = () =>
         skipSign ? { identities: {} } : require('./keys/codesign.json');
@@ -49,15 +106,64 @@ module.exports = function (grunt) {
             );
         }
     }
-    grunt.log.writeln(`Building KeeWeb v${pkg.version} (${sha})`);
+
+    /*
+        Build info printed to console
+    */
+
+    chalk.then(async (c) =>
+        grunt.log.writeln(
+            c.white.bgBlueBright.bold(` ${pkg.name} `),
+            c.white(` → `),
+            c.yellow(`VERSION .. v${pkg.version}`)
+        )
+    );
+
+    chalk.then(async (c) =>
+        grunt.log.writeln(
+            c.white.bgBlueBright.bold(` ${pkg.name} `),
+            c.white(` → `),
+            c.yellow(`SHA ...... ${sha}`)
+        )
+    );
+
+    chalk.then(async (c) =>
+        grunt.log.writeln(
+            c.white.bgBlueBright.bold(` ${pkg.name} `),
+            c.white(` → `),
+            c.yellow(`GUID ..... ${guid}`)
+        )
+    );
+
+    chalk.then(async (c) =>
+        grunt.log.writeln(
+            c.white.bgBlueBright.bold(` ${pkg.name} `),
+            c.white(` → `),
+            c.yellow(`UUID ..... ${uuid}`)
+        )
+    );
 
     const webpackOptions = {
-        date,
+        now,
         guid,
         beta: !!grunt.option('beta'),
         sha,
         appleTeamId: '3LE7JZ657W'
     };
+
+    /*
+        Application Configs
+    */
+
+    const appConfig = webpackConfig({
+        ...webpackOptions,
+        mode: 'development',
+        sha: 'dev'
+    });
+
+    /*
+        App Info > Windows
+    */
 
     const windowsAppVersionString = {
         CompanyName: 'KeeWeb',
@@ -66,6 +172,10 @@ module.exports = function (grunt) {
         ProductName: 'KeeWeb',
         InternalName: 'KeeWeb'
     };
+
+    /*
+        App Info > MacOS
+    */
 
     const appdmgOptions = (arch) => ({
         title: 'KeeWeb',
@@ -85,6 +195,10 @@ module.exports = function (grunt) {
         ]
     });
 
+    /*
+        App Info > Linux
+    */
+
     const linuxDependencies = [
         'libappindicator1',
         'libgconf-2-4',
@@ -94,11 +208,9 @@ module.exports = function (grunt) {
         'libatspi2.0-0'
     ];
 
-    const appConfig = webpackConfig({
-        ...webpackOptions,
-        mode: 'development',
-        sha: 'dev'
-    });
+    /*
+        Grunt Configurations
+    */
 
     grunt.initConfig({
         noop: { noop: {} },
@@ -439,7 +551,7 @@ module.exports = function (grunt) {
                         },
                         {
                             pattern: /"date":\s*".*?"/,
-                            replacement: `"date": "${dt}"`
+                            replacement: `"date": "${nowYyyymmdd}"`
                         },
                         {
                             pattern: /"guid":\s*".*?"/,
@@ -450,9 +562,7 @@ module.exports = function (grunt) {
                 files: { 'dist/update.json': 'app/update.json' }
             },
             'service-worker': {
-                options: {
-                    replacements: [{ pattern: '0.0.0', replacement: pkg.version }]
-                },
+                options: { replacements: [{ pattern: '0.0.0', replacement: pkg.version }] },
                 files: { 'dist/service-worker.js': 'app/service-worker.js' }
             },
             'desktop-public-key': {
@@ -548,7 +658,7 @@ module.exports = function (grunt) {
                 electronVersion,
                 overwrite: true,
                 asar: true,
-                appCopyright: `Copyright © ${year} Antelle`,
+                appCopyright: `Copyright © ${nowYear} Antelle`,
                 appVersion: pkg.version,
                 buildVersion: sha,
                 extraResource: path.join(__dirname, 'app/wallpapers'),
@@ -556,12 +666,14 @@ module.exports = function (grunt) {
                     serialHooks([
                         function (buildPath, electronVersion, platform, arch) {
                             const pathWallpapersTo = path.join(buildPath, 'wallpapers/');
+
                             chalk.then(async (c) =>
                                 grunt.log.writeln(
                                     c.green(`Electron → Extract Complete →`),
                                     c.yellow(buildPath)
                                 )
                             );
+
                             fs.copySync('./app/wallpapers', pathWallpapersTo);
 
                             chalk.then(async (c) =>
@@ -664,7 +776,7 @@ module.exports = function (grunt) {
                     config: {
                         appId: 'net.antelle.keeweb',
                         productName: 'keeweb',
-                        copyright: `Copyright © ${year} Antelle`,
+                        copyright: `Copyright © ${nowYear} Antelle`,
                         directories: {
                             output: 'tmp/desktop/electron-builder',
                             app: 'desktop',
@@ -715,57 +827,22 @@ module.exports = function (grunt) {
                 level: 6
             },
             'win32-x64': {
-                options: {
-                    archive: `dist/desktop/KeeWeb-${pkg.version}.win.x64.zip`
-                },
-                files: [
-                    {
-                        cwd: 'tmp/desktop/KeeWeb-win32-x64',
-                        src: '**',
-                        expand: true
-                    }
-                ]
+                options: { archive: `dist/desktop/KeeWeb-${pkg.version}.win.x64.zip` },
+                files: [{ cwd: 'tmp/desktop/KeeWeb-win32-x64', src: '**', expand: true }]
             },
             'win32-ia32': {
-                options: {
-                    archive: `dist/desktop/KeeWeb-${pkg.version}.win.ia32.zip`
-                },
-                files: [
-                    {
-                        cwd: 'tmp/desktop/KeeWeb-win32-ia32',
-                        src: '**',
-                        expand: true
-                    }
-                ]
+                options: { archive: `dist/desktop/KeeWeb-${pkg.version}.win.ia32.zip` },
+                files: [{ cwd: 'tmp/desktop/KeeWeb-win32-ia32', src: '**', expand: true }]
             },
             'win32-arm64': {
-                options: {
-                    archive: `dist/desktop/KeeWeb-${pkg.version}.win.arm64.zip`
-                },
-                files: [
-                    {
-                        cwd: 'tmp/desktop/KeeWeb-win32-arm64',
-                        src: '**',
-                        expand: true
-                    }
-                ]
+                options: { archive: `dist/desktop/KeeWeb-${pkg.version}.win.arm64.zip` },
+                files: [{ cwd: 'tmp/desktop/KeeWeb-win32-arm64', src: '**', expand: true }]
             },
             'linux-x64': {
-                options: {
-                    archive: `dist/desktop/KeeWeb-${pkg.version}.linux.x64.zip`
-                },
+                options: { archive: `dist/desktop/KeeWeb-${pkg.version}.linux.x64.zip` },
                 files: [
-                    {
-                        cwd: 'tmp/desktop/keeweb-linux-x64',
-                        src: '**',
-                        expand: true
-                    },
-                    {
-                        cwd: 'graphics',
-                        src: '128x128.png',
-                        nonull: true,
-                        expand: true
-                    }
+                    { cwd: 'tmp/desktop/keeweb-linux-x64', src: '**', expand: true },
+                    { cwd: 'graphics', src: '128x128.png', nonull: true, expand: true }
                 ]
             }
         },
@@ -868,13 +945,7 @@ module.exports = function (grunt) {
                     }
                 },
                 files: [
-                    {
-                        cwd: 'package/deb/usr',
-                        src: '**',
-                        dest: '/usr',
-                        expand: true,
-                        nonull: true
-                    },
+                    { cwd: 'package/deb/usr', src: '**', dest: '/usr', expand: true, nonull: true },
                     {
                         cwd: 'tmp/desktop/keeweb-linux-x64/',
                         src: '**',
