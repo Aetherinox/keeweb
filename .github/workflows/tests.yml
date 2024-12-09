@@ -163,6 +163,8 @@ jobs:
             PACKAGE_VERSION: ${{ needs.job-initialize.outputs.package_version }}
             GUID: ${{ needs.job-initialize.outputs.guid }}
             UUID: ${{ needs.job-initialize.outputs.uuid }}
+        outputs:
+            lint_success: ${{ steps.task_lint_npm_lint.outputs.SUCCESS }}
         steps:
 
             # #
@@ -234,6 +236,8 @@ jobs:
         needs: [job-initialize]
         env:
             PACKAGE_VERSION: ${{ needs.job-initialize.outputs.package_version }}
+        outputs:
+            test_success: ${{ steps.task_test_npm_lint.outputs.SUCCESS }}
         steps:
 
             # #
@@ -292,6 +296,8 @@ jobs:
         needs: [job-initialize, job-lint, job-test]
         env:
             PACKAGE_VERSION: ${{ needs.job-initialize.outputs.package_version }}
+            TEST_SUCCESS: ${{ needs.job-test.outputs.test_success }}
+            LINT_SUCCESS: ${{ needs.job-lint.outputs.lint_success }}
             GUID: ${{ needs.job-initialize.outputs.guid }}
             UUID: ${{ needs.job-initialize.outputs.uuid }}
         steps:
@@ -320,3 +326,13 @@ jobs:
                   echo "| **Deploy Time**                 | ${{ env.NOW }}                                                  |" >> $GITHUB_STEP_SUMMARY
                   echo "| **GUID**                        | ${{ env.GUID }}                                                 |" >> $GITHUB_STEP_SUMMARY
                   echo "| **UUID**                        | ${{ env.UUID }}                                                 |" >> $GITHUB_STEP_SUMMARY
+                  if [ ${{ env.LINT_SUCCESS }} == 'true' ]; then
+                      echo "| **Lint Results**            | ✔️                                                              |" >> $GITHUB_STEP_SUMMARY
+                  else
+                      echo "| **Lint Results**            | ❌                                                              |" >> $GITHUB_STEP_SUMMARY
+                  fi
+                  if [ ${{ env.TEST_SUCCESS }} == 'true' ]; then
+                      echo "| **Test Results**            | ✔️                                                              |" >> $GITHUB_STEP_SUMMARY
+                  else
+                      echo "| **Test Results**            | ❌                                                              |" >> $GITHUB_STEP_SUMMARY
+                  fi
