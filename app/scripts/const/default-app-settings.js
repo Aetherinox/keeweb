@@ -15,6 +15,7 @@ const DefaultAppSettings = {
     autoSaveInterval: 0, // interval between performing automatic sync, minutes, -1: on every change
     rememberKeyFiles: 'path', // remember keyfiles selected on the Open screen
     idleMinutes: 15, // app lock timeout after inactivity, minutes
+    idleWipeCredsMinutes: 1, // time until credentials wiped from vault login screen
     minimizeOnClose: false, // minimise the app instead of closing
     minimizeOnFieldCopy: false, // minimise the app on copy
     tableView: false, // view entries as a table instead of list

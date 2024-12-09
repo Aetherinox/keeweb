@@ -1,14 +1,31 @@
 import { Events } from 'framework/events';
 import { AppSettingsModel } from 'models/app-settings-model';
+import { Logger } from 'util/logger';
+
+/*
+    Logger > Create
+*/
+
+const logger = new Logger('idle-tracker');
+
+/*
+    Idle Tracker
+*/
 
 const IdleTracker = {
     actionTime: Date.now(),
     init() {
         setInterval(this.checkIdle.bind(this), 1000 * 60);
+        logger.dev('Started');
     },
     checkIdle() {
         const idleMinutes = (Date.now() - this.actionTime) / 1000 / 60;
         const maxIdleMinutes = AppSettingsModel.idleMinutes;
+
+        logger.dev(
+            'Logging user out in ' + Math.round(idleMinutes) + '/' + maxIdleMinutes + ' minutes'
+        );
+
         if (maxIdleMinutes && idleMinutes > maxIdleMinutes) {
             Events.emit('before-user-idle');
             Events.emit('user-idle');
@@ -26,7 +43,8 @@ const IdleTracker = {
             user's password if they're idle for even 1 second before the timer clocks 60.
         */
 
-        if (idleMinutes >= 1) {
+        if (idleMinutes >= AppSettingsModel.idleWipeCredsMinutes) {
+            logger.dev('Running user-idle-login to wipe user creds');
             Events.emit('user-idle-login');
         }
     },

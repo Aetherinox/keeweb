@@ -1143,7 +1143,11 @@ class OpenView extends View {
         this.views.gen = generator;
     }
 
-    userIdle() {
+    /*
+        Clears password input
+    */
+
+    wipePassword() {
         this.inputEl.val('');
         this.passwordInput.reset();
         this.passwordInput.setElement(
@@ -1152,17 +1156,16 @@ class OpenView extends View {
         );
     }
 
+    userIdle() {
+        this.wipePassword();
+    }
+
     /*
-        Check 'open vault' screen idle time. wipe any passwordsin the textbox after X time of no activity.
+        Check 'open vault' screen idle time. wipe any passwords in the textbox after X time of no activity.
     */
 
     userIdleLogin() {
-        this.inputEl.val('');
-        this.passwordInput.reset();
-        this.passwordInput.setElement(
-            this.inputEl,
-            (this.model.settings.revealPassword && true) || false
-        );
+        this.wipePassword();
     }
 
     usbDevicesChanged() {
