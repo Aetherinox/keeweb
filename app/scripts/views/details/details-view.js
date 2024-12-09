@@ -120,8 +120,8 @@ class DetailsView extends View {
             return;
         }
 
-        if (typeof this.model.settings._temp === 'undefined') {
-            this.model.settings._temp = {};
+        if (typeof AppSettingsModel._temp === 'undefined') {
+            AppSettingsModel._temp = {};
         }
 
         if (this.model instanceof GroupModel) {
