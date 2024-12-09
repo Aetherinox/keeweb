@@ -468,7 +468,6 @@ class DetailsView extends View {
     */
 
     toggleAttachment(e) {
-
         // since keeweb can render markdown, remove .app__details background image. only solid color should appear behind markdown
         const cssBackground = dompurify.sanitize('none');
         this.$el.css('background', cssBackground);
