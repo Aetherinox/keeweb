@@ -292,8 +292,8 @@ jobs:
         needs: [job-initialize, job-lint, job-test]
         env:
             PACKAGE_VERSION: ${{ needs.job-initialize.outputs.package_version }}
-            GUID: ${{ needs.job-cloudflare.outputs.guid }}
-            UUID: ${{ needs.job-cloudflare.outputs.uuid }}
+            GUID: ${{ needs.job-initialize.outputs.guid }}
+            UUID: ${{ needs.job-initialize.outputs.uuid }}
         steps:
 
             # #
@@ -310,7 +310,7 @@ jobs:
             # #
 
             - name: '🆗 Summary: ${{ env.NOW }} - ${{ env.PACKAGE_VERSION }}'
-              id: task_tests_complete_timestamp
+              id: task_tests_complete_summary
               run: |
                   echo ""
                   echo ""
