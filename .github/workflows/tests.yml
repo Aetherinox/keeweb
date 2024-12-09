@@ -326,12 +326,12 @@ jobs:
                   echo "| **Deploy Time**                 | ${{ env.NOW }}                                                  |" >> $GITHUB_STEP_SUMMARY
                   echo "| **GUID**                        | ${{ env.GUID }}                                                 |" >> $GITHUB_STEP_SUMMARY
                   echo "| **UUID**                        | ${{ env.UUID }}                                                 |" >> $GITHUB_STEP_SUMMARY
-                  if [ ${{ env.LINT_SUCCESS }} == 'true' ]; then
+                  if [ ${{ env.LINT_SUCCESS }} == 'true' || ${{ env.LINT_SUCCESS }} == '1' ]; then
                       echo "| **Lint Results**            | ✔️                                                              |" >> $GITHUB_STEP_SUMMARY
                   else
                       echo "| **Lint Results**            | ❌                                                              |" >> $GITHUB_STEP_SUMMARY
                   fi
-                  if [ ${{ env.TEST_SUCCESS }} == 'true' ]; then
+                  if [ ${{ env.TEST_SUCCESS }} == 'true' || ${{ env.TEST_SUCCESS }} == '1' ]; then
                       echo "| **Test Results**            | ✔️                                                              |" >> $GITHUB_STEP_SUMMARY
                   else
                       echo "| **Test Results**            | ❌                                                              |" >> $GITHUB_STEP_SUMMARY
