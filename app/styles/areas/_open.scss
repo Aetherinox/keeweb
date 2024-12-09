@@ -37,6 +37,7 @@
 
         &:hover {
             color: #ec2b55;
+            cursor: pointer;
         }
     }
 
@@ -150,6 +151,10 @@
             }
         }
         &-enter-btn {
+            :hover {
+                color: #ec2b55;
+                cursor: pointer;
+            }
             .open--file & {
                 cursor: pointer;
                 &:hover {
