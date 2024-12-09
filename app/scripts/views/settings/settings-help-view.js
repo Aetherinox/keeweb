@@ -22,6 +22,9 @@ class SettingsHelpView extends View {
             'GUID: ' +
             RuntimeInfo.guid +
             '\n' +
+            'UUID: ' +
+            RuntimeInfo.uuid +
+            '\n' +
             'User-Agent: ' +
             navigator.userAgent;
 

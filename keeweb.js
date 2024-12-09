@@ -23,7 +23,7 @@
 */
 
 const fs = require('fs');
-const { v5: uuid } = require('uuid');
+const { v5: uid } = require('uuid');
 
 /*
  *    declrations > package.json
@@ -32,8 +32,6 @@ const { v5: uuid } = require('uuid');
 const { version, repository } = JSON.parse(fs.readFileSync('./package.json'));
 const args = process.argv.slice(2, process.argv.length);
 const action = args[0];
-// const a       = args[ 1 ];
-// const b       = args[ 2 ];
 
 if (action === 'guid') {
     console.log(`${process.env.GUID}`);
@@ -46,8 +44,8 @@ if (action === 'guid') {
         }
     });
 } else if (action === 'generate') {
-    const buildGuid = uuid(`${repository.url}`, uuid.URL);
-    const buildUuid = uuid(version, buildGuid);
+    const buildGuid = uid(`${repository.url}`, uid.URL);
+    const buildUuid = uid(version, buildGuid);
 
     const ids = `
 VERSION=${version}

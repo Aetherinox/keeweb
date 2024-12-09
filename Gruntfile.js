@@ -4,7 +4,7 @@
     fs                  : filesystem
     moment              : datetime library
     chalk               : chalk v4 for cjs modules. v5 for esm.
-    pkgUuid             : uuid v5, uuid and guid
+    uid                 : uuid v5, uuid and guid
 */
 
 const fs = require('fs-extra');
@@ -13,7 +13,7 @@ const moment = require('moment');
 const debug = require('debug');
 // const chalk = require('chalk'); // chalk v4 cjs
 const chalk = import('chalk').then((m) => m.default); // chalk v5 esm
-const { v5: pkgUuid } = require('uuid');
+const { v5: uid } = require('uuid');
 const { execSync } = require('child_process');
 
 /*
@@ -75,8 +75,8 @@ module.exports = function (grunt) {
         uuid                changes with each new version based on version number
     */
 
-    const guid = pkgUuid(`${pkg.repository.url}`, pkgUuid.URL);
-    const uuid = pkgUuid(pkg.version, guid);
+    const guid = uid(`${pkg.repository.url}`, uid.URL);
+    const uuid = uid(pkg.version, guid);
 
     /*
         Grunt > Set Configs
@@ -152,6 +152,7 @@ module.exports = function (grunt) {
     const webpackOptions = {
         now,
         guid,
+        uuid,
         beta: !!grunt.option('beta'),
         sha,
         appleTeamId: '3LE7JZ657W'
@@ -561,6 +562,10 @@ module.exports = function (grunt) {
                         {
                             pattern: /"guid":\s*".*?"/,
                             replacement: `"guid": "${guid}"`
+                        },
+                        {
+                            pattern: /"uuid":\s*".*?"/,
+                            replacement: `"uuid": "${uuid}"`
                         }
                     ]
                 },

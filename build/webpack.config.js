@@ -3,14 +3,14 @@
 
     fs                  : filesystem
     moment              : datetime library
-    pkgUuid             : uuid v5
+    uid                 : uuid v5
 */
 
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const moment = require('moment');
-const { v5: pkgUuid } = require('uuid');
+const { v5: uid } = require('uuid');
 
 /*
     Plugins
@@ -41,8 +41,8 @@ module.exports = function (options) {
         uuid        : changes with each new version based on version number
     */
 
-    const kwGuid = pkgUuid(`${pkg.repository.url}`, pkgUuid.URL);
-    const kwUuid = pkgUuid(pkg.version, kwGuid);
+    const kwGuid = uid(`${pkg.repository.url}`, uid.URL);
+    const kwUuid = uid(pkg.version, kwGuid);
 
     const guid = options.guid || kwGuid;
     const uuid = options.uuid || kwUuid;
@@ -215,6 +215,7 @@ console.log("%cNever do anything in this window if you are asked by someone outs
                             },
                             { search: /@@DATE/g, replace: nowYyyymmdd },
                             { search: /@@GUID/g, replace: guid },
+                            { search: /@@UUID/g, replace: uuid },
                             {
                                 search: /@@COMMIT/g,
                                 replace: options.sha
