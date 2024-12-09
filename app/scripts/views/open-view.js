@@ -24,11 +24,6 @@ import { omit } from 'util/fn';
 import { GeneratorView } from 'views/generator-view';
 import { NativeModules } from 'comp/launcher/native-modules';
 import template from 'templates/open.hbs';
-import dompurify from 'dompurify';
-import wallpaper1 from 'wallpaper1';
-import wallpaper2 from 'wallpaper2';
-import wallpaper3 from 'wallpaper3';
-import wallpaper4 from 'wallpaper4';
 
 const logger = new Logger('open-view');
 
@@ -104,6 +99,9 @@ class OpenView extends View {
                 }
             });
         }
+        if (typeof this.model.settings._temp === 'undefined') {
+            this.model.settings._temp = {};
+        }
         storageProviders.sort((x, y) => (x.uipos || Infinity) - (y.uipos || Infinity));
         const showMore =
             storageProviders.length ||
@@ -144,43 +142,6 @@ class OpenView extends View {
             showMore,
             showLogo
         });
-
-        /*
-            Backgrounds
-
-            check relative path to wallpapers.
-            'wallpapers' folder needs to be in root directory of keeweb.exe or index.html.
-        */
-
-        console.log('Handle ' + this.model.settings.enableFullPathStorage);
-
-        if (this.model.settings.backgroundState !== 'disabled') {
-            const wallpaperDir = Features.isDesktop ? '../../' : '';
-            const wallpaperArr = [wallpaper1, wallpaper2, wallpaper3, wallpaper4];
-            const wallpaperSel = wallpaperArr[Math.floor(Math.random() * wallpaperArr.length)];
-
-            let wallpaperPath = `${wallpaperDir}${wallpaperSel}`;
-            if (
-                this.model.settings.backgroundUrl &&
-                this.model.settings.backgroundUrl !== '' &&
-                this.model.settings.backgroundState === 'custom'
-            ) {
-                wallpaperPath = encodeURI(this.model.settings.backgroundUrl)
-                    .replace(/[!'()]/g, encodeURI)
-                    .replace(/\*/g, '%2A');
-            }
-
-            // sanitize for xss
-            const cssBackground = dompurify.sanitize(
-                'linear-gradient(rgba(32, 32, 32, 0.90), rgba(32, 32, 32, 0.90)), url(' +
-                    wallpaperPath +
-                    ') 0% 0% / cover'
-            );
-
-            this.$el.css('background', cssBackground);
-        } else {
-            this.$el.css('background', '');
-        }
 
         this.inputEl = this.$el.find('.open__pass-input');
         this.passwordInput.setElement(
@@ -249,6 +210,8 @@ class OpenView extends View {
         /*
             Gdrive returns an id for the file, not a path, so use the name instead.
         */
+
+        logger.dev('(var) enableFullPathStorage: ' + this.model.settings.enableFullPathStorage);
 
         if (this.model.settings.enableFullPathStorage && Features.isDesktop) {
             return fileInfo.storage === 'gdrive' ? fileInfo.name : fileInfo.path;

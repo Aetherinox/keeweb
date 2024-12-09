@@ -31,10 +31,6 @@ import dompurify from 'dompurify';
 import template from 'templates/details/details.hbs';
 import emptyTemplate from 'templates/details/details-empty.hbs';
 import groupTemplate from 'templates/details/details-group.hbs';
-import wallpaper1 from 'wallpaper1';
-import wallpaper2 from 'wallpaper2';
-import wallpaper3 from 'wallpaper3';
-import wallpaper4 from 'wallpaper4';
 
 class DetailsView extends View {
     parent = '.app__details';
@@ -124,6 +120,10 @@ class DetailsView extends View {
             return;
         }
 
+        if (typeof this.model.settings._temp === 'undefined') {
+            this.model.settings._temp = {};
+        }
+
         if (this.model instanceof GroupModel) {
             this.template = groupTemplate;
             super.render();
@@ -153,41 +153,6 @@ class DetailsView extends View {
         this.dragging = false;
         if (this.dragTimeout) {
             clearTimeout(this.dragTimeout);
-        }
-
-        /*
-            Backgrounds
-
-            check relative path to wallpapers.
-            'wallpapers' folder needs to be in root directory of keeweb.exe or index.html.
-        */
-
-        if (AppSettingsModel.backgroundState !== 'disabled') {
-            const wallpaperDir = Features.isDesktop ? '../../' : '';
-            const wallpaperArr = [wallpaper1, wallpaper2, wallpaper3, wallpaper4];
-            const wallpaperSel = wallpaperArr[Math.floor(Math.random() * wallpaperArr.length)];
-
-            let wallpaperPath = `${wallpaperDir}${wallpaperSel}`;
-            if (
-                AppSettingsModel.backgroundUrl &&
-                AppSettingsModel.backgroundUrl !== '' &&
-                AppSettingsModel.backgroundState === 'custom'
-            ) {
-                wallpaperPath = encodeURI(AppSettingsModel.backgroundUrl)
-                    .replace(/[!'()]/g, encodeURI)
-                    .replace(/\*/g, '%2A');
-            }
-
-            // sanitize for xss
-            const cssBackground = dompurify.sanitize(
-                'linear-gradient(rgba(32, 32, 32, 0.90), rgba(32, 32, 32, 0.90)), url(' +
-                    wallpaperPath +
-                    ') 0% 0% / cover'
-            );
-
-            this.$el.css('background', cssBackground);
-        } else {
-            this.$el.css('background', '');
         }
 
         this.pageResized();
