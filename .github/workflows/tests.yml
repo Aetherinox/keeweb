@@ -312,11 +312,21 @@ jobs:
                   echo "NOW=$(date +'%m-%d-%Y %H:%M:%S')" >> $GITHUB_ENV
 
             # #
+            #   Job > Complete > Debug Print
+            # #
+
+            - name: "🔖 Output"
+              run: |
+                echo "LINT_SUCCESS: ${{ env.LINT_SUCCESS }}"
+                echo "TEST_SUCCESS: ${{ env.TEST_SUCCESS }}"
+
+            # #
             #   Job > Complete > Summary of publish
             # #
 
             - name: '🆗 Summary: ${{ env.NOW }} - ${{ env.PACKAGE_VERSION }}'
               id: task_tests_complete_summary
+              shell: bash
               run: |
                   echo ""
                   echo ""
