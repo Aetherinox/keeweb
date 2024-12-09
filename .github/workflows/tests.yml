@@ -164,7 +164,7 @@ jobs:
             GUID: ${{ needs.job-initialize.outputs.guid }}
             UUID: ${{ needs.job-initialize.outputs.uuid }}
         outputs:
-            lint_success: ${{ steps.task_lint_npm_lint.outputs.SUCCESS }}
+            lint_success: ${{ steps.task_lint_npm_lint.outputs.success }}
         steps:
 
             # #
@@ -237,7 +237,7 @@ jobs:
         env:
             PACKAGE_VERSION: ${{ needs.job-initialize.outputs.package_version }}
         outputs:
-            test_success: ${{ steps.task_test_npm_lint.outputs.SUCCESS }}
+            test_success: ${{ steps.task_test_npm_test.outputs.success }}
         steps:
 
             # #
@@ -277,11 +277,11 @@ jobs:
                   npm ci
 
             # #
-            #   Job > Tests > Run Lint
+            #   Job > Tests > Run
             # #
 
-            - name: '🕘 NPM › Lint'
-              id: task_test_npm_lint
+            - name: '🕘 NPM › Test'
+              id: task_test_npm_test
               run: |
                   npm run test
 
