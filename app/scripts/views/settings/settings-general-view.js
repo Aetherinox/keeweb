@@ -302,11 +302,7 @@ class SettingsGeneralView extends View {
             This ensures all aspects are refreshed when the wallpaper is changed.
         */
 
-        Events.emit('toggle-settings', false);
-        Events.emit('toggle-settings', 'general', 'appearance');
-        Events.emit('theme-applied');
-        Events.emit('refresh');
-
+        Events.emit('wallpaper-update');
         this.render();
     }
 
@@ -334,11 +330,7 @@ class SettingsGeneralView extends View {
 
         AppSettingsModel.backgroundUrl = wallpaperUrl;
 
-        Events.emit('toggle-settings', false);
-        Events.emit('toggle-settings', 'general', 'appearance');
-        Events.emit('theme-applied');
-        Events.emit('refresh');
-
+        Events.emit('wallpaper-update');
         this.render();
     }
 
