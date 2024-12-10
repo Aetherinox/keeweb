@@ -6,3 +6,4 @@ import 'hbs-helpers/ifgtr';
 import 'hbs-helpers/iflss';
 import 'hbs-helpers/ifemptyoreq';
 import 'hbs-helpers/res';
+import 'hbs-helpers/ifor';
