@@ -28,6 +28,11 @@ import { TagView } from 'views/tag-view';
 import { ImportCsvView } from 'views/import-csv-view';
 import { TitlebarView } from 'views/titlebar-view';
 import template from 'templates/app.hbs';
+import dompurify from 'dompurify';
+import wallpaper1 from 'wallpaper1';
+import wallpaper2 from 'wallpaper2';
+import wallpaper3 from 'wallpaper3';
+import wallpaper4 from 'wallpaper4';
 
 class AppView extends View {
     parent = 'body';
@@ -99,6 +104,7 @@ class AppView extends View {
         this.listenTo(Events, 'leave-full-screen', this.leaveFullScreen);
         this.listenTo(Events, 'import-csv-requested', this.showImportCsv);
         this.listenTo(Events, 'launcher-before-quit', this.launcherBeforeQuit);
+        this.listenTo(Events, 'wallpaper-update', this.wallpaperUpdate);
 
         this.listenTo(UpdateModel, 'change:updateReady', this.updateApp);
 
@@ -145,6 +151,9 @@ class AppView extends View {
         });
 
         this.panelEl = this.$el.find('.app__panel:first');
+        this.panelAppEl = this.$el.find('.app__body');
+        this.panelFooterEl = this.$el.find('.app__footer');
+
         this.views.listWrap.render();
         this.views.menu.render();
         this.views.menuDrag.render();
@@ -154,6 +163,8 @@ class AppView extends View {
         this.views.details.render();
         this.views.titlebar?.render();
         this.showLastOpenFile();
+
+        Events.emit('wallpaper-update');
     }
 
     showOpenFile() {
@@ -391,6 +402,55 @@ class AppView extends View {
         const result = this.beforeUnload(event);
         if (result !== false) {
             Launcher.exit();
+        }
+    }
+
+    /*
+        @event          wallpaper-update
+
+        usually triggered when the theme is changed. will see if the theme is classified as
+        a dark or light theme, and then adjust the background wallpaper opacity depending on
+        the choice.
+    */
+
+    wallpaperUpdate() {
+        const logger = new Logger('events');
+        logger.dev('triggered wallpaper-update');
+
+        const themeScheme = SettingsManager.getThemeScheme();
+        const bgColor =
+            themeScheme === 'dark' ? 'rgba(32, 32, 32, 0.80)' : 'rgba(255, 255, 255, 0.80)';
+
+        if (this.model.settings.backgroundState !== 'disabled') {
+            const wallpaperDir = Features.isDesktop ? '../../' : '';
+            const wallpaperArr = [wallpaper1, wallpaper2, wallpaper3, wallpaper4];
+            const wallpaperSel = wallpaperArr[Math.floor(Math.random() * wallpaperArr.length)];
+
+            let wallpaperPath = `${wallpaperDir}${wallpaperSel}`;
+            if (
+                this.model.settings.backgroundUrl &&
+                this.model.settings.backgroundUrl !== '' &&
+                this.model.settings.backgroundState === 'custom'
+            ) {
+                wallpaperPath = encodeURI(this.model.settings.backgroundUrl)
+                    .replace(/[!'()]/g, encodeURI)
+                    .replace(/\*/g, '%2A');
+            }
+
+            // sanitize for xss
+            const cssBackground = dompurify.sanitize(
+                'linear-gradient(' +
+                    bgColor +
+                    ', ' +
+                    bgColor +
+                    '), url(' +
+                    wallpaperPath +
+                    ') 0% 0% / cover'
+            );
+
+            this.panelAppEl.css('background', cssBackground);
+        } else {
+            this.panelAppEl.css('background', '');
         }
     }
 

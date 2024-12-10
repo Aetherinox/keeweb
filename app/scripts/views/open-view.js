@@ -726,7 +726,7 @@ class OpenView extends View {
         }
 
         /*
-            @ref    : https://github.com/keeweb/keeweb/issues/2050
+            @ref            https://github.com/keeweb/keeweb/issues/2050
 
             add ability for users to view the master password. However, this is only available if the user
             has opted in by enabling the KeeWeb setting. ensures that the password is still processed through SecureInput()
