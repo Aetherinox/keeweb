@@ -27,6 +27,8 @@ class SettingsGeneralView extends View {
     events = {
         'click .settings__general-theme': 'changeTheme',
         'change .settings__general-backgroundState': 'changeBackgroundState',
+        'change .settings__general-background-opacity-light': 'changeWallpaperOpacityLight',
+        'change .settings__general-background-opacity-dark': 'changeWallpaperOpacityDark',
         'click .settings__general-background-url-save-btn': 'changeBackgroundUrl',
         'click .settings__general-auto-switch-theme': 'changeAuthSwitchTheme',
         'change .settings__general-locale': 'changeLocale',
@@ -96,6 +98,8 @@ class SettingsGeneralView extends View {
             backgroundState: AppSettingsModel.backgroundState,
             backgroundId: AppSettingsModel.backgroundId,
             backgroundUrl: AppSettingsModel.backgroundUrl,
+            backgroundOpacityLight: AppSettingsModel.backgroundOpacityLight,
+            backgroundOpacityDark: AppSettingsModel.backgroundOpacityDark,
             autoSwitchTheme: AppSettingsModel.autoSwitchTheme,
             activeTheme: SettingsManager.activeTheme,
             locales: SettingsManager.allLocales,
@@ -302,7 +306,37 @@ class SettingsGeneralView extends View {
             This ensures all aspects are refreshed when the wallpaper is changed.
         */
 
-        Events.emit('wallpaper-update');
+        Events.emit('wallpaper-change');
+        this.render();
+    }
+
+    /*
+        Called every time opacity is changed. This setting uses the cached background image / path
+        so that the wallpaper is not changed every time the opacity is changed, if the user has opted
+        for 'random'.
+    */
+
+    changeWallpaperOpacityLight(e) {
+        const val = e.target.value;
+        if (val === '...') {
+            e.target.value = AppSettingsModel.backgroundOpacityLight || '0.8';
+        } else {
+            AppSettingsModel.backgroundOpacityLight = val;
+        }
+
+        Events.emit('wallpaper-opacity');
+        this.render();
+    }
+
+    changeWallpaperOpacityDark(e) {
+        const val = e.target.value;
+        if (val === '...') {
+            e.target.value = AppSettingsModel.backgroundOpacityDark || '0.8';
+        } else {
+            AppSettingsModel.backgroundOpacityDark = val;
+        }
+
+        Events.emit('wallpaper-opacity');
         this.render();
     }
 
@@ -330,7 +364,7 @@ class SettingsGeneralView extends View {
 
         AppSettingsModel.backgroundUrl = wallpaperUrl;
 
-        Events.emit('wallpaper-update');
+        Events.emit('wallpaper-change');
         this.render();
     }
 

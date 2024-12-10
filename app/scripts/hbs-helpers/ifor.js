@@ -12,8 +12,8 @@ import Handlebars from 'hbs';
     @usage          {{#ifor backgroundState '["random", "custom"]'}}
 */
 
-Handlebars.registerHelper('ifor', (value, args, options) => {
-    const list = JSON.parse(args);
+Handlebars.registerHelper('ifor', function (lvalue, rvalue, options) {
+    const list = JSON.parse(rvalue);
     const opts = [];
     for (let i = 0; i < list.length; i++) {
         if (typeof list[i] === 'string') {
@@ -21,5 +21,5 @@ Handlebars.registerHelper('ifor', (value, args, options) => {
         }
     }
 
-    return opts.includes(value) === true ? options.fn(this) : options.inverse(this);
+    return opts.includes(lvalue) === true ? options.fn(this) : options.inverse(this);
 });

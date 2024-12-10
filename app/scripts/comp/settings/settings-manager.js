@@ -139,7 +139,7 @@ const SettingsManager = {
         this.activeTheme = theme;
         logger.debug('Theme changed', theme);
         Events.emit('theme-applied');
-        Events.emit('wallpaper-update');
+        Events.emit('wallpaper-change');
     },
 
     getThemeClass(theme) {
