@@ -13,3 +13,27 @@ body:
       placeholder: "v1.90.0"
     validations:
       required: true
+
+  - type: dropdown
+    id: roadmap-package
+    attributes:
+      label: "Package"
+      description: |
+          Select which package this roadmap is designed for.
+      options:
+        - ⭐ New NodeJS Package
+        - Argon2
+        - Babel
+        - Electron
+        - ESLint & Prettier
+        - Fontawesome & SVG / TTF
+        - Got & http Resolving
+        - Grunt
+        - Keeweb
+        - Marked & Markdown
+        - Other
+        - Sass & CSS
+        - Webpack
+      default: ⭐ New NodeJS Package
+    validations:
+      required: true
