@@ -2,36 +2,36 @@
 
 ##### v1.19.0 (TBA)
 
-`+` feat: passphrase generation ([EFF](https://eff.org/dice) Wordlist)
-`+` feat: new generator pattern: `spaces`
-`+` feat: new generator preset: `512 bit hash`
-`+` feat: new generator preset: `UUID4`
+`+` feat: passphrase generation ([EFF](https://eff.org/dice) Wordlist)  
+`+` feat: new generator pattern: `spaces`  
+`+` feat: new generator preset: `512 bit hash`  
+`+` feat: new generator preset: `UUID4`  
 `+` feat: reveal password functionality (#2050)
-`+` feat: setting to allow for full file paths to be displayed in "Recently Opened" list  (#2118)
-`+` feat: wipe password text-field after 1 minute of inactivity on home vault page
-`+` feat: otpauth now supports multiple otpauth syntax `otpauth://totp?secret=`, `otpauth://totp/default?secret=`
-`+` feat: markdown attachment support - read/see properly formatted markdown files ending with extension `.md`
-`+` feat: dev-tools for Desktop using hotkey
-`+` new user setting: `Security` › `Enable reveal password`
-`+` new user setting: `Storage` › `Show full paths for local storage`
-`+` new user setting: `Appearance` › `Font Size` › `Smaller`
-`^` change: updated large number of dependencies
-`^` change: update password generator interface
-`^` change: release v2 of [KeeWeb Favicon Grabber](https://services.keeweb.info/), completely re-written - [source code](https://github.com/keeweb/keeweb-favicon-worker) (#2108)
-`^` change: can now go two levels deeper with folder structure
-`^` change: bump minimum node framework from v15.x.x to v18.12.0 LTS
-`^` change: bump electron to v13 (#2052)
-`^` change: remove deprecated jquery methods
-`^` change: iconpack updated to FontAwesome 6
-`-` fix: over 60+ vulernabilities due to outdated package dependencies
-`-` fix: no longer requires environment variable for legacy support / OpenSSL 
-`-` fix: error:0308010C:digital envelope routines::unsupported (#2090, #2144)
-`-` fix: convert space character to non-breaking space on password reveal (#2151)
-`-` fix: support multiple otpauth url structures (#2148)
-`-` fix: addresses not being able to unset a keyfile once added to a vault (#2146)
-`-` fix: unable to remove keyfile from vault (#1924, #2030)
-`-` fix: csv parser ignoring last entry due to imcorrect condition (#1904, #1944)
-`-` fix: shortcuts from gdrive return 4XX error (#1519, #2008)
+`+` feat: setting to allow for full file paths to be displayed in "Recently Opened" list (#2118)  
+`+` feat: wipe password text-field after 1 minute of inactivity on home vault page  
+`+` feat: otpauth now supports multiple otpauth syntax `otpauth://totp?secret=`, `otpauth://totp/default?secret=`  
+`+` feat: markdown attachment support - read/see properly formatted markdown files ending with extension `.md`  
+`+` feat: dev-tools for Desktop using hotkey  
+`+` new user setting: `Security` › `Enable reveal password`  
+`+` new user setting: `Storage` › `Show full paths for local storage`  
+`+` new user setting: `Appearance` › `Font Size` › `Smaller`  
+`^` change: updated large number of dependencies  
+`^` change: update password generator interface  
+`^` change: release v2 of [KeeWeb Favicon Grabber](https://services.keeweb.info/), completely re-written - [source code](https://github.com/keeweb/keeweb-favicon-worker) (#2108)  
+`^` change: can now go two levels deeper with folder structure  
+`^` change: bump minimum node framework from v15.x.x to v18.12.0 LTS  
+`^` change: bump electron to v13 (#2052)  
+`^` change: remove deprecated jquery methods  
+`^` change: iconpack updated to FontAwesome 6  
+`-` fix: over 60+ vulernabilities due to outdated package dependencies  
+`-` fix: no longer requires environment variable for legacy support / OpenSSL   
+`-` fix: error:0308010C:digital envelope routines::unsupported (#2090, #2144)  
+`-` fix: convert space character to non-breaking space on password reveal (#2151)  
+`-` fix: support multiple otpauth url structures (#2148)  
+`-` fix: addresses not being able to unset a keyfile once added to a vault (#2146)  
+`-` fix: unable to remove keyfile from vault (#1924, #2030)  
+`-` fix: csv parser ignoring last entry due to imcorrect condition (#1904, #1944)  
+`-` fix: shortcuts from gdrive return 4XX error (#1519, #2008)  
 
 ##### v1.18.7 (2021-07-18)
 

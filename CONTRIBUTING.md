@@ -9,24 +9,24 @@ Please review everything on this page before you submit your contribution.
 <br />
 
 - [Contributing to KeeWeb](#contributing-to-keeweb)
-    - [Code of Conduct](#code-of-conduct)
-    - [Issues, Bugs, Ideas](#issues-bugs-ideas)
-    - [Vulnerabilities](#vulnerabilities)
-    - [Development](#development)
-        - [Before Submitting Pull Requests](#before-submitting-pull-requests)
-        - [Conventional Commit Specification](#conventional-commit-specification)
-            - [Types](#types)
-                - [Example 1:](#example-1)
-                - [Example 2:](#example-2)
-        - [Referencing Issues](#referencing-issues)
-        - [Commenting](#commenting)
-        - [Variable \& Method Casing](#variable--method-casing)
-        - [ESLint \& Prettier](#eslint--prettier)
-        - [Spaces Instead Of Tabs](#spaces-instead-of-tabs)
-    - [Documentation / Wiki](#documentation--wiki)
-    - [Donations](#donations)
-    - [Translations](#translations)
-    - [Public Relations](#public-relations)
+  - [Code of Conduct](#code-of-conduct)
+  - [Issues, Bugs, Ideas](#issues-bugs-ideas)
+  - [Vulnerabilities](#vulnerabilities)
+  - [Development](#development)
+    - [Before Submitting Pull Requests](#before-submitting-pull-requests)
+    - [Conventional Commit Specification](#conventional-commit-specification)
+      - [Types](#types)
+        - [Example 1:](#example-1)
+        - [Example 2:](#example-2)
+    - [Referencing Issues](#referencing-issues)
+    - [Commenting](#commenting)
+    - [Variable \& Method Casing](#variable--method-casing)
+    - [ESLint \& Prettier](#eslint--prettier)
+    - [Spaces Instead Of Tabs](#spaces-instead-of-tabs)
+  - [Documentation / Wiki](#documentation--wiki)
+  - [Donations](#donations)
+  - [Translations](#translations)
+  - [Public Relations](#public-relations)
 
 <br />
 
@@ -37,6 +37,9 @@ Please review everything on this page before you submit your contribution.
 ## Code of Conduct
 
 This project and everyone participating in it is governed by the [KeeWeb Code of Conduct](https://github.com/keeweb/keeweb/blob/master/.github/CODE_OF_CONDUCT.md#readme).
+
+<br />
+
 By participating, you are expected to uphold this code. Please report unacceptable behavior to antelle.net@gmail.com.
 
 <br />
@@ -153,7 +156,7 @@ All contributions are made via **Pull Requests**. To make a pull request, you wi
 - When submitting your Pull Request, use one of the following branches:
     - For bug fixes: `main` branch
     - For features & functionality: `development` branch
-- Include a proper git commit message following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/#specification).
+- Include a proper git commit message following the [Conventional Commit Specification](https://conventionalcommits.org/en/v1.0.0/#specification).
 
 <br />
 
@@ -174,7 +177,7 @@ Before submitting your pull request, please review the following resources:
 
 ### Conventional Commit Specification
 
-When commiting your changes, we require you to follow the Conventional Commit Specification, described below.
+When commiting your changes, we require you to follow the Conventional Commit Specification (with a few additions), described below.
 
 **The Conventional Commits** is a specification for the format and content of a commit message. The concept behind Conventional Commits is to provide a rich commit history that can be read and understood by both humans and automated tools. Conventional Commits have the following format:
 
@@ -190,24 +193,22 @@ When commiting your changes, we require you to follow the Conventional Commit Sp
 
 #### Types
 
-| Type        | Description                                                                                                                                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `feat`      | Introduces a new feature                                                                                                                                                                                                                   |
-| `fix`       | Bug fix for the end-user                                                                                                                                                                                                                   |
-| `deps`      | Specifically targets adding new or updating existing dependencies                                                                                                                                                                          |
-| `docs`      | Change to the website or Markdown documents                                                                                                                                                                                                |
-| `build`     | Alters the build process. E.g: creating a new build task, updating the release script, etc.                                                                                                                                                |
-| `test`      | Adds or refactors tests, no production code change. Usually changes the suite of automated tests for the app.                                                                                                                              |
-| `perf`      | Improves performance of algorithms or general execution time of the app, but does not fundamentally change an existing feature.                                                                                                            |
-| `style`     | Updates or reformats the style of the source code, but does not otherwise change the way the app is implemented. Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)                    |
-| `refactor`  | Change to production code that leads to no behavior difference, E.g. splitting files, renaming internal variables, improving code style, etc.                                                                                              |
-| `change`    | Changes to an existing feature.                                                                                                                                                                                                            |
-| `chore`     | Includes a technical or preventative maintenance task that is necessary for managing the app or the repo, such as updating grunt tasks, but is not tied to any specific feature. Usually done for maintanence purposes.                    |
-| `ci`        | Changes related to Continuous Integration (usually `yml` and other configuration files).                                                                                                                                                   |
-| `misc`      | Anything else that doesn't fit into another commit type. Usually doesn't change production code; yet is not ci, test or chore.                                                                                                             |
-| `revert`    | Revert a previous commit                                                                                                                                                                                                                   |
-| `remove`    | Removes a feature from the app. Typically features are deprecated first for a period of time before being removed. Removing a feature from the app may be considered a breaking change that will require a major version number increment. |
-| `deprecate` | Deprecates existing functionality, but does not remove it from the app.                                                                                                                                                                    |
+| Type        | Description |
+| ----------- | ----------- |
+| `build`     | Alters the build process. E.g: creating a new build task, updating the release script, etc. |
+| `chore`     | Technical / preventative maintenance task that is necessary for managing the app or the repo, such as updating grunt tasks, but is not tied to any specific feature. Usually done for maintanence purposes. |
+| `ci`        | Changes Continuous Integration (usually `yml` and other configuration files). |
+| `deps`      | Additions or updates existing dependencies |
+| `deprecate` | Deprecates existing functionality, but does not remove it from the app. |
+| `docs`      | Change to the website or markdown documents |
+| `feat`      | Introduces a new feature |
+| `fix`       | Addresses a bug for the end-user |
+| `perf`      | Improves performance of algorithms or general execution time of the app, but does not fundamentally change an existing feature. |
+| `refactor`  | Change to production code that leads to no behavior difference, E.g. splitting files, renaming internal variables, improving code style |
+| `remove`    | Removes a feature. Features are usually deprecated first for a period of time before being removed. Removing a feature from the app may be considered a breaking change that will require a major version number increment. |
+| `style`     | Updates or reformats the style of the source code, but does not otherwise change the way the app is implemented. Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc) |
+| `test`      | Adds or refactors tests, no production code change. Usually changes the suite of automated tests for the app. |
+| `revert`    | Reverts a previous commit |
 
 <br />
 
@@ -233,11 +234,8 @@ feat(core): allow overriding of webpack config
   │       │             │
   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
   │       │
-  │       └─⫸ Commit Scope: animations|bazel|benchpress|common|compiler|compiler-cli|core|
-  │                          elements|forms|http|language-service|localize|platform-browser|
-  │                          platform-browser-dynamic|platform-server|router|service-worker|
-  │                          upgrade|zone.js|packaging|changelog|docs-infra|migrations|ngcc|ve|
-  │                          devtools....
+  │       └─⫸ Commit Scope: api|autotype|core|dev|dist|grunt|hbs|kdbx|lang|logs|
+  │                          plugin|settings|ui|ux|web|
   │
   └─⫸ Commit Type: build|ci|doc|docs|feat|fix|perf|refactor|test
                     website|chore|style|type|revert|deprecate

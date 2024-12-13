@@ -27,8 +27,8 @@ import { SettingsView } from 'views/settings/settings-view';
 import { TagView } from 'views/tag-view';
 import { ImportCsvView } from 'views/import-csv-view';
 import { TitlebarView } from 'views/titlebar-view';
+import DOMPurify from 'DOMPurify';
 import template from 'templates/app.hbs';
-import dompurify from 'dompurify';
 import wallpaper1 from 'wallpaper1';
 import wallpaper2 from 'wallpaper2';
 import wallpaper3 from 'wallpaper3';
@@ -36,9 +36,8 @@ import wallpaper4 from 'wallpaper4';
 
 class AppView extends View {
     parent = 'body';
-
     template = template;
-
+    titlebarStyle = 'default';
     events = {
         contextmenu: 'contextMenu',
         drop: 'drop',
@@ -47,8 +46,6 @@ class AppView extends View {
         'click a[target=_blank]': 'extLinkClick',
         mousedown: 'bodyClick'
     };
-
-    titlebarStyle = 'default';
 
     constructor(model) {
         super(model);
@@ -83,6 +80,7 @@ class AppView extends View {
         this.listenTo(Events, 'open-devtools', this.openDevTools);
         this.listenTo(Events, 'show-file', this.toggleShowFile);
         this.listenTo(Events, 'open-file', this.toggleOpenFile);
+        this.listenTo(Events, 'settings-file', this.showFileSettings);
         this.listenTo(Events, 'save-all', this.saveAll);
         this.listenTo(Events, 'remote-key-changed', this.remoteKeyChanged);
         this.listenTo(Events, 'key-change-pending', this.keyChangePending);
@@ -106,7 +104,7 @@ class AppView extends View {
         this.listenTo(Events, 'launcher-before-quit', this.launcherBeforeQuit);
         this.listenTo(Events, 'wallpaper-change', this.wallpaperChange);
         this.listenTo(Events, 'wallpaper-opacity', this.wallpaperOpacity);
-
+        this.listenTo(Events, 'wallpaper-toggle', this.wallpaperToggle);
         this.listenTo(UpdateModel, 'change:updateReady', this.updateApp);
 
         window.onbeforeunload = this.beforeUnload.bind(this);
@@ -338,20 +336,40 @@ class AppView extends View {
     }
 
     /*
-        @TAG        v1.9.0
-                    actions when switching between open vaults
+        @tag            v1.9.0
+                        actions when switching between open vaults.
+                        should be called when a new vault file is opened, which auto selects it in the footer ui.
+        @event          show-file
+        @arg            obj e 
+                        Object { fileId: "abcdef12-1a2b-3c4d-5ef0-1a23ac802ab4" }
     */
 
     toggleShowFile(e) {
+        new Logger('app-view').dev('<f>:toggleShowFile', '<act>:start', '<evn>:show-file');
+
+        const file_id = e.fileId || e.file.id;
+
+        if (!file_id) {
+            new Logger('app-view').error(
+                '<f>:toggleShowFile',
+                '<act>:error',
+                '<nsg>:could not locate invalid file id to show',
+                e
+            );
+            Alerts.error({ header: Locale.openFailedRead, body: e.toString() });
+            return;
+        }
+
         const menuItem = this.model.menu.filesSection.items.find(
-            (item) => item.file.id === e.fileId // 1fac5844-1693-5261-41f0-92928fcaee0a
+            (item) => item.file.id === file_id // 1fac5844-1693-5261-41f0-92928fcaee0a
         );
 
         const items = this.model.menu.filesSection.items; // match all menu vault items
         const vault_id = `${menuItem.file.id}:${menuItem.file.uuid}`;
 
-        // action > already clicked
+        // action > already clicked; open file settings
         if (this.model.filter.group === vault_id) {
+            this.showFileSettings(e);
             return;
         }
 
@@ -385,6 +403,38 @@ class AppView extends View {
         this.item.toggleClass('footer__center-vault-item-active');
     }
 
+    /*
+        File > Open Settings
+        
+        allows the user to modify settings specifically for the opened vault.
+        change password, add/remove key, backups, clear history, etc.
+
+        @event          settings-file
+        @arg            obj e 
+                        Object { fileId: "abcdef12-1a2b-3c4d-5ef0-1a23ac802ab4" }
+    */
+
+    showFileSettings(e) {
+        const menuItem = this.model.menu.filesSection.items.find(
+            (item) => item.file.id === e.fileId
+        );
+        if (this.views.settings) {
+            if (this.views.settings.file === menuItem.file) {
+                this.showEntries();
+            } else {
+                this.model.menu.select({ item: menuItem });
+            }
+        } else {
+            this.showSettings(menuItem);
+        }
+    }
+
+    /*
+        File > Open
+
+        @event          open-file
+    */
+
     toggleOpenFile() {
         if (this.views.open) {
             if (this.model.files.hasOpenFiles()) {
@@ -395,8 +445,16 @@ class AppView extends View {
         }
     }
 
+    /*
+        Launcher Before Quit
+
+        calls main.on('before-quit').
+        only utilized by MacOS.
+
+        @event          launcher-before-quit
+    */
+
     launcherBeforeQuit() {
-        // this is currently called only on macos
         const event = {
             preventDefault() {}
         };
@@ -407,79 +465,135 @@ class AppView extends View {
     }
 
     /*
-        @event          wallpaper-opacity
-
         triggered within settings. changes the opacity of the wallpaper without re-loading
         the wallpaper itself.
+
+        @event          wallpaper-opacity
     */
 
     wallpaperOpacity() {
-        const logger = new Logger('events');
-        logger.dev('triggered wallpaper-opacity');
+        new Logger('app-view').dev(
+            '<fnc>:wallpaperOpacity',
+            '<act>:start',
+            '<evn>:wallpaper-opacity'
+        );
 
         if (
             this.model.settings.backgroundPath &&
             this.model.settings.backgroundState !== 'disabled'
         ) {
-            const themeScheme = SettingsManager.getThemeScheme();
+            const themeScheme = SettingsManager.getThemeScheme() || 'dark';
             const bgColor =
                 themeScheme === 'dark'
                     ? 'rgba(32, 32, 32, ' + this.model.settings.backgroundOpacityDark + ')'
                     : 'rgba(255, 255, 255, ' + this.model.settings.backgroundOpacityLight + ')';
 
-            const wallpaperPath = encodeURI(`${this.model.settings.backgroundPath}`)
+            const imgPath = encodeURI(`${this.model.settings.backgroundPath}`)
                 .replace(/[!'()]/g, encodeURI)
                 .replace(/\*/g, '%2A');
 
             // sanitize for xss
-            const cssBackground = dompurify.sanitize(
+            const imgCssStyle = DOMPurify.sanitize(
                 'linear-gradient(' +
                     bgColor +
                     ', ' +
                     bgColor +
                     '), url(' +
-                    wallpaperPath +
+                    imgPath +
                     ') 0% 0% / cover'
             );
 
-            this.panelAppEl.css('background', cssBackground);
+            this.panelAppEl.css('background', imgCssStyle);
         } else {
             this.panelAppEl.css('background', '');
         }
     }
 
     /*
-        @event          wallpaper-change
-
         usually triggered when the theme is changed. will see if the theme is classified as
         a dark or light theme, and then adjust the background wallpaper opacity depending on
         the choice.
+
+        @event          wallpaper-change
     */
 
     wallpaperChange() {
-        const logger = new Logger('events');
-        logger.dev('triggered wallpaper-change');
+        new Logger('app-view').dev(
+            '<fnc>:wallpaperChange',
+            '<act>:start',
+            '<evn>:wallpaper-change'
+        );
 
         if (this.model.settings.backgroundState !== 'disabled') {
             const wallpaperDir = Features.isDesktop ? '../../' : '';
             const wallpaperArr = [wallpaper1, wallpaper2, wallpaper3, wallpaper4];
             const wallpaperSel = wallpaperArr[Math.floor(Math.random() * wallpaperArr.length)];
 
-            let wallpaperPath = `${wallpaperDir}${wallpaperSel}`;
+            let imgPath = `${wallpaperDir}${wallpaperSel}`;
 
             if (
                 this.model.settings.backgroundUrl &&
                 this.model.settings.backgroundUrl !== '' &&
                 this.model.settings.backgroundState === 'custom'
             ) {
-                wallpaperPath = encodeURI(this.model.settings.backgroundUrl)
+                imgPath = encodeURI(this.model.settings.backgroundUrl)
                     .replace(/[!'()]/g, encodeURI)
                     .replace(/\*/g, '%2A');
             }
 
-            this.model.settings.backgroundPath = wallpaperPath;
+            this.model.settings.backgroundPath = imgPath;
 
             this.wallpaperOpacity();
+        }
+    }
+
+    /*
+        toggles the opacity of user wallpaper to ensure we can disable it in certain instances
+        such as when viewing markdown.
+
+        @usage          wallpaperToggle(true)       hides wallpaper
+                        wallpaperToggle()           shows wallpaper
+        @event          wallpaper-toggle
+        @arg            bool bOff 
+    */
+
+    wallpaperToggle(bOff) {
+        new Logger('app-view').dev(
+            '<fnc>:wallpaperToggle',
+            '<act>:start',
+            '<evn>:wallpaper-toggle [' + bOff + ']'
+        );
+
+        if (
+            this.model.settings.backgroundState !== 'disabled' &&
+            this.model.settings.backgroundPath
+        ) {
+            const themeScheme = SettingsManager.getThemeScheme() || 'dark';
+            const bgColor =
+                themeScheme === 'dark'
+                    ? 'rgba(32, 32, 32, ' +
+                      (bOff === true ? 1 : this.model.settings.backgroundOpacityDark) +
+                      ')'
+                    : 'rgba(255, 255, 255, ' +
+                      (bOff === true ? 1 : this.model.settings.backgroundOpacityLight) +
+                      ')';
+
+            const imgPath = encodeURI(`${this.model.settings.backgroundPath}`)
+                .replace(/[!'()]/g, encodeURI)
+                .replace(/\*/g, '%2A');
+
+            // sanitize for xss
+            const imgCssStyle = DOMPurify.sanitize(
+                'linear-gradient(' +
+                    bgColor +
+                    ', ' +
+                    bgColor +
+                    '), url(' +
+                    imgPath +
+                    ') 0% 0% / cover'
+            );
+
+            this.panelAppEl.css('background', imgCssStyle);
         }
     }
 
@@ -978,9 +1092,10 @@ class AppView extends View {
 
     showImportCsv(file) {
         const reader = new FileReader();
-        const logger = new Logger('import-csv');
-        logger.info('Reading CSV...');
+        new Logger('app-view').dev('<fnc>:showImportCsv', '<act>:start', '<msg>:reading CSV file');
+
         reader.onload = (e) => {
+            const logger = new Logger('app-view');
             logger.info('Parsing CSV...');
             const ts = logger.ts();
             const parser = new CsvParser();

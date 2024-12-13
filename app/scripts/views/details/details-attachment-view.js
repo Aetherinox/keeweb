@@ -2,6 +2,7 @@ import { View } from 'framework/views/view';
 import { Shortcuts } from 'comp/app/shortcuts';
 import { Features } from 'util/features';
 import { MdToHtml } from 'util/formatting/md-to-html';
+import { Events } from 'framework/events';
 import template from 'templates/details/details-attachment.hbs';
 
 class DetailsAttachmentView extends View {
@@ -42,7 +43,8 @@ class DetailsAttachmentView extends View {
                 File Type > Markdown
             */
 
-            case 'md': {
+            case 'md':
+            case 'markdown': {
                 const reader = new FileReader();
                 reader.addEventListener('loadend', () => {
                     const converted = MdToHtml.convert(reader.result, false, true);
@@ -85,6 +87,7 @@ class DetailsAttachmentView extends View {
     }
 
     closeAttachment() {
+        Events.emit('wallpaper-toggle');
         this.emit('close');
     }
 }

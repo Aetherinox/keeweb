@@ -341,7 +341,7 @@ Want to help but can't write code?
   [codecov-coverage-uri]: https://codecov.io/github/keeweb/keeweb
 
 <!-- BADGE > ALL CONTRIBUTORS -->
-  [contribs-all-img]: https://img.shields.io/github/all-contributors/Aetherinox/keeweb?logo=contributorcovenant&color=de1f6f&label=contributors
+  [contribs-all-img]: https://img.shields.io/github/all-contributors/keeweb/keeweb?logo=contributorcovenant&color=de1f6f&label=contributors
   [contribs-all-uri]: https://github.com/all-contributors/all-contributors
 
 <!-- BADGE > GITHUB > BUILD > NPM -->

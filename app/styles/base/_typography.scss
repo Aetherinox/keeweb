@@ -61,11 +61,47 @@ p {
 }
 
 hr {
-    border-bottom: base-border();
+    border-bottom: none;
     border-left: 0;
     border-right: 0;
     border-top: 0;
     margin: $base-spacing 0;
+}
+
+hr.hr30-l {
+    border-bottom: base-border();
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+hr.hr40-l {
+    border-bottom: base-border();
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+hr.hr30-nl {
+    border: none;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+hr.hr40-nl {
+    border: none;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 img {
