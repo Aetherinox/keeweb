@@ -27,7 +27,7 @@ import { SettingsView } from 'views/settings/settings-view';
 import { TagView } from 'views/tag-view';
 import { ImportCsvView } from 'views/import-csv-view';
 import { TitlebarView } from 'views/titlebar-view';
-import dompurify from 'dompurify';
+import DOMPurify from 'dompurify';
 import template from 'templates/app.hbs';
 import wallpaper1 from 'wallpaper1';
 import wallpaper2 from 'wallpaper2';
@@ -493,7 +493,7 @@ class AppView extends View {
                 .replace(/\*/g, '%2A');
 
             // sanitize for xss
-            const imgCssStyle = dompurify.sanitize(
+            const imgCssStyle = DOMPurify.sanitize(
                 'linear-gradient(' +
                     bgColor +
                     ', ' +
@@ -583,7 +583,7 @@ class AppView extends View {
                 .replace(/\*/g, '%2A');
 
             // sanitize for xss
-            const imgCssStyle = dompurify.sanitize(
+            const imgCssStyle = DOMPurify.sanitize(
                 'linear-gradient(' +
                     bgColor +
                     ', ' +

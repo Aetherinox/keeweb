@@ -136,7 +136,6 @@ console.log("%cNever do anything in this window if you are asked by someone outs
                 baron: `baron/baron${devMode ? '' : '.min'}.js`,
                 qrcode: `jsqrcode/dist/qrcode${devMode ? '' : '.min'}.js`,
                 argon2: 'argon2-browser/dist/argon2.js',
-                dompurify: `dompurify`,
                 tweetnacl: `tweetnacl/nacl${devMode ? '' : '.min'}.js`,
                 hbs: 'handlebars/runtime.js',
                 'argon2-wasm': 'argon2-browser/dist/argon2.wasm',
