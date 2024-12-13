@@ -1,6 +1,6 @@
-name: '🗺️ Roadmap'
+name: "🗺️ Roadmap"
 description: Planned projects in the future to do.
-title: '🗺️ Roadmap: <title>'
+title: "🗺️ Roadmap: <title>"
 labels: [
   "Type ◦ Roadmap"
 ]
@@ -8,7 +8,7 @@ body:
   - type: input
     id: roadmap-version-target
     attributes:
-      label: Target Version
+      label: "Target Version"
       description: Which version are we aiming to introduce this into KeeWeb?
       placeholder: "v1.90.0"
     validations:
@@ -17,7 +17,7 @@ body:
   - type: dropdown
     id: roadmap-package
     attributes:
-      label: Package
+      label: "Package"
       description: |
           Select which package this roadmap is designed for.
       options:
@@ -52,7 +52,7 @@ body:
   - type: textarea
     id: roadmap-details
     attributes:
-      label: Roadmap Details
+      label: "Roadmap Details"
       description: |
         Explain the vital steps in a bullet-point breakdown
       placeholder: |
@@ -64,7 +64,7 @@ body:
   - type: textarea
     id: roadmap-screenshots
     attributes:
-        label: 'Additional Info / Examples / Screenshots'
+        label: "Additional Info / Examples / Screenshots"
         description: |
             If available, provide mockups or examples.
             Any further details you want to add.
