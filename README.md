@@ -1,29 +1,35 @@
 <div align="center">
-<h6>Password Manager</h6>
-<h1>KeeWeb Password Manager🔑</h1>
+<h6>Docker image for Keeweb</h6>
+<h1>🔑 Keeweb Password Manager 🔑</h1>
 
 <br />
 
-<p>
-KeeWeb is a browser and desktop password manager which is capable of opening up existing KeePass database `kdbx` files, or creating new vaults to store your important credentials in.
+The `docker/keeweb` branch contains the Keeweb password manager within a docker image, which allows you to host it within [Docker](https://docker.com), instead of a bare-metal or local install.
+
 </p>
 
-<p align="center"><img style="width: 80%;text-align: center;" src="img/screenshot.png"></p>
+<br />
+
+<img src="https://github.com/keeweb/keeweb/raw/master/img/screenshot.png" height="280">
 
 <br />
 <br />
 
 </div>
 
+<br />
+
 <div align="center">
 
 <!-- prettier-ignore-start -->
 [![Version][github-version-img]][github-version-uri]
-[![Tests][github-tests-img]][github-tests-uri]
+[![Docker Version][dockerhub-version-img]][dockerhub-version-uri]
 [![Downloads][github-downloads-img]][github-downloads-uri]
+[![Docker Pulls][dockerhub-pulls-img]][dockerhub-pulls-uri]
+[![Build Status][github-build-img]][github-build-uri]
 [![Size][github-size-img]][github-size-img]
 [![Last Commit][github-commit-img]][github-commit-img]
-[![Contributors][contribs-all-img]](#contributors-)
+<!-- prettier-ignore-end -->
 
 </div>
 
@@ -34,33 +40,27 @@ KeeWeb is a browser and desktop password manager which is capable of opening up 
 <br />
 
 - [About](#about)
-  - [Quick Links](#quick-links)
-- [Self-hosting](#self-hosting)
-  - [Docker:](#docker)
-    - [Run](#run)
-    - [Compose](#compose)
-    - [Traefik](#traefik)
-      - [Dynamic.yml](#dynamicyml)
-      - [Static.yml](#staticyml)
-        - [certificatesResolvers](#certificatesresolvers)
-        - [entryPoints (Normal)](#entrypoints-normal)
-        - [entryPoints (Cloudflare)](#entrypoints-cloudflare)
-  - [Env \& Volumes](#env--volumes)
-    - [Env Variables](#env-variables)
-    - [Volumes](#volumes)
-  - [Dropbox Support](#dropbox-support)
-- [Build From Source](#build-from-source)
-  - [Platform: Windows](#platform-windows)
-    - [Using Grunt](#using-grunt)
-    - [Using NPM](#using-npm)
-  - [Platform: Linux](#platform-linux)
-    - [Using Grunt](#using-grunt-1)
-    - [Using NPM](#using-npm-1)
-  - [Platform: MacOS](#platform-macos)
-    - [Using Grunt](#using-grunt-2)
-    - [Using NPM](#using-npm-2)
-- [Donations](#donations)
-- [Contributors ✨](#contributors-)
+- [Image Options](#image-options)
+  - [Image Vendors](#image-vendors)
+  - [Image Tags](#image-tags)
+- [Install](#install)
+  - [Docker Run](#docker-run)
+  - [Docker Compose](#docker-compose)
+  - [Traefik](#traefik)
+    - [Dynamic.yml](#dynamicyml)
+    - [Static.yml](#staticyml)
+      - [certificatesResolvers](#certificatesresolvers)
+      - [entryPoints (Normal)](#entrypoints-normal)
+      - [entryPoints (Cloudflare)](#entrypoints-cloudflare)
+- [Env Variables \& Volumes](#env-variables--volumes)
+  - [Environment Variables](#environment-variables)
+  - [Volumes](#volumes)
+- [Build](#build)
+  - [Troubleshooting](#troubleshooting)
+    - [Permission Denied](#permission-denied)
+- [Shell / Bash](#shell--bash)
+- [SSL Certificates](#ssl-certificates)
+- [Logs](#logs)
 
 <br />
 
@@ -69,31 +69,7 @@ KeeWeb is a browser and desktop password manager which is capable of opening up 
 <br />
 
 ## About
-
-**KeeWeb** is a password manager which supports managing `kdbx` files created by other applications such as KeePass, KeePassXC, etc. You choose the platform you wish to run; as KeeWeb supports being installed and ran as either a Desktop application, or in your web-browser.
-
-<br />
-
-With support for Linux, Windows, and MacOS, we give you the tools to seamlessly manage your most important credentials across multiple applications and platforms.
-
-<br />
-
-Decide how you want to save your credential vault, KeeWeb supports saving your database as a local file, or you can store your password vault with some of the most popular cloud services such as Dropbox, Google Drive, and Microsoft OneDrive.
-
-<br />
-
-### Quick Links
-
-Review some of our most important links below to learn more about KeeWeb and who we are:
-
-<br />
-
-Apps: [Web](https://app.keeweb.info/), [Desktop](https://github.com/keeweb/keeweb/releases/latest)  
-Timeline: [Release Notes](release-notes.md), [TODO](https://github.com/keeweb/keeweb/wiki/TODO)  
-On one page: [Features](https://keeweb.info/#features), [FAQ](https://github.com/keeweb/keeweb/wiki/FAQ)  
-Website: [keeweb.info](https://keeweb.info)  
-Twitter: [kee_web](https://twitter.com/kee_web)  
-Donate: [OpenCollective](https://opencollective.com/keeweb#support), [GitHub](https://github.com/sponsors/antelle)
+This repository contains Keeweb Password Manager, distributed within a docker image which can be deployed and utilized in your browser.
 
 <br />
 
@@ -101,23 +77,46 @@ Donate: [OpenCollective](https://opencollective.com/keeweb#support), [GitHub](ht
 
 <br />
 
-## Self-hosting
-
-Want to self-host your copy of KeeWeb? Everything you need to host this app on your server is provided within the package. KeeWeb itself is a single HTML file combined with a service worker (optionally; for offline access).
-
-<br />
-
-You can download the latest distribution files from [gh-pages](https://github.com/keeweb/keeweb/archive/gh-pages.zip) branch.
+## Image Options
+Use any of the following images in your `docker-compose.yml` or `run` command:
 
 <br />
 
-### Docker:
-
-If you wish to host Keeweb within a Docker container, we provide pre-built images that you can pull into your environment.
+### Image Vendors
+You may pick from the following vendors:
 
 <br />
 
-#### Run
+| Service | Version | Image Link |
+| --- | --- | --- |
+| `Docker Hub` | [![Docker Version][dockerhub-version-ftb-img]][dockerhub-version-ftb-uri] | `keeweb/keeweb:latest` |
+| `Github` | [![Github Version][github-version-ftb-img]][github-version-ftb-uri] | `ghcr.io/keeweb/keeweb:latest` |
+
+<br />
+
+### Image Tags
+This repo includes a numerous options for the architecture:
+
+<br />
+
+| Tag | Description |
+| --- | --- |
+| `:latest` | Latest version of the `amd64` image |
+| `:1.xx.x-amd64` | amd64 |
+| `:1.xx.x-arm64` | arm64 / aarch64 |
+
+<br />
+
+---
+
+<br />
+
+## Install
+Instructions on using this container
+
+<br />
+
+### Docker Run
 If you want to bring the docker container up quickly, use the following command:
 
 ```shell
@@ -126,15 +125,15 @@ docker run -d --restart=unless-stopped -p 443:443 --name keeweb -v ${PWD}/keeweb
 
 <br />
 
-#### Compose
+### Docker Compose
 Create a new `docker-compose.yml` with the following:
 
 ```yml
 services:
     keeweb:
         container_name: keeweb
-        image: ghcr.io/keeweb/keeweb:latest       # Github image
-      # image: keeweb/keeweb:latest               # Dockerhub image
+        image: ghcr.io/keeweb/keeweb:latest          # Github image
+      # image: keeweb/keeweb:latest                         # Dockerhub image
         restart: unless-stopped
         volumes:
             - ./keeweb:/config
@@ -148,7 +147,7 @@ services:
 
 <br />
 
-#### Traefik
+### Traefik
 You can put this container behind Traefik if you want to use a reverse proxy and let Traefik handle the SSL certificate.
 
 <br />
@@ -160,7 +159,7 @@ You can put this container behind Traefik if you want to use a reverse proxy and
 
 <br />
 
-##### Dynamic.yml
+#### Dynamic.yml
 Open the Traefik dynamic file which is usually named `dynamic.yml`. We need to add a new `middleware`, `router`, and `service` to our Traefik dynamic file so that it knows about our new Keeweb container and where it is.
 
 ```yml
@@ -174,7 +173,7 @@ http:
     routers:
         keeweb-http:
             service: keeweb
-            rule: Host(`keeweb.localhost`) || Host(`keeweb.domain.com`)
+            rule: Host(`domain.localhost`) || Host(`keeweb.domain.com`)
             entryPoints:
                 - http
             middlewares:
@@ -182,7 +181,7 @@ http:
 
         keeweb-https:
             service: keeweb
-            rule: Host(`keeweb.localhost`) || Host(`keeweb.domain.com`)
+            rule: Host(`domain.localhost`) || Host(`keeweb.domain.com`)
             entryPoints:
                 - https
             tls:
@@ -201,12 +200,12 @@ http:
 
 <br />
 
-##### Static.yml
+#### Static.yml
 These entries will go in your Traefik `static.yml` file. Any changes made to this file requires that you reset Traefik afterward.
 
 <br />
 
-###### certificatesResolvers
+##### certificatesResolvers
 
 Open your Traefik `static.yml` file and add your `certResolver` from above. We are going to use Cloudflare in this exmaple, you can use whatever from the list at:
 - https://doc.traefik.io/traefik/https/acme/#providers
@@ -255,7 +254,7 @@ Save the `.env` file and exit.
 
 <br />
 
-###### entryPoints (Normal)
+##### entryPoints (Normal)
 Finally, inside the Traefik `static.yml`, we need to make sure we have our `entryPoints` configured. Add the following to the Traefik `static.yml` file only if you **DON'T** have entry points set yet:
 
 ```yml
@@ -283,7 +282,7 @@ entryPoints:
 
 <br />
 
-###### entryPoints (Cloudflare)
+##### entryPoints (Cloudflare)
 If your website is behind Cloudflare's proxy service, you need to modify your `entryPoints` above so that you can automatically allow Cloudflare's IP addresses through. This means your entry points will look a bit different.
 
 <br />
@@ -349,33 +348,33 @@ Save the files and then give Traefik and your Keeweb containers a restart.
 
 <br />
 
-### Env & Volumes
+## Env Variables & Volumes
 This section outlines that environment variables can be specified, and which volumes you can mount when the container is started.
 
 <br />
 
-#### Env Variables
+### Environment Variables
 The following env variables can be modified before spinning up this container:
 
 <br />
 
 | Env Var | Default | Description |
 | --- | --- | --- |
-| `PUID`        | 1000      | <sub>User ID running the container</sub> |
-| `PGID`        | 1000      | <sub>Group ID running the container</sub> |
-| `TZ`          | Etc/UTC   | <sub>Timezone</sub> |
-| `PORT_HTTP`   | 80        | <sub>Defines the HTTP port to run on</sub> |
-| `PORT_HTTPS`  | 443       | <sub>Defines the HTTPS port to run on</sub> |
+| `PUID` | 1000 | <sub>User ID running the container</sub> |
+| `PGID` | 1000 | <sub>Group ID running the container</sub> |
+| `TZ` | Etc/UTC | <sub>Timezone</sub> |
+| `PORT_HTTP` | 80 | <sub>Defines the HTTP port to run on</sub> |
+| `PORT_HTTPS` | 443 | <sub>Defines the HTTPS port to run on</sub> |
 
 <br />
 
-#### Volumes
+### Volumes
 The following volumes can be mounted with this container:
 
 <br />
 
 | Volume | Description |
-| ---- | ---- |
+| --- | --- |
 | `./keeweb:/config` | <sub>Path which stores Keeweb, nginx configs, and optional SSL certificate/keys</sub> |
 
 <br />
@@ -384,17 +383,12 @@ By mounting the volume above, you should now have access to the following folder
 <br />
 
 | Folder | Description |
-| ---- | ---- |
-| `📁 keys`   | <sub>Responsible for storing your ssl certificate `cert.crt` + key `cert.key`</sub> |
-| `📁 log`    | <sub>All nginx / container logs</sub> |
-| `📁 nginx`  | <sub>Contains `nginx.conf`, `resolver.conf`, `ssl.conf`, `site-confs`</sub> |
-| `📁 www`    | <sub>Folder which stores the Keeweb files and images</sub> |
-
-<br />
-
-### Dropbox Support
-
-To configure Dropbox support on your self-hosted setup [view our Wiki page](https://github.com/keeweb/keeweb/wiki/Dropbox-and-GDrive).
+| --- | --- |
+| `📁 keys` | <sub>Responsible for storing your ssl certificate `cert.crt` + key `cert.key`</sub> |
+| `📁 log` | <sub>All nginx and php logs</sub> |
+| `📁 nginx` | <sub>Contains `nginx.conf`, `resolver.conf`, `ssl.conf`, `site-confs`</sub> |
+| `📁 php` | <sub>Contains `php-local.ini`, `www2.conf`</sub> |
+| `📁 www` | <sub>Folder which stores the Keeweb files and images</sub> |
 
 <br />
 
@@ -402,106 +396,51 @@ To configure Dropbox support on your self-hosted setup [view our Wiki page](http
 
 <br />
 
-## Build From Source
+## Build
+To build this image, utilize the following commands for both architectures. For the argument `VERSION`; specify the current release of alpine linux that is to be packaged within the docker image.
 
-The easiest way to clone all KeeWeb repos is:
-
-```bash
-curl https://raw.githubusercontent.com/keeweb/keeweb/develop/dev-env.sh | bash -
+```shell ignore
+docker build --build-arg VERSION=1.19.0 --build-arg BUILD_DATE=12.15.24 -t keeweb:latest -t keeweb:1.19.0 -t keeweb:1.19.0-amd64 -f Dockerfile .
 ```
 
 <br />
 
-KeeWeb can be built utilizing the **grunt commandline**. Each platform has multiple commands you can use; pick one:
+### Troubleshooting
+These are issues you may experience when building and deploying your own custom image.
 
 <br />
 
-### Platform: Windows
+#### Permission Denied
 
-You may build KeeWeb for `Windows` by executing ONE of the following two commands provided:
+```console
+Failed to open apk database: Permission denied
+unable to exec /etc/s6-overlay/s6-rc.d/init-envfile/run: Permission denied
+unable to exec /etc/s6-overlay/s6-rc.d/init-envfile/run: Permission denied
+```
 
 <br />
 
-#### Using Grunt
+If you receive any type of `permission denied` error when running your custom image, you must ensure that certain files have executable `+x` (or `0755`) permissions. Once you fix the file permissions, re-build the image. A full list of files requiring elevated permissions are listed below:
 
 ```shell
-grunt dev-desktop-win32 --skip-sign
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-adduser/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-crontab-config/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-custom-files/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-envfile/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-folders/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-keygen/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-migrations/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-nginx/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-permissions/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-php/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-samples/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/init-version-checks/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/svc-cron/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/svc-nginx/run
+sudo chmod +x /root/etc/s6-overlay/s6-rc.d/svc-php-fpm/run
+sudo chmod +x /run.sh
+sudo chmod +x /download.sh
 ```
-
-<br />
-
-#### Using NPM
-
-```shell
-npm run dev-desktop-windows
-```
-
-<br />
-
-### Platform: Linux
-
-You may build KeeWeb for `Linux` by executing ONE of the following two commands provided:
-
-<br />
-
-#### Using Grunt
-
-```shell
-grunt dev-desktop-linux --skip-sign
-```
-
-<br />
-
-#### Using NPM
-
-```shell
-npm run dev-desktop-linux
-```
-
-<br />
-<br />
-
-### Platform: MacOS
-
-You may build KeeWeb for `MacOS` by executing ONE of the following two commands provided:
-
-#### Using Grunt
-
-```shell
-grunt dev-desktop-darwin --skip-sign
-```
-
-#### Using NPM
-
-```shell
-npm run dev-desktop-macos
-```
-
-<br />
-
-Once the build is complete, all (html files will be in `dist/` folder. To build KeeWeb, utilize the following commands below.
-
-<br />
-
-To run the desktop (electron) app without building an installer, build the app with `grunt` and then launch KeeWeb with one of the following commands:
-
-<br />
-
-```bash
-npm run dev
-npm run electron
-```
-
-<br />
-
-To debug your build:
-
-1. run `npm run dev`
-2. open `http://localhost:8085`
-
-<br />
-
-Once built, the output files will be generated in `tmp`:
 
 <br />
 
@@ -509,19 +448,12 @@ Once built, the output files will be generated in `tmp`:
 
 <br />
 
-## Donations
+## Shell / Bash
+You can access the docker container's shell by running:
 
-KeeWeb is not free to develop. It takes time, requires paid code signing certificates and domains.  
-You can help the project or say "thank you" with this button:  
-[<img src="https://opencollective.com/keeweb/tiers/backer.svg?avatarHeight=42&width=880" alt="OpenCollective">](https://opencollective.com/keeweb#support)
-
-<br />
-
-You can also sponsor the developer directly [on GitHub](https://github.com/sponsors/antelle).
-
-<br />
-
-Please note: donation does not imply any type of service contract.
+```shell
+docker exec -it keeweb ash
+```
 
 <br />
 
@@ -529,60 +461,83 @@ Please note: donation does not imply any type of service contract.
 
 <br />
 
-## Contributors ✨
-We are always looking for contributors. If you feel that you can provide something useful to Gistr, then we'd love to review your suggestion. Before submitting your contribution, please review the following resources:
-
-- [Pull Request Procedure](.github/PULL_REQUEST_TEMPLATE.md)
-- [Contributor Policy](CONTRIBUTING.md)
+## SSL Certificates
+This docker image automatically generates an SSL certificate when the nginx server is brought online. 
 
 <br />
 
-Want to help but can't write code?
-- Review [active questions by our community](https://github.com/keeweb/keeweb/labels/help%20wanted) and answer the ones you know.
+<p align="center"><img style="width: 85%;text-align: center;border: 1px solid #353535;" src="docs/img/002.png"></p>
 
 <br />
 
-![Alt](https://repobeats.axiom.co/api/embed/7dc2a7ce8b8a09bc63114defdc7ccb9d91bbd352.svg "Analytics image")
+You may opt to either use the generated self-signed certificate, or you can add your own. If you decide to use your own self-signed certificate, ensure you have mounted the `/config` volume in your `docker-compose.yml`:
 
-Want to help but can't write code?
+```yml
+services:
+    keeweb:
+        container_name: keeweb
+        image: ghcr.io/keeweb/keeweb:latest    # Github image
+        restart: unless-stopped
+        volumes:
+            - ./keeweb:/config
+```
 
-- Review [active questions by our community](https://github.com/keeweb/keeweb/labels/help%20wanted) and answer the ones you know.
-- Help [translating KeeWeb](https://keeweb.oneskyapp.com)
+<br />
+
+Then navigate to the newly mounted folder and add your `📄 cert.crt` and `🔑 cert.key` files to the `📁 /keeweb/keys/*` folder.
 
 <br />
 
-<div align="center">
+> [!NOTE]
+> If you are generating your own certificate and key, we recommend a minimum of:
+> - RSA: `2048 bits`
+> - ECC: `256 bits`
+> - ECDSA: `P-384 or P-521`
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![Contributors][contribs-all-img]](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://gitlab.com/antelle"><img src="https://avatars.githubusercontent.com/u/633557?v=4?s=40" width="40px;" alt="Antelle"/><br /><sub><b>Antelle</b></sub></a><br /><a href="https://github.com/KeeWeb/KeeWeb/commits?author=antelle" title="Code">💻</a> <a href="#projectManagement-antelle" title="Project Management">📆</a> <a href="#fundingFinding-antelle" title="Funding Finding">🔍</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://gitlab.com/Aetherinox"><img src="https://avatars.githubusercontent.com/u/118329232?v=4?s=40" width="40px;" alt="Aetherinox"/><br /><sub><b>Aetherinox</b></sub></a><br /><a href="https://github.com/KeeWeb/KeeWeb/commits?author=Aetherinox" title="Code">💻</a> <a href="#projectManagement-Aetherinox" title="Project Management">📆</a> <a href="#fundingFinding-Aetherinox" title="Funding Finding">🔍</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://gitlab.com/HarlemSquirrel"><img src="https://avatars.githubusercontent.com/u/6445815?v=4?s=40" width="40px;" alt="HarlemSquirrel"/><br /><sub><b>HarlemSquirrel</b></sub></a><br /><a href="https://github.com/KeeWeb/KeeWeb/commits?author=HarlemSquirrel" title="Code">💻</a> <a href="#projectManagement-HarlemSquirrel" title="Project Management">📆</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-<br />
 <br />
 
 ---
 
 <br />
 
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
+## Logs
+This image spits out detailed information about its current progress. You can either use `docker logs` or a 3rd party app such as [Portainer](https://portainer.io/) to view the logs.
+
+<br />
+
+```shell
+──────────────────────────────────────────────────────────────────────────────────────────
+                              Keeweb Password Manager                             
+──────────────────────────────────────────────────────────────────────────────────────────
+
+  Thanks for choosing Keeweb. Get started with some of the links below:
+        Official Repo           https://github.com/keeweb/keeweb
+        Official Site           https://keeweb.info/
+        Beta Demo               https://beta.keeweb.info/
+        Web App                 https://app.keeweb.info/
+        Favicon Service         https://services.keeweb.info/favicon
+
+  If you are making this copy of Keeweb available on a public-facing domain,
+  please consider using Traefik and Authentik to protect this container from
+  outside access.
+
+        User ID ........... 1000
+        Group ID .......... 1000
+        Port HTTP ......... 80
+        Port HTTPS ........ 443
+
+──────────────────────────────────────────────────────────────────────────────────────────
+
+ SSL          : Using existing keys found in /config/keys
+ Loader       : No custom files found, skipping...
+ Core         : Completed loading container
+```
+
+<br />
+
+---
+
+<br />
 
 <!-- BADGE > GENERAL -->
   [general-npmjs-uri]: https://npmjs.com
@@ -592,6 +547,10 @@ Want to help but can't write code?
 <!-- BADGE > VERSION > GITHUB -->
   [github-version-img]: https://img.shields.io/github/v/tag/keeweb/keeweb?logo=GitHub&label=Version&color=ba5225
   [github-version-uri]: https://github.com/keeweb/keeweb/releases
+
+<!-- BADGE > VERSION > GITHUB (For the Badge) -->
+  [github-version-ftb-img]: https://img.shields.io/github/v/tag/keeweb/keeweb?style=for-the-badge&logo=github&logoColor=FFFFFF&logoSize=34&label=%20&color=ba5225
+  [github-version-ftb-uri]: https://github.com/keeweb/keeweb/releases
 
 <!-- BADGE > VERSION > NPMJS -->
   [npm-version-img]: https://img.shields.io/npm/v/keeweb?logo=npm&label=Version&color=ba5225
@@ -630,20 +589,30 @@ Want to help but can't write code?
   [contribs-all-uri]: https://github.com/all-contributors/all-contributors
 
 <!-- BADGE > GITHUB > BUILD > NPM -->
-  [github-build-img]: https://img.shields.io/github/actions/workflow/status/keeweb/keeweb/release-build.yml?logo=github&logoColor=FFFFFF&label=Build&color=%23278b30
-  [github-build-uri]: https://github.com/keeweb/keeweb/actions/workflows/release-build.yml
+  [github-build-img]: https://img.shields.io/github/actions/workflow/status/keeweb/keeweb/deploy-docker.yml?logo=github&logoColor=FFFFFF&label=Build&color=%23278b30
+  [github-build-uri]: https://github.com/keeweb/keeweb/actions/workflows/deploy-docker.yml
 
 <!-- BADGE > GITHUB > BUILD > Pypi -->
   [github-build-pypi-img]: https://img.shields.io/github/actions/workflow/status/keeweb/keeweb/release-pypi.yml?logo=github&logoColor=FFFFFF&label=Build&color=%23278b30
-  [github-build-pypi-uri]: https://github.com/keeweb/keeweb/actions/workflows/release-pypi.yml
+  [github-build-pypi-uri]: https://github.com/keeweb/keeweb/actions/workflows/pypi-release.yml
 
 <!-- BADGE > GITHUB > TESTS -->
-  [github-tests-img]: https://img.shields.io/github/actions/workflow/status/keeweb/keeweb/tests.yml?logo=github&label=Tests&color=2c6488
-  [github-tests-uri]: https://github.com/keeweb/keeweb/actions/workflows/tests.yml
+  [github-tests-img]: https://img.shields.io/github/actions/workflow/status/keeweb/keeweb/npm-tests.yml?logo=github&label=Tests&color=2c6488
+  [github-tests-uri]: https://github.com/keeweb/keeweb/actions/workflows/npm-tests.yml
 
 <!-- BADGE > GITHUB > COMMIT -->
   [github-commit-img]: https://img.shields.io/github/last-commit/keeweb/keeweb?logo=conventionalcommits&logoColor=FFFFFF&label=Last%20Commit&color=313131
   [github-commit-uri]: https://github.com/keeweb/keeweb/commits/main/
 
-<!-- prettier-ignore-end -->
-<!-- markdownlint-restore -->
+<!-- BADGE > DOCKER HUB > VERSION -->
+  [dockerhub-version-img]: https://img.shields.io/docker/v/antelle/keeweb/latest?logo=docker&logoColor=FFFFFF&label=Docker%20Version&color=ba5225
+  [dockerhub-version-uri]: https://hub.docker.com/repository/docker/antelle/keeweb/general
+
+<!-- BADGE > DOCKER HUB > VERSION (For the Badge) -->
+  [dockerhub-version-ftb-img]: https://img.shields.io/docker/v/antelle/keeweb/latest?style=for-the-badge&logo=docker&logoColor=FFFFFF&logoSize=34&label=%20&color=ba5225
+  [dockerhub-version-ftb-uri]: https://hub.docker.com/repository/docker/antelle/keeweb/tags
+
+<!-- BADGE > DOCKER HUB > PULLS -->
+  [dockerhub-pulls-img]: https://img.shields.io/docker/pulls/antelle/keeweb?logo=docker&logoColor=FFFFFF&label=Docker%20Pulls&color=af9a00
+  [dockerhub-pulls-uri]: https://hub.docker.com/repository/docker/antelle/keeweb/general
+
