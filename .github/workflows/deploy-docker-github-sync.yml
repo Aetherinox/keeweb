@@ -1,0 +1,177 @@
+# #
+#   @type               github workflow
+#   @author             Aetherinox
+#   @url                https://github.com/Aetherinox
+#   @usage              syncs main/package folder with branch docker/keeweb
+#   @secrets            secrets.ADMINSERV_GPG_KEY_ASC                   gpg private key (armored) | BEGIN PGP PRIVATE KEY BLOCK
+#                       secrets.ADMINSERV_GPG_PASSPHRASE                gpg private key passphrase
+#                       secrets.IMAGE_GHCR_TOKEN                        github personal access token (classic) with package:write permission
+# #
+
+name: "🔀 Sync › Docker › Github"
+run-name: "🔀 Sync › Docker › Github"
+
+# #
+#   Triggers
+# #
+
+on:
+
+    # #
+    #   Trigger › Workflow Dispatch
+    #
+    #   If any values are not provided, will use fallback env variable
+    # #
+
+    workflow_dispatch:
+        inputs:
+
+            # #
+            #   Image Name
+            #
+            #   used in github image path
+            #       ghcr.io/${{ env.IMAGE_AUTHOR }}/${{ env.IMAGE_NAME }}
+            # #
+
+            IMAGE_NAME:
+                description:  "📦 Image Name"
+                required:     true
+                default:      'keeweb'
+                type:         string
+
+            # #
+            #   Image Author
+            #
+            #   used in github image path
+            #       ghcr.io/${{ env.IMAGE_AUTHOR }}/${{ env.IMAGE_NAME }}
+            # #
+
+            IMAGE_AUTHOR:
+                description:  "🪪 Image Author"
+                required:     true
+                default:      'keeweb'
+                type:         string
+
+            # #
+            #   Image Version
+            #
+            #   used to create new release tag, and add version to docker image name
+            # #
+
+            IMAGE_VERSION:
+                description:  "🏷️ Image Version"
+                required:     true
+                default:      '1.19.0'
+                type:         string
+
+            # #
+            #   Image ghcr username
+            #
+            #   this is the user to sign into ghcr as.
+            # #
+
+            IMAGE_GHCR_USERNAME:
+                description:  "🪪 ghcr.io Username"
+                required:     true
+                default:      'keeweb'
+                type:         string
+
+            # #
+            #   true:     runs all actions, even ones not scheduled
+            #   false:    only scheduled tasks will run
+            # #
+
+            PRINT_ONLY:
+                description:  "📑 Print Debugs Only"
+                required:     true
+                default:      false
+                type:         boolean
+
+            # #
+            #   ENABLE:       released version will be marked as beta and receive beta tag for docker
+            #   DISABLE:      release version will be marked as stable / normal release
+            # #
+
+            DEV_RELEASE:
+                description:  "🧪 Development Release"
+                required:     true
+                default:      false
+                type:         boolean
+
+    # #
+    #   Trigger › Push
+    # #
+
+    push:
+        tags:
+            - '*'
+
+# #
+#   Environment Vars
+# #
+
+env:
+    IMAGE_NAME:           ${{ github.event.inputs.IMAGE_NAME || 'keeweb' }}
+    IMAGE_AUTHOR:         ${{ github.event.inputs.IMAGE_AUTHOR || 'keeweb' }}
+    IMAGE_VERSION:        ${{ github.event.inputs.IMAGE_VERSION || '1.19.0' }}
+    IMAGE_GHCR_USERNAME:  ${{ github.event.inputs.IMAGE_GHCR_USERNAME || 'keeweb' }}
+    BOT_NAME_1:           EuropaServ
+    BOT_NAME_DEPENDABOT:  dependabot[bot]
+    
+# #
+#   Jobs
+#
+#   The way pushed docker containers on Github work, the most recent image built goes at the top.
+#   We will use the order below which builds the :latest image last so that it appears at the very
+#   top of the packages page.
+# #
+
+jobs:
+
+    # #
+    #   Job › Create Tag
+    # #
+
+    job-docker-release-tags-create:
+        name: >-
+          📦 Release › Sync
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            packages: write
+            attestations: write
+            id-token: write
+        steps:
+
+            # #
+            #   Release › Sync › Start
+            # #
+
+            - name: "✅ Start"
+              id: task_ctags_start
+              run: |
+                  echo "Starting branch sync"
+
+            # #
+            #   Release › Sync › Checkout
+            # #
+
+            - name: "☑️ Checkout"
+              id: task_ctags_checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            # #
+            #   Release › Sync › Check Permissions
+            # #
+
+            - name: 'Check Permissions'
+              uses: BetaHuhn/repo-file-sync-action@v1
+              with:
+                  GH_PAT: ${{ secrets.SELF_TOKEN_CL }}
+                  CONFIG_PATH: .github/sync.yml
+                  COMMIT_BODY: "[Docker] Sync"
+                  IS_FINE_GRAINED: false
+                  DRY_RUN: true
+                  SKIP_CLEANUP: false
