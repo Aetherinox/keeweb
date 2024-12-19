@@ -43,6 +43,18 @@ on:
                 type:         string
 
             # #
+            #   Destination Path
+            #
+            #   where the files will be placed
+            # #
+
+            DEST_PATH:
+                description:  "📂 Destination Path"
+                required:     true
+                default:      'package/docker'
+                type:         string
+
+            # #
             #   true:     runs all actions, even ones not scheduled
             #   false:    only scheduled tasks will run
             # #
@@ -66,7 +78,7 @@ on:
 # #
 
 env:
-    IMAGE_NAME:           ${{ github.event.inputs.IMAGE_NAME || 'keeweb' }}
+    DEST_PATH:            ${{ github.event.inputs.DEST_PATH || 'package/docker' }}
     BOT_NAME_1:           EuropaServ
     BOT_NAME_DEPENDABOT:  dependabot[bot]
     
@@ -135,8 +147,32 @@ jobs:
                   git config --global pager.diff false
                   git config --global advice.detachedHead false
                   git checkout origin/main
-                  git --work-tree=package/docker checkout origin/docker/keeweb -- root Dockerfile*
-                  find ./package/docker/ -type f | grep -Ev '.git|.github|*.jpg|*.jpeg|*.png' | xargs dos2unix --
+                  git --work-tree=${{ inputs.DEST_PATH }} checkout origin/docker/keeweb -- root Dockerfile*
+
+            # #
+            #   Sync › Run permission management
+            # #
+
+            - name: '#️⃣ Manage Permissions'
+              run: |
+                  find ${{ inputs.DEST_PATH }} -name 'run' -exec chmod 755 {} \;
+                  WRONG_PERM=$(find ${{ inputs.DEST_PATH }}  -path "./.git" -prune -o \( -name "run" -o -name "finish" -o -name "check" \) -not -perm -u=x,g=x,o=x -print)
+                  if [ -n "${WRONG_PERM}" ]; then
+                      for i in ${WRONG_PERM}; do
+                      echo "::error file=${i},line=1,title=Missing Executable Bit::This file needs to be set as executable!"
+                      done
+                      exit 1
+                  else
+                      echo "**** Executable permissions are OK ****"
+                  fi
+
+            # #
+            #   Sync › Run dos2unix
+            # #
+
+            - name: '🔐 Apply dos2unix'
+              run: |
+                  find ${{ inputs.DEST_PATH }} -type f | grep -Ev '.git|.github|*.jpg|*.jpeg|*.png' | xargs dos2unix --
 
             # #
             #   Sync › Show Differences
