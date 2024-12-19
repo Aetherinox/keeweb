@@ -153,16 +153,6 @@ jobs:
                   echo "Starting branch sync"
 
             # #
-            #   Release › Sync › Checkout
-            # #
-
-            - name: "☑️ Checkout"
-              id: task_ctags_checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            # #
             #   Release › Sync › Check Permissions
             # #
 
