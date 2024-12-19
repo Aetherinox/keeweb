@@ -127,6 +127,7 @@ jobs:
                   git config --global advice.detachedHead false
                   git checkout origin/main
                   git --work-tree=package/docker checkout origin/docker/keeweb -- root Dockerfile*
+                  find ./package/docker/ -type f | grep -Ev '.git|.github|*.jpg|*.jpeg|*.png' | xargs dos2unix --
 
             # #
             #   Sync › Show Differences
