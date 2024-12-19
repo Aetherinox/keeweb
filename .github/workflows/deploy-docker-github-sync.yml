@@ -245,6 +245,8 @@ jobs:
                   echo "github.event_name .... ${{ github.event_name }}"
                   echo "inputs.PRINT_ONLY .... ${{ env.PRINT_ONLY }}"
 
+                  echo " ⚠️⚠️⚠️⚠️ This workflow will copy files [ 📄 root Dockerfile* ] from branch 🏠 ${{ env.REPO_SRC }} to 🔄 ${{ env.REPO_DEST }} ⚠️⚠️⚠️"
+
             # #
             #   Sync › Commit
             # 
