@@ -180,9 +180,8 @@ jobs:
               run: |
                   git diff --name-only HEAD
 
-            - uses: stefanzweifel/git-auto-commit-action@v5
-              with:
-                  commit_message: "Sync docker/keeweb › main"
-                  branch: main
-                  commit_options: '--signoff'
-                  add_options: '-u'
+            - name: 'Commit Changes from docker/keeweb to main'
+              run: |
+                  git add .
+                  git commit -S -m "Sync docker/keeweb to main"
+                  git push --force
