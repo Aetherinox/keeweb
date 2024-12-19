@@ -162,12 +162,15 @@ jobs:
 
             # #
             #   Release › Sync › Check Permissions
+            #
+            #   discard changes from detached head state with
+            #       git checkout -
             # #
 
             - name: 'Check Permissions'
               run: |
                   git checkout origin/main
-                  git checkout origin/docker/keeweb -- root/
+                  git checkout origin/docker/keeweb -- root
 
                   ls
                   dir
