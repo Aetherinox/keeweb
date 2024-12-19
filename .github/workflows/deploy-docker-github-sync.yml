@@ -173,8 +173,8 @@ jobs:
                   SRC_ROOT: "/"
                   FILE_PATTERNS: |-
                     ^packages\/docker\/Dockerfile$
-                    ^Dockerfile.aarch64$
+                    ^packages\/docker\/Dockerfile.aarch64$
                   GITHUB_TOKEN: ${{ secrets.SELF_TOKEN_CL }}
                   TARGET_REPOS: |
                     aetherinox/keeweb:main
-                  TARGET_ROOT: "/package/docker"
+                  TARGET_ROOT: "/"
