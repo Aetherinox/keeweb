@@ -260,5 +260,5 @@ jobs:
                   commit_author: "${{ steps.task_sync_commit_gpg.outputs.name }} <${{ steps.task_sync_commit_gpg.outputs.email }}>"
                   commit_user_name: ${{ steps.task_sync_commit_gpg.outputs.name }}
                   commit_user_email: ${{ steps.task_sync_commit_gpg.outputs.email }}
-                  branch: main
+                  branch: ${{ env.REPO_DEST }}
                   add_options: '-u'
