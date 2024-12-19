@@ -192,7 +192,7 @@ jobs:
             # #
 
             - uses: stefanzweifel/git-auto-commit-action@v5
-              if: ( github.event_name == 'workflow_dispatch' && inputs.PRINT_ONLY == 'false' ) || ( github.event_name == 'push' )
+              if: ( github.event_name == 'workflow_dispatch' && inputs.PRINT_ONLY == false ) || ( github.event_name == 'push' )
               with:
                   commit_message: ${{ env.COMMIT_MESSAGE }}
                   commit_author: "${{ steps.task_sync_commit_gpg.outputs.name }} <${{ steps.task_sync_commit_gpg.outputs.email }}>"
