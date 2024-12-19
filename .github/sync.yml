@@ -1,4 +1,8 @@
 aetherinox/keeweb@main:
-  - package/docker/
+  - package/docker/root/
+  - Dockerfile
+  - Dockerfile.aarch64
 aetherinox/keeweb@docker/keeweb:
-  - ""
+  - root/
+  - Dockerfile
+  - Dockerfile.aarch64
