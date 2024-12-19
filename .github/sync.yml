@@ -1,4 +1,4 @@
 aetherinox/keeweb@main:
   - package/docker/
 aetherinox/keeweb@docker/keeweb:
-  - 
+  - ./
