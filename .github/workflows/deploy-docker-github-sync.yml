@@ -152,8 +152,8 @@ jobs:
             #   Sync › Debug
             # #
 
-            - name: '⚠️ Env Variable Check'
-              id: task_sync_varcheck
+            - name: '⚠️ Env Variable › Check'
+              id: task_sync_vars_check
               run: |
                   if [[ "${{ env.REPO_SRC }}" == "${{ env.REPO_DEST }}" ]]; then
                       echo "Source and destination repos are the same, changing to main"
@@ -161,6 +161,13 @@ jobs:
                       echo "REPO_DEST=$(echo $branch_Default)" >> $GITHUB_ENV
                   fi
 
+            # #
+            #   Sync › Var Check › Confirm
+            # #
+
+            - name: '⚠️ Env Variable › Confirm'
+              id: task_sync_vars_confirm
+              run: |
                   echo "REPO_DEST is now ${{ env.REPO_DEST }}"
 
             # #
