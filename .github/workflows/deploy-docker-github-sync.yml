@@ -153,6 +153,12 @@ jobs:
             #
             #   this action copies all the required docker files from the docker/keeweb branch, over to 
             #   the main branch within the subfolder `package/docker/*`
+            #
+            #   to discard the actions of git checkout and not commit, run: 
+            #     git checkout -
+            #
+            #   if you are copying files from docker/keeweb which don't exist on the main branch, you must
+            #   run `git add package/docker` to track the new files / folders added
             # #
 
             - name: '⬇️ Pull Docker Files'
@@ -162,6 +168,7 @@ jobs:
                   git config --global advice.detachedHead false
                   git checkout origin/${{ env.REPO_DEST }}                                                      #  ${{ inputs.REPO_DEST || github.ref_name || 'main' }}
                   git --work-tree=${{ env.DEST_PATH }} checkout origin/${{ env.REPO_SRC }} -- root Dockerfile*  #  ${{ inputs.REPO_SRC || 'docker/keeweb' }}
+                  git add ${{ env.DEST_PATH }}
 
             # #
             #   Sync › Run permission management
@@ -193,7 +200,14 @@ jobs:
             # #
             #   Sync › Show Differences
             # 
-            #   this is just a debugging step, it shows all the files pending commit that will be committed
+            #   this is just a debugging step, it shows all the files pending commit that will be committed.
+            #   if you are stuck in the git pager, hit "Q" to quit.
+            #
+            #   to disable the pager, run the command:
+            #       git config --global pager.diff false
+            #
+            #   to show only a list of changed files:
+            #       git diff --name-only HEAD
             # #
 
             - name: '📑 View Differences'
