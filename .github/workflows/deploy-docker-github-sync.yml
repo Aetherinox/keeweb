@@ -169,10 +169,12 @@ jobs:
             #       git checkout -
             # #
 
-            - name: 'Check Permissions'
+            - name: 'Pull Docker Files'
               run: |
+                  git config --global advice.detachedHead false
                   git checkout origin/main
                   git checkout origin/docker/keeweb -- root
 
-                  ls
-                  dir
+            - name: 'View Differences'
+              run: |
+                  git diff
