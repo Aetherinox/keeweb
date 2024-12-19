@@ -236,7 +236,7 @@ jobs:
             #   Sync › Debug
             # #
 
-            - name: '🪪 Debug › Print'
+            - name: '⚠️ Action Info'
               id: task_sync_debug_print
               run: |
                   echo "github.actor.......... ${{ github.actor }}"
@@ -245,7 +245,11 @@ jobs:
                   echo "github.event_name .... ${{ github.event_name }}"
                   echo "inputs.PRINT_ONLY .... ${{ env.PRINT_ONLY }}"
 
-                  echo " ⚠️⚠️⚠️⚠️ This workflow will copy files [ 📄 root Dockerfile* ] from branch 🏠 ${{ env.REPO_SRC }} to 🔄 ${{ env.REPO_DEST }} ⚠️⚠️⚠️"
+                  echo " ⚠️⚠️⚠️⚠️ This workflow will copy files [ 📄 root Dockerfile* ] from branch 🏠 ${{ env.REPO_SRC }} to 🔄 ${{ env.REPO_DEST }} to folder 📂 ${{ env.DEST_PATH }} ⚠️⚠️⚠️"
+                  echo "    › Copy files ............. 📄 root Dockerfile*"
+                  echo "    › From branch ............ 🏠 ${{ env.REPO_SRC }}"
+                  echo "    › To branch .............. 🔄 ${{ env.REPO_DEST }}"
+                  echo "    › In folder .............. 📂 ${{ env.DEST_PATH }}"
 
             # #
             #   Sync › Commit
