@@ -30,17 +30,38 @@ on:
         inputs:
 
             # #
-            #   Image Name
-            #
-            #   used in github image path
-            #       ghcr.io/${{ env.IMAGE_AUTHOR }}/${{ env.IMAGE_NAME }}
+            #   Name
             # #
 
-            IMAGE_NAME:
-                description:  "📦 Image Name"
+            PROJECT_NAME:
+                description:  "📦 Name"
                 required:     true
-                default:      'keeweb'
+                default:      'docker/keeweb'
                 type:         string
+
+            # #
+            #   Repo › Source
+            #
+            #   Where the files to be copied are
+            # #
+
+            REPO_SRC:
+              description:  "📂 Repo › Source"
+              required:     true
+              default:      'docker/keeweb'
+              type:         string
+
+            # #
+            #   Repo › Destination
+            #
+            #   Where the files are to be copied to
+            # #
+
+            REPO_DEST:
+              description:  "📂 Repo › Destination"
+              required:     true
+              default:      'main'
+              type:         string
 
             # #
             #   Destination Path
@@ -98,7 +119,7 @@ jobs:
 
     job-docker-release-tags-create:
         name: >-
-          📦 Release › Sync
+            📦 Release › Sync
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -112,7 +133,7 @@ jobs:
             # #
 
             - name: "✅ Start"
-              id: task_ctags_start
+              id: task_sync_start
               run: |
                   echo "Starting branch sync"
 
@@ -121,7 +142,7 @@ jobs:
             # #
 
             - name: "☑️ Checkout"
-              id: task_ctags_checkout
+              id: task_sync_checkout
               uses: actions/checkout@v4
               with:
                   fetch-depth: 0
@@ -142,18 +163,20 @@ jobs:
             #   the main branch within the subfolder `package/docker/*`
             # #
 
-            - name: 'Pull Docker Files'
+            - name: '⬇️ Pull Docker Files'
+              id: task_sync_files_pull
               run: |
                   git config --global pager.diff false
                   git config --global advice.detachedHead false
-                  git checkout origin/main
-                  git --work-tree=${{ inputs.DEST_PATH }} checkout origin/docker/keeweb -- root Dockerfile*
+                  git checkout origin/${{ inputs.REPO_DEST }}
+                  git --work-tree=${{ inputs.DEST_PATH }} checkout origin/${{ inputs.REPO_SRC }} -- root Dockerfile*
 
             # #
             #   Sync › Run permission management
             # #
 
             - name: '#️⃣ Manage Permissions'
+              id: task_sync_fix_permissions
               run: |
                   find ${{ inputs.DEST_PATH }} -name 'run' -exec chmod 755 {} \;
                   WRONG_PERM=$(find ${{ inputs.DEST_PATH }}  -path "./.git" -prune -o \( -name "run" -o -name "finish" -o -name "check" \) -not -perm -u=x,g=x,o=x -print)
@@ -171,6 +194,7 @@ jobs:
             # #
 
             - name: '🔐 Apply dos2unix'
+              id: task_sync_fix_dos2unix
               run: |
                   find ${{ inputs.DEST_PATH }} -type f | grep -Ev '.git|.github|*.jpg|*.jpeg|*.png' | xargs dos2unix --
 
@@ -180,7 +204,8 @@ jobs:
             #   this is just a debugging step, it shows all the files pending commit that will be committed
             # #
 
-            - name: 'View Differences'
+            - name: '📑 View Differences'
+              id: task_sync_debug_diff
               run: |
                   git diff --name-only HEAD
 
@@ -190,11 +215,11 @@ jobs:
             #   define the date/time and the commit message
             # #
 
-            - name: "📦 Commit › Pre-commit"
-              id: task_commit_pre
+            - name: '📦 Commit › Pre-commit'
+              id: task_sync_commit_pre
               run: |
                   now=$(date -u '+%m/%d/%Y %H:%M')
-                  commit_label="Sync" >> $GITHUB_ENV
+                  commit_label="Docker Sync" >> $GITHUB_ENV
                   commit_message="\`️️🔄 $commit_label 🔄\` \`$now UTC\`" >> $GITHUB_ENV
                   echo "COMMIT_MESSAGE=$(echo $commit_message)" >> $GITHUB_ENV
                   echo "NOW=$(echo $now)" >> $GITHUB_ENV
@@ -206,7 +231,7 @@ jobs:
             #       stefanzweifel/git-auto-commit-action@v5
             # #
 
-            - name: "📦 Commit › GPG Key"
+            - name: '📦 Commit › GPG Key'
               id: task_sync_commit_gpg
               uses: crazy-max/ghaction-import-gpg@v6
               with:
@@ -219,14 +244,13 @@ jobs:
             #   Sync › Debug
             # #
 
-            - name: "🪪 Debug › Print"
-              id: task_release_gh_print
+            - name: '🪪 Debug › Print'
+              id: task_sync_debug_print
               run: |
                   echo "github.actor.......... ${{ github.actor }}"
                   echo "github.ref ........... ${{ github.ref }}"
                   echo "github.event_name .... ${{ github.event_name }}"
                   echo "inputs.PRINT_ONLY .... ${{ inputs.PRINT_ONLY }}"
-                  echo "env.COMMIT_MESSAGE ... (echo "${{ env.COMMIT_MESSAGE }}")"
 
             # #
             #   Sync › Commit
@@ -234,7 +258,8 @@ jobs:
             #   commits the pending changes to the main branch
             # #
 
-            - name: "🔄 Sync › Commit"
+            - name: '🔄 Sync › Commit'
+              id: task_sync_commit
               uses: stefanzweifel/git-auto-commit-action@v5
               if: ( github.event_name == 'workflow_dispatch' && inputs.PRINT_ONLY == false ) || ( github.event_name == 'push' )
               with:
