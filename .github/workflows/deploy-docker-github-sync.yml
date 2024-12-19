@@ -149,13 +149,57 @@ jobs:
                   sudo apt-get install -qq dos2unix
 
             # #
+            #   Sync › Debug
+            # #
+
+            - name: '⚠️ Env Variable › Check'
+              id: task_sync_vars_check
+              run: |
+                  if [[ "${{ env.REPO_SRC }}" == "${{ env.REPO_DEST }}" ]]; then
+                      echo "Source and destination repos are the same, changing to main"
+                      branch_Default="main"
+                      echo "REPO_DEST=$(echo $branch_Default)" >> $GITHUB_ENV
+                  fi
+
+            # #
+            #   Sync › Var Check › Confirm
+            # #
+
+            - name: '⚠️ Env Variable › Confirm'
+              id: task_sync_vars_confirm
+              run: |
+                  echo "REPO_DEST is now ${{ env.REPO_DEST }}"
+
+            # #
+            #   Sync › Debug
+            # #
+
+            - name: '⚠️ Action Info'
+              id: task_sync_debug_step1_print
+              run: |
+                  echo "github.actor.......... ${{ github.actor }}"
+                  echo "github.ref ........... ${{ github.ref }}"
+                  echo "github.ref_name ...... ${{ github.ref_name }}"
+                  echo "github.event_name .... ${{ github.event_name }}"
+                  echo "inputs.PRINT_ONLY .... ${{ inputs.PRINT_ONLY }}"
+                  echo "env.REPO_SRC.......... ${{ env.REPO_SRC }}"
+                  echo "env.REPO_DEST......... ${{ env.REPO_DEST }}"
+                  echo "env.DEST_PATH......... ${{ env.DEST_PATH }}"
+
+                  echo " ⚠️⚠️⚠️⚠️ This workflow will copy files [ 📄 root Dockerfile* ] from branch 🏠 ${{ env.REPO_SRC }} to 🔄 ${{ env.REPO_DEST }} to folder 📂 ${{ env.DEST_PATH }} ⚠️⚠️⚠️"
+                  echo "    › Copy files ............. 📄 root Dockerfile*"
+                  echo "    › From branch ............ 🏠 ${{ env.REPO_SRC }}"
+                  echo "    › To branch .............. 🔄 ${{ env.REPO_DEST }}"
+                  echo "    › In folder .............. 📂 ${{ env.DEST_PATH }}"
+
+            # #
             #   Sync › Copy Dockerfiles to Main branch
             #
             #   this action copies all the required docker files from the docker/keeweb branch, over to 
             #   the main branch within the subfolder `package/docker/*`
             #
             #   to discard the actions of git checkout and not commit, run: 
-            #     git checkout -
+            #       git checkout -
             #
             #   if you are copying files from docker/keeweb which don't exist on the main branch, you must
             #   run `git add package/docker` to track the new files / folders added
@@ -205,9 +249,6 @@ jobs:
             #
             #   to disable the pager, run the command:
             #       git config --global pager.diff false
-            #
-            #   to show only a list of changed files:
-            #       git diff --name-only HEAD
             # #
 
             - name: '📑 View Differences'
