@@ -115,6 +115,15 @@ jobs:
                   fetch-depth: 0
 
             # #
+            #   Sync › Install Dependencies
+            # #
+
+            - name: "📦 Install Dependencies"
+              id: task_sync_dependencies
+              run:
+                  sudo apt-get install -qq dos2unix
+
+            # #
             #   Sync › Copy Dockerfiles to Main branch
             #
             #   this action copies all the required docker files from the docker/keeweb branch, over to 
