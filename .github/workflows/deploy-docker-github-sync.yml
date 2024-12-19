@@ -171,10 +171,11 @@ jobs:
 
             - name: 'Pull Docker Files'
               run: |
+                  git config --global pager.diff false
                   git config --global advice.detachedHead false
                   git checkout origin/main
                   git checkout origin/docker/keeweb -- root
 
             - name: 'View Differences'
               run: |
-                  git diff
+                  git diff --name-only HEAD
