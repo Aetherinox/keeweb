@@ -90,7 +90,7 @@ on:
 
 env:
     REPO_SRC:             ${{ github.event.inputs.REPO_SRC || 'docker/keeweb' }}
-    REPO_DEST:            ${{ github.event.inputs.DEST_PATH || 'main' }}
+    REPO_DEST:            ${{ github.event.inputs.DEST_PATH || github.head_ref || github.ref_name || 'main' }}
     DEST_PATH:            ${{ github.event.inputs.DEST_PATH || 'package/docker' }}
     BOT_NAME_1:           EuropaServ
     BOT_NAME_DEPENDABOT:  dependabot[bot]
@@ -240,6 +240,8 @@ jobs:
               id: task_sync_debug_print
               run: |
                   echo "github.actor.......... ${{ github.actor }}"
+                  echo "github.head_ref ...... ${{ github.head_ref }}"
+                  echo "github.ref_name ...... ${{ github.ref_name }}"
                   echo "github.ref ........... ${{ github.ref }}"
                   echo "github.event_name .... ${{ github.event_name }}"
                   echo "inputs.PRINT_ONLY .... ${{ env.PRINT_ONLY }}"
