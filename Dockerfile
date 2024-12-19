@@ -5,10 +5,10 @@
 #   @usage          keeweb docker image
 #   @file           Dockerfile
 #   @repo           https://github.com/keeweb/keeweb
-#                   https://github.com/keeweb/docker-alpine-base
+#                   https://github.com/keeweb/alpine-base
 #                   https://hub.docker.com/repository/docker/keeweb/keeweb
 #                   https://hub.docker.com/repository/docker/keeweb/alpine-base
-#	hello
+#
 # #
 
 FROM ghcr.io/keeweb/alpine-base:3.20-amd64
