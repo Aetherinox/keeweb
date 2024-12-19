@@ -143,7 +143,6 @@ jobs:
             id-token: write
         steps:
 
-
             # #
             #   Release › Sync › Start
             # #
@@ -154,12 +153,19 @@ jobs:
                   echo "Starting branch sync"
 
             # #
+            #   Release › Sync › Checkout
+            # #
+
+            - name: "☑️ Checkout"
+              id: task_ctags_checkout
+              uses: actions/checkout@v4
+
+            # #
             #   Release › Sync › Check Permissions
             # #
 
             - name: 'Check Permissions'
               run: |
-                  git remote add secure-origin https://${{ secrets.SELF_TOKEN_CL }}@github.com/Aetherinox/keeweb.git
                   git checkout origin/main
                   git checkout docker/keeweb root/
 
