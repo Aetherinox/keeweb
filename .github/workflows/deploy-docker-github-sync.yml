@@ -158,14 +158,10 @@ jobs:
             # #
 
             - name: 'Check Permissions'
-              uses: adrianjost/files-sync-action@v2.1.0
-              with:
-                  SRC_REPO: aetherinox/keeweb:docker/keeweb
-                  SRC_ROOT: "/"
-                  FILE_PATTERNS: |-
-                    ^Dockerfile$
-                    ^Dockerfile.aarch64$
-                  GITHUB_TOKEN: ${{ secrets.SELF_TOKEN_CL }}
-                  TARGET_REPOS: |
-                    aetherinox/keeweb:main
-                  TARGET_ROOT: "package/docker/"
+              run: |
+                  git remote add secure-origin https://${{ secrets.SELF_TOKEN_CL }}@github.com/Aetherinox/keeweb.git
+                  git checkout origin/main
+                  git checkout docker/keeweb root/
+
+                  ls
+                  dir
