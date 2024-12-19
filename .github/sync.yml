@@ -1,5 +1,5 @@
 aetherinox/keeweb@docker/keeweb:
-  - root/
+  - root
   - Dockerfile
   - Dockerfile.aarch64
 aetherinox/keeweb@main:
