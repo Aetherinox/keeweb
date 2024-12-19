@@ -177,11 +177,4 @@ jobs:
                 src_branch: docker/keeweb
                 dst_branch: main
                 commit_message: "Test"
-                exclude: |
-                    *.github*
-                    *docs*
-                    *.editorconfig*
-                    *.gitignore*
-                    *.prettierignore*
-                    *LICENSE*
-                    *README.md*
+                exclude: *+(/.github/|/docs/)*
