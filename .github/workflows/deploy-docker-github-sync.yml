@@ -30,16 +30,6 @@ on:
         inputs:
 
             # #
-            #   Name
-            # #
-
-            PROJECT_NAME:
-                description:  "📦 Name"
-                required:     true
-                default:      'docker/keeweb'
-                type:         string
-
-            # #
             #   Repo › Source
             #
             #   Where the files to be copied are
@@ -91,8 +81,8 @@ on:
     # #
 
     push:
-        tags:
-            - '*'
+        branches:
+            - docker/keeweb
 
 # #
 #   Environment Vars
