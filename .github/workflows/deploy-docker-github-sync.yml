@@ -90,7 +90,7 @@ on:
 
 env:
     REPO_SRC:             ${{ github.event.inputs.REPO_SRC || 'docker/keeweb' }}
-    REPO_DEST:            ${{ github.event.inputs.DEST_PATH || 'main' }}
+    REPO_DEST:            ${{ github.ref_name || github.event.inputs.REPO_DEST ||  'main' }}
     DEST_PATH:            ${{ github.event.inputs.DEST_PATH || 'package/docker' }}
     BOT_NAME_1:           EuropaServ
     BOT_NAME_DEPENDABOT:  dependabot[bot]
@@ -160,8 +160,8 @@ jobs:
               run: |
                   git config --global pager.diff false
                   git config --global advice.detachedHead false
-                  git checkout origin/${{ env.REPO_DEST }}
-                  git --work-tree=${{ env.DEST_PATH }} checkout origin/${{ env.REPO_SRC }} -- root Dockerfile*
+                  git checkout origin/${{ env.REPO_DEST }}                                                      #  ${{ inputs.REPO_DEST || github.ref_name || 'main' }}
+                  git --work-tree=${{ env.DEST_PATH }} checkout origin/${{ env.REPO_SRC }} -- root Dockerfile*  #  ${{ inputs.REPO_SRC || 'docker/keeweb' }}
 
             # #
             #   Sync › Run permission management
@@ -241,6 +241,7 @@ jobs:
               run: |
                   echo "github.actor.......... ${{ github.actor }}"
                   echo "github.ref ........... ${{ github.ref }}"
+                  echo "github.ref_name ...... ${{ github.ref_name }}"
                   echo "github.event_name .... ${{ github.event_name }}"
                   echo "inputs.PRINT_ONLY .... ${{ env.PRINT_ONLY }}"
 
@@ -259,5 +260,5 @@ jobs:
                   commit_author: "${{ steps.task_sync_commit_gpg.outputs.name }} <${{ steps.task_sync_commit_gpg.outputs.email }}>"
                   commit_user_name: ${{ steps.task_sync_commit_gpg.outputs.name }}
                   commit_user_email: ${{ steps.task_sync_commit_gpg.outputs.email }}
-                  branch: main
+                  branch: ${{ env.REPO_DEST }}
                   add_options: '-u'
