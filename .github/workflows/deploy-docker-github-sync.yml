@@ -178,10 +178,10 @@ jobs:
                 dst_branch: main
                 commit_message: "Test"
                 exclude: |
-                    /package/docker/.github/*
-                    /package/docker/docs/*
-                    /package/docker/.editorconfig
-                    /package/docker/.gitignore
-                    /package/docker/.prettierignore
-                    /package/docker/LICENSE
-                    /package/docker/README.md
+                    *.github*
+                    *docs*
+                    *.editorconfig*
+                    *.gitignore*
+                    *.prettierignore*
+                    *LICENSE*
+                    *README.md*
