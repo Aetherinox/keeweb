@@ -89,6 +89,8 @@ on:
 # #
 
 env:
+    REPO_SRC:             ${{ github.event.inputs.REPO_SRC || 'docker/keeweb' }}
+    REPO_DEST:            ${{ github.event.inputs.DEST_PATH || 'main' }}
     DEST_PATH:            ${{ github.event.inputs.DEST_PATH || 'package/docker' }}
     BOT_NAME_1:           EuropaServ
     BOT_NAME_DEPENDABOT:  dependabot[bot]
@@ -158,8 +160,8 @@ jobs:
               run: |
                   git config --global pager.diff false
                   git config --global advice.detachedHead false
-                  git checkout origin/${{ inputs.REPO_DEST }}
-                  git --work-tree=${{ inputs.DEST_PATH }} checkout origin/${{ inputs.REPO_SRC }} -- root Dockerfile*
+                  git checkout origin/${{ env.REPO_DEST }}
+                  git --work-tree=${{ env.DEST_PATH }} checkout origin/${{ env.REPO_SRC }} -- root Dockerfile*
 
             # #
             #   Sync › Run permission management
@@ -168,8 +170,8 @@ jobs:
             - name: '#️⃣ Manage Permissions'
               id: task_sync_fix_permissions
               run: |
-                  find ${{ inputs.DEST_PATH }} -name 'run' -exec chmod 755 {} \;
-                  WRONG_PERM=$(find ${{ inputs.DEST_PATH }}  -path "./.git" -prune -o \( -name "run" -o -name "finish" -o -name "check" \) -not -perm -u=x,g=x,o=x -print)
+                  find ${{ env.DEST_PATH }} -name 'run' -exec chmod 755 {} \;
+                  WRONG_PERM=$(find ${{ env.DEST_PATH }}  -path "./.git" -prune -o \( -name "run" -o -name "finish" -o -name "check" \) -not -perm -u=x,g=x,o=x -print)
                   if [ -n "${WRONG_PERM}" ]; then
                       for i in ${WRONG_PERM}; do
                       echo "::error file=${i},line=1,title=Missing Executable Bit::This file needs to be set as executable!"
@@ -186,7 +188,7 @@ jobs:
             - name: '🔐 Apply dos2unix'
               id: task_sync_fix_dos2unix
               run: |
-                  find ${{ inputs.DEST_PATH }} -type f | grep -Ev '.git|.github|*.jpg|*.jpeg|*.png' | xargs dos2unix --
+                  find ${{ env.DEST_PATH }} -type f | grep -Ev '.git|.github|*.jpg|*.jpeg|*.png' | xargs dos2unix --
 
             # #
             #   Sync › Show Differences
@@ -240,7 +242,7 @@ jobs:
                   echo "github.actor.......... ${{ github.actor }}"
                   echo "github.ref ........... ${{ github.ref }}"
                   echo "github.event_name .... ${{ github.event_name }}"
-                  echo "inputs.PRINT_ONLY .... ${{ inputs.PRINT_ONLY }}"
+                  echo "inputs.PRINT_ONLY .... ${{ env.PRINT_ONLY }}"
 
             # #
             #   Sync › Commit
