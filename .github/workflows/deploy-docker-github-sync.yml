@@ -2,7 +2,10 @@
 #   @type               github workflow
 #   @author             Aetherinox
 #   @url                https://github.com/Aetherinox
-#   @usage              syncs main/package folder with branch docker/keeweb
+#   @usage              originally, Keeweb's docker files were hosted in the main branch within the folder /package/docker/*
+#                       with the new setup, the Keeweb docker files are stored in a separate branch from main called `docker/keeweb`.
+#                       this workflow copies the required docker files from the new branch docker/keeweb, and brings them over to the main branch
+#                       and places them within the original subfolder `package/docker/*`
 #   @secrets            secrets.ADMINSERV_GPG_KEY_ASC                   gpg private key (armored) | BEGIN PGP PRIVATE KEY BLOCK
 #                       secrets.ADMINSERV_GPG_PASSPHRASE                gpg private key passphrase
 #                       secrets.IMAGE_GHCR_TOKEN                        github personal access token (classic) with package:write permission
@@ -40,60 +43,12 @@ on:
                 type:         string
 
             # #
-            #   Image Author
-            #
-            #   used in github image path
-            #       ghcr.io/${{ env.IMAGE_AUTHOR }}/${{ env.IMAGE_NAME }}
-            # #
-
-            IMAGE_AUTHOR:
-                description:  "🪪 Image Author"
-                required:     true
-                default:      'keeweb'
-                type:         string
-
-            # #
-            #   Image Version
-            #
-            #   used to create new release tag, and add version to docker image name
-            # #
-
-            IMAGE_VERSION:
-                description:  "🏷️ Image Version"
-                required:     true
-                default:      '1.19.0'
-                type:         string
-
-            # #
-            #   Image ghcr username
-            #
-            #   this is the user to sign into ghcr as.
-            # #
-
-            IMAGE_GHCR_USERNAME:
-                description:  "🪪 ghcr.io Username"
-                required:     true
-                default:      'keeweb'
-                type:         string
-
-            # #
             #   true:     runs all actions, even ones not scheduled
             #   false:    only scheduled tasks will run
             # #
 
             PRINT_ONLY:
                 description:  "📑 Print Debugs Only"
-                required:     true
-                default:      false
-                type:         boolean
-
-            # #
-            #   ENABLE:       released version will be marked as beta and receive beta tag for docker
-            #   DISABLE:      release version will be marked as stable / normal release
-            # #
-
-            DEV_RELEASE:
-                description:  "🧪 Development Release"
                 required:     true
                 default:      false
                 type:         boolean
@@ -144,7 +99,7 @@ jobs:
         steps:
 
             # #
-            #   Release › Sync › Start
+            #   Sync › Start
             # #
 
             - name: "✅ Start"
@@ -153,7 +108,7 @@ jobs:
                   echo "Starting branch sync"
 
             # #
-            #   Release › Sync › Checkout
+            #   Sync › Checkout
             # #
 
             - name: "☑️ Checkout"
@@ -163,10 +118,10 @@ jobs:
                   fetch-depth: 0
 
             # #
-            #   Release › Sync › Check Permissions
+            #   Sync › Copy Dockerfiles to Main branch
             #
-            #   discard changes from detached head state with
-            #       git checkout -
+            #   this action copies all the required docker files from the docker/keeweb branch, over to 
+            #   the main branch within the subfolder `package/docker/*`
             # #
 
             - name: 'Pull Docker Files'
@@ -176,13 +131,59 @@ jobs:
                   git checkout origin/main
                   git --work-tree=package/docker checkout origin/docker/keeweb -- root Dockerfile*
 
+            # #
+            #   Sync › Show Differences
+            # 
+            #   this is just a debugging step, it shows all the files pending commit that will be committed
+            # #
+
             - name: 'View Differences'
               run: |
                   git diff --name-only HEAD
 
-            - uses: stefanzweifel/git-auto-commit-action@v5
+            # #
+            #   Sync › Precommit
+            #
+            #   define the date/time and the commit message
+            # #
+
+            - name: "📦 Commit › Pre-commit"
+              id: task_commit_pre
+              run: |
+                  now=$(date -u '+%m/%d/%Y %H:%M')
+                  commit_label="Sync" >> $GITHUB_ENV
+                  commit_message="\`️️🔒 $commit_label 🔒\` \`$now UTC\`" >> $GITHUB_ENV
+                  echo "COMMIT_MESSAGE=$(echo $commit_message)" >> $GITHUB_ENV
+                  echo "NOW=$(echo $now)" >> $GITHUB_ENV
+
+            # #
+            #   Sync › GPG Key
+            #
+            #   this step is required so that you can sign commits in the last step
+            #       stefanzweifel/git-auto-commit-action@v5
+            # #
+
+            - name: "📦 Commit › GPG Key"
+              id: task_sync_commit_gpg
+              uses: crazy-max/ghaction-import-gpg@v6
               with:
-                  commit_message: "Sync docker/keeweb › main"
+                  gpg_private_key: ${{ secrets.ADMINSERV_GPG_KEY_ASC }}
+                  passphrase: ${{ secrets.ADMINSERV_GPG_PASSPHRASE }}
+                  git_user_signingkey: true
+                  git_commit_gpgsign: true
+
+            # #
+            #   Sync › Commit
+            # 
+            #   commits the pending changes to the main branch
+            # #
+
+            - uses: stefanzweifel/git-auto-commit-action@v5
+              if: ( github.event_name == 'workflow_dispatch' && inputs.PRINT_ONLY == 'false' ) || ( github.event_name == 'push' )
+              with:
+                  commit_message: ${{ env.COMMIT_MESSAGE }}
+                  commit_author: "${{ steps.task_sync_commit_gpg.outputs.name }} <${{ steps.task_sync_commit_gpg.outputs.email }}>"
+                  commit_user_name: ${{ steps.task_sync_commit_gpg.outputs.name }}
+                  commit_user_email: ${{ steps.task_sync_commit_gpg.outputs.email }}
                   branch: main
-                  commit_options: '--signoff'
                   add_options: '-u'
