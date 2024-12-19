@@ -155,7 +155,7 @@ jobs:
             #   the main branch within the subfolder `package/docker/*`
             #
             #   to discard the actions of git checkout and not commit, run: 
-            #     git checkout -
+            #       git checkout -
             #
             #   if you are copying files from docker/keeweb which don't exist on the main branch, you must
             #   run `git add package/docker` to track the new files / folders added
@@ -205,9 +205,6 @@ jobs:
             #
             #   to disable the pager, run the command:
             #       git config --global pager.diff false
-            #
-            #   to show only a list of changed files:
-            #       git diff --name-only HEAD
             # #
 
             - name: '📑 View Differences'
