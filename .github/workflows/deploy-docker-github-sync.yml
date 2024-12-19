@@ -167,12 +167,13 @@ jobs:
             # #
 
             - name: 'Check Permissions'
-              uses: BetaHuhn/repo-file-sync-action@v1
+              uses: andstor/copycat-action@v3
               with:
-                  GH_PAT: ${{ secrets.SELF_TOKEN_CL }}
-                  CONFIG_PATH: .github/sync.yml
-                  COMMIT_BODY: "[Docker] Sync"
-                  IS_FINE_GRAINED: false
-                  DRY_RUN: false
-                  SKIP_PR: true
-                  SKIP_CLEANUP: false
+                personal_token: ${{ secrets.SELF_TOKEN_CL }}
+                src_path: /.
+                dst_path: /package/docker/
+                dst_owner: aetherinox
+                dst_repo_name: keeweb
+                src_branch: docker/keeweb
+                dst_branch: main
+                commit_message: "Test"
