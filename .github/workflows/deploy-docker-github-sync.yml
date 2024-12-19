@@ -173,7 +173,7 @@ jobs:
                   SRC_ROOT: "/"
                   FILE_PATTERNS: |-
                     ^Dockerfile$
-                    Dockerfile
+                    ^Dockerfile$
                     ^Dockerfile.aarch64$
                   GITHUB_TOKEN: ${{ secrets.SELF_TOKEN_CL }}
                   TARGET_REPOS: |
