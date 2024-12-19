@@ -1,10 +1,8 @@
-  group:
-    repos: |
-      aetherinox/keeweb@docker/keeweb
-    files:
-      - source: root/
-        dest: root/
-      - source: rDockerfile
-        dest: Dockerfile
-      - source: Dockerfile.aarch64
-        dest: Dockerfile.aarch64
+aetherinox/keeweb@docker/keeweb:
+  - root/
+  - Dockerfile
+  - Dockerfile.aarch64
+aetherinox/keeweb@main:
+  - package/docker/root/
+  - package/docker/Dockerfile
+  - package/docker/Dockerfile.aarch64
