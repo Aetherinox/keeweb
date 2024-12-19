@@ -169,9 +169,12 @@ jobs:
             - name: 'Check Permissions'
               uses: adrianjost/files-sync-action@v2.1.0
               with:
-                  SRC_REPO: aetherinox/keeweb:main
+                  SRC_REPO: aetherinox/keeweb:docker/keeweb
+                  SRC_ROOT: "/"
                   TARGET_REPOS: |
-                    aetherinox/keeweb:docker/keeweb
+                    aetherinox/keeweb:main
+                  TARGET_ROOT: "/package/docker"
                   FILE_PATTERNS: |
                     ^Dockerfile$
+                    ^Dockerfile.aarch64$
                   GITHUB_TOKEN: ${{ secrets.SELF_TOKEN_CL }}
