@@ -11,8 +11,8 @@
 #                       secrets.IMAGE_GHCR_TOKEN                        github personal access token (classic) with package:write permission
 # #
 
-name: "🔀 Sync › Docker › Github"
-run-name: "🔀 Sync › Docker › Github"
+name: "🔄 Sync › Docker › Github"
+run-name: "🔄 Sync › Docker › Github"
 
 # #
 #   Triggers
@@ -67,9 +67,6 @@ on:
 
 env:
     IMAGE_NAME:           ${{ github.event.inputs.IMAGE_NAME || 'keeweb' }}
-    IMAGE_AUTHOR:         ${{ github.event.inputs.IMAGE_AUTHOR || 'keeweb' }}
-    IMAGE_VERSION:        ${{ github.event.inputs.IMAGE_VERSION || '1.19.0' }}
-    IMAGE_GHCR_USERNAME:  ${{ github.event.inputs.IMAGE_GHCR_USERNAME || 'keeweb' }}
     BOT_NAME_1:           EuropaServ
     BOT_NAME_DEPENDABOT:  dependabot[bot]
     
@@ -179,11 +176,11 @@ jobs:
             - name: "🪪 Debug › Print"
               id: task_release_gh_print
               run: |
-                echo "github.actor.......... ${{ github.actor }}"
-                echo "github.ref ........... ${{ github.ref }}"
-                echo "github.event_name .... ${{ github.event_name }}"
-                echo "inputs.PRINT_ONLY .... ${{ inputs.PRINT_ONLY }}"
-                echo "env.COMMIT_MESSAGE ... (echo ${{ env.COMMIT_MESSAGE }})"
+                  echo "github.actor.......... ${{ github.actor }}"
+                  echo "github.ref ........... ${{ github.ref }}"
+                  echo "github.event_name .... ${{ github.event_name }}"
+                  echo "inputs.PRINT_ONLY .... ${{ inputs.PRINT_ONLY }}"
+                  echo "env.COMMIT_MESSAGE ... (echo "${{ env.COMMIT_MESSAGE }}")"
 
             # #
             #   Sync › Commit
@@ -191,7 +188,8 @@ jobs:
             #   commits the pending changes to the main branch
             # #
 
-            - uses: stefanzweifel/git-auto-commit-action@v5
+            - name: "🔄 Sync › Commit"
+              uses: stefanzweifel/git-auto-commit-action@v5
               if: ( github.event_name == 'workflow_dispatch' && inputs.PRINT_ONLY == false ) || ( github.event_name == 'push' )
               with:
                   commit_message: ${{ env.COMMIT_MESSAGE }}
