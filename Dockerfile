@@ -8,6 +8,7 @@
 #                   https://github.com/keeweb/docker-alpine-base
 #                   https://hub.docker.com/repository/docker/keeweb/keeweb
 #                   https://hub.docker.com/repository/docker/keeweb/alpine-base
+#	hello
 # #
 
 FROM ghcr.io/keeweb/alpine-base:3.20-amd64
