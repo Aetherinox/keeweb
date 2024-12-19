@@ -173,5 +173,5 @@ jobs:
                   CONFIG_PATH: .github/sync.yml
                   COMMIT_BODY: "[Docker] Sync"
                   IS_FINE_GRAINED: false
-                  DRY_RUN: true
+                  DRY_RUN: false
                   SKIP_CLEANUP: false
