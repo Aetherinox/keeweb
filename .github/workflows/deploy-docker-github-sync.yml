@@ -176,4 +176,3 @@ jobs:
                   TARGET_REPOS: |
                     aetherinox/keeweb:main
                   TARGET_ROOT: "/package/docker/"
-                  SKIP_DELETE: true
