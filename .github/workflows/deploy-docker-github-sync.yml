@@ -173,6 +173,19 @@ jobs:
                   git_commit_gpgsign: true
 
             # #
+            #   Sync › Debug
+            # #
+
+            - name: "🪪 Debug › Print"
+              id: task_release_gh_print
+              run: |
+                echo "github.actor.......... ${{ github.actor }}"
+                echo "github.ref ........... ${{ github.ref }}"
+                echo "github.event_name .... ${{ github.event_name }}"
+                echo "inputs.PRINT_ONLY .... ${{ inputs.PRINT_ONLY }}"
+                echo "env.COMMIT_MESSAGE.... ${{ env.COMMIT_MESSAGE }}"
+
+            # #
             #   Sync › Commit
             # 
             #   commits the pending changes to the main branch
