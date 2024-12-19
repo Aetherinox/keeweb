@@ -167,14 +167,11 @@ jobs:
             # #
 
             - name: 'Check Permissions'
-              uses: andstor/copycat-action@v3
+              uses: adrianjost/files-sync-action@v2.1.0
               with:
-                personal_token: ${{ secrets.SELF_TOKEN_CL }}
-                src_path: /.
-                dst_path: /package/docker/
-                dst_owner: aetherinox
-                dst_repo_name: keeweb
-                src_branch: docker/keeweb
-                dst_branch: main
-                commit_message: "Test"
-                exclude: '*+(/.github/|/docs/)*'
+                  SRC_REPO: aetherinox/keeweb:main
+                  TARGET_REPOS: |
+                    aetherinox/keeweb:docker/keeweb
+                  FILE_PATTERNS: |
+                    ^Dockerfile$
+                  GITHUB_TOKEN: ${{ secrets.SELF_TOKEN_CL }}
