@@ -174,7 +174,7 @@ jobs:
                   git config --global pager.diff false
                   git config --global advice.detachedHead false
                   git checkout origin/main
-                  git checkout origin/docker/keeweb -- root
+                  git checkout origin/docker/keeweb -- root Dockerfile Dockerfile.aarch64
 
             - name: 'View Differences'
               run: |
