@@ -168,4 +168,4 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.SELF_TOKEN_CL }}
                   TARGET_REPOS: |
                     aetherinox/keeweb:main
-                  TARGET_ROOT: "/package/docker/"
+                  TARGET_ROOT: "package/docker/"
