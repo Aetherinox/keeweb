@@ -208,11 +208,11 @@ jobs:
             - name: '⬇️ Pull Docker Files'
               id: task_sync_files_pull
               run: |
+                  rm -rf ${{ env.DEST_PATH }}/*
                   git config --global pager.diff false
                   git config --global advice.detachedHead false
                   git checkout origin/${{ env.REPO_DEST }}                                                      #  ${{ inputs.REPO_DEST || github.ref_name || 'main' }}
                   git --work-tree=${{ env.DEST_PATH }} checkout origin/${{ env.REPO_SRC }} -- root Dockerfile*  #  ${{ inputs.REPO_SRC || 'docker/keeweb' }}
-                  rm -rf ${{ env.DEST_PATH }}/*
                   git add ${{ env.DEST_PATH }}
 
             # #
