@@ -2,13 +2,20 @@
 #   @type               github workflow
 #   @author             Aetherinox
 #   @url                https://github.com/Aetherinox
+#
 #   @usage              originally, Keeweb's docker files were hosted in the main branch within the folder /package/docker/*
 #                       with the new setup, the Keeweb docker files are stored in a separate branch from main called `docker/keeweb`.
 #                       this workflow copies the required docker files from the new branch docker/keeweb, and brings them over to the main branch
 #                       and places them within the original subfolder `package/docker/*`
+#
 #   @secrets            secrets.ADMINSERV_GPG_KEY_ASC                   gpg private key (armored) | BEGIN PGP PRIVATE KEY BLOCK
 #                       secrets.ADMINSERV_GPG_PASSPHRASE                gpg private key passphrase
-#                       secrets.IMAGE_GHCR_TOKEN                        github personal access token (classic) with package:write permission
+#
+#   @triggers           this workflow is automatically run every time a PUSH is made to the branch `docker/keeweb`; it will copy docker/keeweb's contents
+#                       to the main branch's `package/docker` folder.
+#
+#                       this workflow can be manually triggered (WORKFLOW_DISPATCH). to select the destination branch, click `Run Workflow` and select `Use Workflow From`
+#                       and select the destination branch
 # #
 
 name: "🔄 Sync › Docker › Github"
@@ -42,25 +49,13 @@ on:
               type:         string
 
             # #
-            #   Repo › Destination
-            #
-            #   Where the files are to be copied to
-            # #
-
-            REPO_DEST:
-              description:  "📂 Repo › Destination"
-              required:     true
-              default:      'main'
-              type:         string
-
-            # #
             #   Destination Path
             #
             #   where the files will be placed
             # #
 
             DEST_PATH:
-                description:  "📂 Destination Path"
+                description:  "📂 Destination Folder"
                 required:     true
                 default:      'package/docker'
                 type:         string
@@ -89,9 +84,11 @@ on:
 # #
 
 env:
+    REPO_MAIN:            'main'
     REPO_SRC:             ${{ github.event.inputs.REPO_SRC || 'docker/keeweb' }}
-    REPO_DEST:            ${{ github.ref_name || github.event.inputs.REPO_DEST ||  'main' }}
+    REPO_DEST:            ${{ github.ref_name || 'main' }}
     DEST_PATH:            ${{ github.event.inputs.DEST_PATH || 'package/docker' }}
+
     BOT_NAME_1:           EuropaServ
     BOT_NAME_DEPENDABOT:  dependabot[bot]
     
@@ -155,9 +152,9 @@ jobs:
             - name: '⚠️ Env Variable › Check'
               id: task_sync_vars_check
               run: |
-                  if [[ "${{ env.REPO_SRC }}" == "${{ env.REPO_DEST }}" ]]; then
+                  if [[ "${{ env.REPO_SRC }}" == "${{ env.REPO_DEST || env.REPO_MAIN }}" ]]; then
                       echo "Source and destination repos are the same, changing to main"
-                      branch_Default="main"
+                      branch_Default="${{ env.REPO_MAIN }}"
                       echo "REPO_DEST=$(echo $branch_Default)" >> $GITHUB_ENV
                   fi
 
@@ -183,13 +180,13 @@ jobs:
                   echo "github.event_name .... ${{ github.event_name }}"
                   echo "inputs.PRINT_ONLY .... ${{ inputs.PRINT_ONLY }}"
                   echo "env.REPO_SRC.......... ${{ env.REPO_SRC }}"
-                  echo "env.REPO_DEST......... ${{ env.REPO_DEST }}"
+                  echo "env.REPO_DEST......... ${{ env.REPO_DEST || env.REPO_MAIN  }}"
                   echo "env.DEST_PATH......... ${{ env.DEST_PATH }}"
 
-                  echo " ⚠️⚠️⚠️⚠️ This workflow will copy files [ 📄 root Dockerfile* ] from branch 🏠 ${{ env.REPO_SRC }} to 🔄 ${{ env.REPO_DEST }} to folder 📂 ${{ env.DEST_PATH }} ⚠️⚠️⚠️"
+                  echo " ⚠️⚠️⚠️⚠️ This workflow will copy files [ 📄 root Dockerfile* ] from branch 🏠 ${{ env.REPO_SRC }} to 🔄 ${{ env.REPO_DEST || env.REPO_MAIN }} to folder 📂 ${{ env.DEST_PATH }} ⚠️⚠️⚠️"
                   echo "    › Copy files ............. 📄 root Dockerfile*"
                   echo "    › From branch ............ 🏠 ${{ env.REPO_SRC }}"
-                  echo "    › To branch .............. 🔄 ${{ env.REPO_DEST }}"
+                  echo "    › To branch .............. 🔄 ${{ env.REPO_DEST || env.REPO_MAIN }}"
                   echo "    › In folder .............. 📂 ${{ env.DEST_PATH }}"
 
             # #
@@ -203,16 +200,23 @@ jobs:
             #
             #   if you are copying files from docker/keeweb which don't exist on the main branch, you must
             #   run `git add package/docker` to track the new files / folders added
+            #
+            #   this step does the following:
+            #       - deletes the package/docker/* folder contents on the destination repo
+            #       - sets a few settings to get rid of annoying features
+            #       - git checkout origin/main (destination branch)
+            #       - git checkout origin/docker/keeweb (source branch) and sets working tree to /package/docker/
+            #       - adds all changes to git which will be committed in a later step
             # #
 
             - name: '⬇️ Pull Docker Files'
               id: task_sync_files_pull
               run: |
+                  rm -rf ${{ env.DEST_PATH }}/*
                   git config --global pager.diff false
                   git config --global advice.detachedHead false
-                  git checkout origin/${{ env.REPO_DEST }}                                                      #  ${{ inputs.REPO_DEST || github.ref_name || 'main' }}
+                  git checkout origin/${{ env.REPO_DEST || env.REPO_MAIN }}                                                      #  ${{ github.ref_name || 'main' }}
                   git --work-tree=${{ env.DEST_PATH }} checkout origin/${{ env.REPO_SRC }} -- root Dockerfile*  #  ${{ inputs.REPO_SRC || 'docker/keeweb' }}
-                  rm -rf ${{ env.DEST_PATH }}/*
                   git add ${{ env.DEST_PATH }}
 
             # #
@@ -301,10 +305,10 @@ jobs:
                   echo "github.event_name .... ${{ github.event_name }}"
                   echo "inputs.PRINT_ONLY .... ${{ env.PRINT_ONLY }}"
 
-                  echo " ⚠️⚠️⚠️⚠️ This workflow will copy files [ 📄 root Dockerfile* ] from branch 🏠 ${{ env.REPO_SRC }} to 🔄 ${{ env.REPO_DEST }} to folder 📂 ${{ env.DEST_PATH }} ⚠️⚠️⚠️"
+                  echo " ⚠️⚠️⚠️⚠️ This workflow will copy files [ 📄 root Dockerfile* ] from branch 🏠 ${{ env.REPO_SRC }} to 🔄 ${{ env.REPO_DEST || env.REPO_MAIN }} to folder 📂 ${{ env.DEST_PATH }} ⚠️⚠️⚠️"
                   echo "    › Copy files ............. 📄 root Dockerfile*"
                   echo "    › From branch ............ 🏠 ${{ env.REPO_SRC }}"
-                  echo "    › To branch .............. 🔄 ${{ env.REPO_DEST }}"
+                  echo "    › To branch .............. 🔄 ${{ env.REPO_DEST || env.REPO_MAIN }}"
                   echo "    › In folder .............. 📂 ${{ env.DEST_PATH }}"
 
             # #
@@ -322,5 +326,5 @@ jobs:
                   commit_author: "${{ steps.task_sync_commit_gpg.outputs.name }} <${{ steps.task_sync_commit_gpg.outputs.email }}>"
                   commit_user_name: ${{ steps.task_sync_commit_gpg.outputs.name }}
                   commit_user_email: ${{ steps.task_sync_commit_gpg.outputs.email }}
-                  branch: ${{ env.REPO_DEST }}
+                  branch: ${{ env.REPO_DEST || env.REPO_MAIN }}
                   add_options: '-u'
