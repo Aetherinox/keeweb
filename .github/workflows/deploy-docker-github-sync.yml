@@ -155,7 +155,7 @@ jobs:
             # #
             #   Sync › Get Default Branch Name
             #
-            #   attempts to get the name of the default branch so that we don't have to manually change
+            #   attempts to get the name of the default branch so that we don't have to manually changes
             # #
 
             - name: "🔍 Find Default Branch Name"
