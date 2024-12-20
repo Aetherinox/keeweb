@@ -155,13 +155,13 @@ jobs:
             # #
             #   Sync › Get Default Branch Name
             #
-            #   attempts to get the name of the default branch so that we don't have to manually change
+            #   attempts to get the name of the default branch so that we don't have to manually changes
             # #
 
             - name: "🔍 Find Default Branch Name"
               id: task_sync_branch_default_get
               run:
-                  echo "BRANCH_MAIN=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')" >> $GITHUB_ENV
+                  echo "BRANCH_MAIN=${{ github.event.repository.default_branch }}" >> $GITHUB_ENV
 
             # #
             #   Sync › Debug
@@ -170,10 +170,10 @@ jobs:
             - name: '⚠️ Env Variable › Check'
               id: task_sync_vars_check
               run: |
-                  if [[ "${{ env.BRANCH_SRC }}" == "${{ env.BRANCH_DEST || env.BRANCH_MAIN }}" ]]; then
-                      echo "⚠️⚠️⚠️ Source and destination branches are the same, changing destination branch to main ⚠️⚠️⚠️"
-                      branch_Default="${{ env.BRANCH_MAIN }}"
-                      echo "BRANCH_DEST=$(echo $branch_Default)" >> $GITHUB_ENV
+                  if [[ "${{ env.BRANCH_SRC }}" == "${{ env.BRANCH_DEST }}" ]]; then
+                      branch_default="${{ env.BRANCH_MAIN }}"
+                      echo "⚠️⚠️⚠️ Source and destination branches are the same, changing destination branch to $branch_default ⚠️⚠️⚠️"
+                      echo "BRANCH_DEST=$(echo $branch_default)" >> $GITHUB_ENV
                   fi
 
             # #
