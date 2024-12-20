@@ -171,9 +171,9 @@ jobs:
               id: task_sync_vars_check
               run: |
                   if [[ "${{ env.BRANCH_SRC }}" == "${{ env.BRANCH_DEST }}" ]]; then
-                      branch_Default="${{ env.BRANCH_MAIN }}"
-                      echo "⚠️⚠️⚠️ Source and destination branches are the same, changing destination branch to default $branch_Default ⚠️⚠️⚠️"
-                      echo "BRANCH_DEST=$(echo $branch_Default)" >> $GITHUB_ENV
+                      branch_default="${{ env.BRANCH_MAIN }}"
+                      echo "⚠️⚠️⚠️ Source and destination branches are the same, changing destination branch to $branch_default ⚠️⚠️⚠️"
+                      echo "BRANCH_DEST=$(echo $branch_default)" >> $GITHUB_ENV
                   fi
 
             # #
