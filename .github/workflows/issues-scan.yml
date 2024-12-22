@@ -301,6 +301,7 @@ jobs:
 
                         let bHasError           = false;
                         let bHasWarning         = false;
+                        let bShowOKFiles        = false; // enable to list every single file that passed in PR
 
                         let date                = new Date( `${ context.payload.pull_request.created_at }` );
                         date.toISOString( )
@@ -478,7 +479,7 @@ jobs:
 
                             if ( bFuncFetch == true )
                             {
-                                addWarning( "Fetch() found - Ensure this implementation works for every platform" );
+                                addWarning( "Fetch() found - Ensure this implementation's data is properly validated to filter MTM attacks" );
                             }
 
                             /*
@@ -573,7 +574,9 @@ jobs:
                             }
                             else
                             {
-                                message.push    ( "\n\n\n> [!NOTE]\n> The file `" + file + "` contains no errors\n\n<br>\n\n" );
+                                if ( bShowOKFiles === true ) {
+                                    message.push    ( "\n\n\n> [!NOTE]\n> The file `" + file + "` contains no errors\n\n<br>\n\n" );
+                                }
                             }
                         }
 
