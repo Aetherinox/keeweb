@@ -437,8 +437,8 @@ jobs:
                             const bAsAny                        = /\((.*? as Any\s*)\)/gi.test( filesData );
                             const bInnerHTML                    = /^\s?.*[a-zA-Z0-9_]+\.innerHTML*\s?.*$/gm.test( filesData );
                             const bOuterHTML                    = /^\s?.*[a-zA-Z0-9_]+\.outerHTML*\s?.*$/gm.test( filesData );
-                            const bFoundLooseWord               = /(?:'|").*(Settings_|General_).*(?:'|")?/gmi.test( filesData );
-                            const bContainsGeneric              = /(?:^|(?<= ))(MyPlugin|MyPluginSettings|SampleSettings|SampleSettingTab|SampleModal|Sample Plugin|my-plugin)(?:(?= )|$)/gim.test( filesData );
+                            const bEval                         = /(eval)\((.*)\)(\[([^\]]*)\])?/gim.test( filesData );
+                            const bContainsGeneric              = /(?:^|(?<= ))(MyPlugin|MyPluginSettings|PluginSettings|SampleSettings|SampleSetting|SampleModal|Sample Plugin|my-plugin)(?:(?= )|$)/gim.test( filesData );
                             const bFileSkip                     = files_skipList.some( s => s.includes( file_current ) || file_current.includes( s ) );
 
                             if ( bFileSkip == true )
@@ -530,21 +530,21 @@ jobs:
                             }
 
                             /*
+                                eval
+                            */
+
+                            if ( bEval == true )
+                            {
+                                addError( `Using \`eval\` can be a potential security risk. Ensure there's no risk of code injection.` );
+                            }
+
+                            /*
                                 Generic Calls
                             */
 
                             if ( bContainsGeneric == true )
                             {
                                 addError( "Rename sample classes to something that makes sense. You are not allowed to have names such as: " + error_Generic );
-                            }
-
-                            /*
-                                Loose words found
-                            */
-
-                            if ( bFoundLooseWord == true && file != "package.json" && file != "manifest.json" )
-                            {
-                                addWarning( "A loose word was found in your code. Generic words should not be used as method / variable names such as: " + warn_LooseWords );
                             }
 
                             if ( errors.length > 0 || warnings.length > 0 )
