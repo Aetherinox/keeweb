@@ -451,8 +451,10 @@ jobs:
                                 Header
                             */
 
-                            message.push        ( "\n<br />\n\n---\n\n<br />\n" );
-                            message.push        ( "### 📄 " + file_current + "\n" );
+                            if ( bShowOKFiles === true ) {
+                                message.push        ( "\n<br />\n\n---\n\n<br />\n" );
+                                message.push        ( "### 📄 " + file_current + "\n" );
+                            }
                             message             = message.concat( warnings );
 
                             /*
