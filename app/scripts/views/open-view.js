@@ -1025,6 +1025,7 @@ class OpenView extends View {
         if (storage.applyConfig) {
             storage.applyConfig(opts, this.storageApplyConfigComplete.bind(this, req));
         } else {
+            console.log(req);
             storage.stat(path, opts, this.storageStatComplete.bind(this, req));
         }
     }
@@ -1044,6 +1045,10 @@ class OpenView extends View {
     }
 
     storageStatComplete(req, err, stat) {
+        console.log('-------------------------------')
+        console.log(req)
+        console.log(err)
+        console.log(stat)
         if (this.storageWaitId !== req.waitId) {
             return;
         }
@@ -1051,6 +1056,8 @@ class OpenView extends View {
         this.busy = false;
         if (err) {
             this.views.openConfig.setDisabled(false);
+            console.log('errrrr')
+            console.log(err)
             this.views.openConfig.setError(err);
         } else {
             this.closeConfig();
