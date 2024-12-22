@@ -194,14 +194,16 @@ jobs:
                     result-encoding: string
 
             # #
-            #   print issue number
+            #   checkpoint
             # #
 
               - name: >-
-                    #️⃣ Issue number › Print
+                    ⚠️ Checkpoint
                 id: task_autocheck_issue_num_get
                 run: |
-                    echo '${{ steps.task_autocheck_issue_num_set.outputs.result }}'
+                    echo 'issue # ............... ${{ steps.task_autocheck_issue_num_set.outputs.result }}'
+                    echo 'actor ................. ${{ github.actor }}'
+                    echo 'action ................ ${{ github.event.action }}'
 
             # #
             #   checkout
