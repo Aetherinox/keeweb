@@ -1,3 +1,7 @@
+/*
+    Test Workflow Change
+*/
+
 const RuntimeInfo = {
     version: '@@VERSION',
     beta: !!'@@BETA',

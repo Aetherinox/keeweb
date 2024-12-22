@@ -1,3 +1,7 @@
+/*
+    Test Workflow Change
+*/
+
 const Links = {
     AutoType: 'https://github.com/keeweb/keeweb/wiki/Auto-Type',
     AutoTypeMacOS: 'https://github.com/keeweb/keeweb/wiki/Auto-Type#macos',
