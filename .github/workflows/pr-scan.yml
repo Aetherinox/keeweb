@@ -18,9 +18,8 @@ run-name: "🎫 PR › Scan"
 on:
     pull_request:
         branches:
-            - main
-            - master
-            - develop*
+            - 'main'
+            - 'master'
 
 # #
 #   environment variables
@@ -35,6 +34,7 @@ env:
     LABEL_CHECK_SECURITY_ERR:       AC › Security Warning
     LABEL_CHECK_STATUS_CHGMADE:     AC › Changes Made
     LABEL_CHECK_SCAN_SKIPPED:       AC › Skipped Scan
+    LABEL_STATUS_REVIEW:            Status 𐄂 Review
     LABEL_TYPE_PR:                  Type ◦ Pull Request
     LABEL_TYPE_DEPENDENCY:          Type ◦ Dependency
     LABEL_TYPE_GITACTION:           Type ◦ Git Action
@@ -194,14 +194,16 @@ jobs:
                     result-encoding: string
 
             # #
-            #   print issue number
+            #   checkpoint
             # #
 
               - name: >-
-                    #️⃣ Issue number › Print
+                    ⚠️ Checkpoint
                 id: task_autocheck_issue_num_get
                 run: |
-                    echo '${{ steps.task_autocheck_issue_num_set.outputs.result }}'
+                    echo 'issue # ............... ${{ steps.task_autocheck_issue_num_set.outputs.result }}'
+                    echo 'actor ................. ${{ github.actor }}'
+                    echo 'action ................ ${{ github.event.action }}'
 
             # #
             #   checkout
@@ -288,15 +290,21 @@ jobs:
                         const escape_html       = ( unsafe ) => unsafe.replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' ).replace( /'/g, '&#039;' );
                         const labels            = [];
 
+                        const actor             = '${{ github.actor }}';
+                        const action            = '${{ github.event.action }}';
+
                         const files_List        = `${{ steps.task_autocheck_changed_files_get.outputs.all_changed_files }}` || ''
                         const files_Array       = files_List.split(',')
                         const branch_ref        = `${ context.payload.pull_request.head.ref }`
 
                         let message             = [ "\n<br />\n" ]
-                        message.push            ( "## Automatic Self-Check - #" + context.issue.number + "\n" );
-                        message.push            ( `The details of our automated scan for your pull request are listed below. If our scan detected errors, they must be corrected before this pull request will be advanced to the review stage:\n` );
-                        message.push            ( "\n<br />\n\n---\n\n<br />\n\n" );
-                        message.push            ( "### About\nThis pull request includes the following information:" );
+
+                        if ( action === "opened" ) {
+                            message.push            ( "## Automatic Self-Check - #" + context.issue.number + "\n" );
+                            message.push            ( `The details of our automated scan for your pull request are listed below. If our scan detected errors, they must be corrected before this pull request will be advanced to the review stage:\n` );
+                            message.push            ( "\n<br />\n\n---\n\n<br />\n\n" );
+                            message.push            ( "### About\nThis pull request includes the following information:" );
+                        }
 
                         let bHasError           = false;
                         let bHasWarning         = false;
@@ -304,8 +312,6 @@ jobs:
 
                         let date                = new Date( `${ context.payload.pull_request.created_at }` );
                         date.toISOString( )
-
-                        const actor             = '${{ github.actor }}';
 
                         const dateTimeformat = ( date ) =>
                         {
@@ -349,7 +355,9 @@ jobs:
                         | Deleted Files | ${{ steps.task_autocheck_changed_files_get.outputs.deleted_files_count }} |
                         `;
 
-                        message.push        ( md_table );
+                        if ( action === "opened" ) {
+                            message.push        ( md_table );
+                        }
 
                         let error_Generic = "\n" +
                         "- `MyPlugin`\n" +
@@ -636,8 +644,12 @@ jobs:
                                 } );
                             }
 
-                            if ( !context.payload.pull_request.labels.filter( label => label.name === "${{ env.LABEL_CHECK_CHANGES_REQ }}" ).length > 0 )
+                            if ( !context.payload.pull_request.labels.filter( label => label.name === "${{ env.LABEL_CHECK_CHANGES_REQ }}" ).length > 0 ) {
                                 labels.push( "${{ env.LABEL_CHECK_REVIEW_READY }}" );
+                                if ( !context.payload.pull_request.labels.filter( label => label.name === "${{ env.LABEL_CHECK_CHANGES_REQ }}" ).length > 0 ) {
+                                    labels.push( "${{ env.LABEL_STATUS_REVIEW }}" );
+                                }
+                            }
                         }
 
                         /*
