@@ -8,18 +8,19 @@
 #   @url                https://github.com/Aetherinox
 # #
 
-name: "🎫 Issues › Scan"
-run-name: "🎫 Issues › Scan"
+name: "🎫 PR › Scan"
+run-name: "🎫 PR › Scan"
 
 # #
 #   triggers
 # #
 
 on:
-    pull_request_target:
+    pull_request:
         branches:
             - main
             - master
+            - develop*
 
 # #
 #   environment variables
@@ -38,9 +39,7 @@ env:
     LABEL_TYPE_DEPENDENCY:          Type ◦ Dependency
     LABEL_TYPE_GITACTION:           Type ◦ Git Action
 
-    BOT_NAME_1:                     AdminServ
-    BOT_NAME_2:                     AdminServX
-    BOT_NAME_3:                     EuropaServ
+    BOT_NAME_1:                     EuropaServ
     BOT_NAME_DEPENDABOT:            dependabot[bot]
 
     LABELS_JSON: |
