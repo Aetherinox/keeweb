@@ -358,9 +358,9 @@ jobs:
                         "- `SampleSettingTab`\n" +
                         "- `SampleModal`\n"
 
-                        let warn_BadWords = "\n" +
-                        "- `General`\n" +
-                        "- `Settings`\n"
+                        let warn_LooseWords = "\n" +
+                        "- `General_`\n" +
+                        "- `Settings_`\n"
 
                         /*
                             Loop files
@@ -433,22 +433,11 @@ jobs:
                             const bFuncFetch                    = /(fetch)\((.*)\)(\[([^\]]*)\])?/gim.test( filesData );
                             const bVar                          = /^(?:var|)\s(\w+)\s*=\s*/gm.test( filesData );
                             const bLookBehind                   = /\(\?<[=!].*?\)/gmi.test( filesData );
-                            const bMarkdownHtmlNode             = /new\s+NodeHtmlMarkdown/gmi.test( filesData );
-                            const bAsTFile                      = /as\s+TFile/g.test( filesData );
-                            const bAsTFolder                    = /as\s+TFolder/g.test( filesData );
                             const bAsAny                        = /\((.*? as Any\s*)\)/gi.test( filesData );
                             const bInnerHTML                    = /^\s?.*[a-zA-Z0-9_]+\.innerHTML*\s?.*$/gm.test( filesData );
                             const bOuterHTML                    = /^\s?.*[a-zA-Z0-9_]+\.outerHTML*\s?.*$/gm.test( filesData );
-                        //  const bFuncConsoleLog               = /(console.log)\((.*)\)(\[([^\]]*)\])?/gim.test( filesData );
-                            const bFuncSetTimeout               = /(setTimeout)\((.*)\)(\[([^\]]*)\])?/gim.test( filesData );
-                            const bFuncFS_Chk1                  = /(require)\s?\((\s?(?:'|")fs(?:'|"))\s?\)?/gim.test( filesData );
-                            const bFuncFS_Chk2                  = /from\s+(?:'|")fs(?:'|")\s?/gim.test( filesData );
-                            const bFuncFS_ExistsSync            = /(fs.existsSync)\((.*)\)(\[([^\]]*)\])?/gm.test( filesData );
-                            const bFuncFS_MkdirSync             = /(fs.mkdirSync)\((.*)\)(\[([^\]]*)\])?/gm.test( filesData );
-                            const bFoundBadWord                 = /(?:'|").*(Settings|General).*(?:'|")?/gmi.test( filesData );
+                            const bFoundLooseWord               = /(?:'|").*(Settings_|General_).*(?:'|")?/gmi.test( filesData );
                             const bContainsGeneric              = /(?:^|(?<= ))(MyPlugin|MyPluginSettings|SampleSettings|SampleSettingTab|SampleModal|Sample Plugin|my-plugin)(?:(?= )|$)/gim.test( filesData );
-                            const check_depGetUnpinnedLeaf      = "app.workspace.getUnpinnedLeaf"
-
                             const bFileSkip                     = files_skipList.some( s => s.includes( file_current ) || file_current.includes( s ) );
 
                             if ( bFileSkip == true )
@@ -475,25 +464,12 @@ jobs:
                             */
 
                             /*
-                                ( Deprecated ) app.workspace.getUnpinnedLeaf
-
-                                @usage  : obsidian.md
-                            */
-
-                            /*
-                            if ( filesData.toLowerCase( ).includes( check_depGetUnpinnedLeaf.toLowerCase( ) ) )
-                            {
-                                addError( "This function is deprecated, use `this.app.workspace.getLeaf( false )` instead" );
-                            }
-                            */
-
-                            /*
                                 Using inline style
                             */
 
                             if ( bContainsStyle == true )
                             {
-                                addError( "Avoid assigning `inline styles` via JavaScript or in HTML. Move these styles to CSS so that they are adaptable by themes and other plugins." );
+                                addError( "Avoid assigning `inline styles` via JavaScript or in HTML." );
                             }
 
                             /*
@@ -502,7 +478,7 @@ jobs:
 
                             if ( bFuncFetch == true )
                             {
-                                addError( "Do not handle http data with `fetch( )`. Use the Obsidian API -> `requestUrl` method instead, which will make sure that network requests work on every platform." );
+                                addWarning( "Fetch() found - Ensure this implementation works for every platform" );
                             }
 
                             /*
@@ -521,33 +497,6 @@ jobs:
                             if ( bLookBehind == true )
                             {
                                 addError( "Lookbehinds are not supported in iOS < 16.4" );
-                            }
-
-                            /*
-                                Using HTML Node
-                            */
-
-                            if ( bMarkdownHtmlNode == true )
-                            {
-                                addError( "Do not use `NodeHtmlMarkdown`. Use Obsidian API -> `htmlToMarkdown` instead." );
-                            }
-
-                            /*
-                                As TFile
-                            */
-
-                            if ( bAsTFile == true )
-                            {
-                                addError( "Do not cast `as TFile`, use `instanceof` instead to check if the item is actually a file / folder" );
-                            }
-
-                            /*
-                                As TFolder
-                            */
-
-                            if ( bAsTFolder == true )
-                            {
-                                addError( "Do not cast `as TFolder`, use `instanceof` instead to check if the item is actually a file / folder" );
                             }
 
                             /*
@@ -578,42 +527,6 @@ jobs:
                             }
 
                             /*
-                                setTimeout
-                            */
-
-                            if ( bFuncSetTimeout == true )
-                            {
-                                addError( "Do not utilize `setTimeout`, utilize Obsidian API -> `sleep`. E.g: `await sleep( X )`" );
-                            }
-
-                            /*
-                                require("fs")
-                            */
-
-                            if ( bFuncFS_Chk1 == true || bFuncFS_Chk2 == true  )
-                            {
-                                addError( "`fs` import only available from Node.js runtime, this will throw errors for users running on mobile" );
-                            }
-
-                            /*
-                                require("fs") / fs.existsSync
-                            */
-
-                            if ( bFuncFS_ExistsSync == true  )
-                            {
-                                addError( "`fs` import only available from Node.js runtime, this will throw errors for users running on mobile." );
-                            }
-
-                            /*
-                                require("fs") / fs.mkdirSync
-                            */
-
-                            if ( bFuncFS_MkdirSync == true  )
-                            {
-                                addError( "`fs` import only available from Node.js runtime, this will throw errors for users running on mobile." );
-                            }
-
-                            /*
                                 Generic Calls
                             */
 
@@ -623,23 +536,12 @@ jobs:
                             }
 
                             /*
-                                console.log found
+                                Loose words found
                             */
 
-                            /*
-                            if ( bFuncConsoleLog == true )
+                            if ( bFoundLooseWord == true && file != "package.json" && file != "manifest.json" )
                             {
-                                addWarning( "Avoid unnecessary logging or ensure logging only occurs in development environment." );
-                            }
-                            */
-
-                            /*
-                                Bad words found
-                            */
-
-                            if ( bFoundBadWord == true && file != "package.json" && file != "manifest.json" )
-                            {
-                                addWarning( "A restricted word was found in your code. Generic words are not allowed in strings such as: " + warn_BadWords );
+                                addWarning( "A loose word was found in your code. Generic words should not be used as method / variable names such as: " + warn_LooseWords );
                             }
 
                             if ( errors.length > 0 || warnings.length > 0 )
