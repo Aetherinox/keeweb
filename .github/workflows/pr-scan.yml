@@ -17,10 +17,11 @@ run-name: "🎫 PR › Scan"
 
 on:
     pull_request:
+        types: [opened]
         branches:
             - main
             - master
-            - develop*
+            - 'develop/v?[0-9]+.[0-9]+.[0-9]+'
 
 # #
 #   environment variables
@@ -293,10 +294,13 @@ jobs:
                         const branch_ref        = `${ context.payload.pull_request.head.ref }`
 
                         let message             = [ "\n<br />\n" ]
-                        message.push            ( "## Automatic Self-Check - #" + context.issue.number + "\n" );
-                        message.push            ( `The details of our automated scan for your pull request are listed below. If our scan detected errors, they must be corrected before this pull request will be advanced to the review stage:\n` );
-                        message.push            ( "\n<br />\n\n---\n\n<br />\n\n" );
-                        message.push            ( "### About\nThis pull request includes the following information:" );
+
+                        if ( action === "opened" ) {
+                            message.push            ( "## Automatic Self-Check - #" + context.issue.number + "\n" );
+                            message.push            ( `The details of our automated scan for your pull request are listed below. If our scan detected errors, they must be corrected before this pull request will be advanced to the review stage:\n` );
+                            message.push            ( "\n<br />\n\n---\n\n<br />\n\n" );
+                            message.push            ( "### About\nThis pull request includes the following information:" );
+                        }
 
                         let bHasError           = false;
                         let bHasWarning         = false;
@@ -306,6 +310,7 @@ jobs:
                         date.toISOString( )
 
                         const actor             = '${{ github.actor }}';
+                        const action            = '${{ github.event.action }}';
 
                         const dateTimeformat = ( date ) =>
                         {
@@ -349,7 +354,9 @@ jobs:
                         | Deleted Files | ${{ steps.task_autocheck_changed_files_get.outputs.deleted_files_count }} |
                         `;
 
-                        message.push        ( md_table );
+                        if ( action === "opened" ) {
+                            message.push        ( md_table );
+                        }
 
                         let error_Generic = "\n" +
                         "- `MyPlugin`\n" +
